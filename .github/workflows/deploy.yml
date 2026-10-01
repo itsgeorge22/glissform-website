@@ -1,0 +1,33 @@
+name: Deploy website
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: website-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Publish production
+        env:
+          DEPLOY_KEY: ${{ secrets.WEBSITE_DEPLOY_SSH_KEY }}
+        run: |
+          set -eu
+          test -n "$DEPLOY_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/website_key
+          chmod 600 ~/.ssh/website_key
+          tar -czf /tmp/website.tar.gz -C dist .
+          ssh -i ~/.ssh/website_key -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=config/production-known-hosts glissform-website-deploy@159.194.226.154 "deploy $GITHUB_SHA" < /tmp/website.tar.gz
+          curl --fail --retry 3 https://glissform.app/deployment.json | grep -F "$GITHUB_SHA"
