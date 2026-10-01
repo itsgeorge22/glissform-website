@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Remove CSS corner rounding from brand logos and make navbar and footer shadows follow the transparent logo shape, eliminating the rectangular corner artifact.
+
 - Animate the future-features dot field in a 360px-tall area with 64px of space below the section text, with the earlier left-to-right wave direction, blue shading tied to wave height, and two short diagonal depth fades from opposite corners. The wave keeps its speed and depth on hover while nearby dots lean toward the cursor and brighten; leaving smoothly releases the magnetic response. Preserve dot sizes and spacing, add rows for the taller field and reserve dots beyond every edge, and fade by rendered position to conceal its ends. Remove the oversized focal dot and fixed glow. Pause rendering offscreen, in hidden tabs and below the desktop breakpoint; use a matching static SVG for Reduce Motion or unavailable canvas rendering.
 
 - Reduce primary download button scaling to 1.008 on hover and 0.985 on press, retaining the smooth timing, rebound and visual styling. Navbar motion is unchanged.

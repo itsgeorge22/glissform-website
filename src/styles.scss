@@ -36,7 +36,7 @@ h1, h2, h3, p { margin: 0; }
   letter-spacing: -1px;
   white-space: nowrap;
 
-  img { display: block; width: 32px; height: 32px; border-radius: 2px; box-shadow: 0 0 12px #00000029; }
+  img { display: block; width: 32px; height: 32px; filter: drop-shadow(0 0 12px #00000029); }
 
   &--link {
     border-radius: 6px;
