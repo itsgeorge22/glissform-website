@@ -1,6 +1,7 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import SeamlessCloseSection from './SeamlessCloseSection';
 import DownloadPanel from './DownloadPanel';
+import GlassDownloadLink from './GlassDownloadLink';
 
 const asset = (name: string) => '/assets/' + name;
 const downloadUrl = '/downloads/Glissform-0.1.0-beta.5.dmg';
@@ -14,6 +15,7 @@ function Brand({ homeLink = false }: { homeLink?: boolean }) {
 }
 
 function DownloadLink({ secondary = false }: { secondary?: boolean }) {
+  if (secondary) return <GlassDownloadLink href={downloadUrl} />;
   return <a className={secondary ? 'download-link download-link--secondary' : 'download-link'} href={downloadUrl}>
     {secondary && <img src={asset('download.svg')} width="24" height="24" alt="" />}
     <span>{secondary ? 'Download for Mac' : 'Download Glissform'}</span>

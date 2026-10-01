@@ -2,13 +2,25 @@
 
 ## Unreleased
 
+- Reduce primary download button scaling to 1.008 on hover and 0.985 on press, retaining the smooth timing, rebound and visual styling. Navbar motion is unchanged.
+
+- Soften the end of both download buttons’ hover, press and return motion with longer settling tails and a gentler rebound. Preserve their movement distances, final scale and visual styling.
+
+- Match primary download buttons to the navbar button’s hover lift, press compression and springy return. Share the lift, timing and easing, with more restrained primary scaling, while preserving the primary button’s shadows, colors, borders and shimmer.
+
+- Restart the primary download button’s shimmer on release while still hovered, matching the secondary button.
+
+- Remove the navbar download button’s icon and fit its width to the centered label with 16px padding on each side, preserving its glass interactions.
+
+- Give the navbar download button a glass reflection that follows the pointer, a lit rim, a gentle tilt and an entry light sweep. Compress the glass with inset shading on press and a soft rebound on release. Keep the clickable area fixed, preserve keyboard focus feedback and disable decorative motion with Reduce Motion.
+
 - Remove the small availability note below the hero download button.
 
 - Smooth the primary button shimmer with a 650ms eased sweep that begins at the left edge immediately on hover, without a fade-in delay, and finishes beyond the right edge. Restart each hover from the beginning.
 
 - Capitalise each word in the lid-reveal headline: “A Little Magic / Every Time You Close”.
 
-- Refine primary download button feedback with a gentle lift and a brighter, wider light sweep on hover, followed by a small compression on press. Use 150ms press timing with the original movement easing and ease for the other visual transitions. Expand the blue glow on hover, remove the outer shadow and white border while pressed, retain the inner highlight and smoothly restore the glow on release. Disable movement and the light sweep with Reduce Motion.
+- Refine primary download button feedback with a gentle lift and a brighter, wider light sweep on hover, followed by a small compression on press. Use 180ms press movement and 150ms ease transitions for the other visual feedback. Expand the blue glow on hover, remove the outer shadow and white border while pressed, retain the inner highlight and smoothly restore the glow on release. Disable movement and the light sweep with Reduce Motion.
 
 - Align the “Feels At Home” card titles with Figma: “Start at login”, “Settings, close by”, “Keep effects ready” and “Update your way”. Keep the matching descriptions.
 

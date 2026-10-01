@@ -128,7 +128,7 @@ h1, h2, h3, p { margin: 0; }
   &:not(&--secondary) {
     width: 192px;
     transform: translateY(0) scale(1);
-    transition: transform .26s cubic-bezier(.16, 1, .3, 1), filter .2s ease, box-shadow .2s ease, border-color .12s ease;
+    transition: transform .6s cubic-bezier(.2, 1.35, .4, 1), filter .2s ease, box-shadow .2s ease, border-color .12s ease;
 
     &:hover { box-shadow: 0 36px 96px #57b1ff66, 0 20px 36px #57b1ff3d, 0 8px 14px #57b1ff33, 0 3px 5px #57b1ff29, inset 0 1px 16px #d2eaffcc, inset 0 1px 4px #d2eaffcc; }
 
@@ -145,7 +145,8 @@ h1, h2, h3, p { margin: 0; }
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
-        transform: translateY(-1.5px) scale(1.012);
+        transform: translateY(-1.5px) scale(1.008);
+        transition-duration: .36s, .2s, .2s, .12s;
         filter: brightness(1.04) saturate(1.03);
       }
       &:hover::after {
@@ -156,16 +157,18 @@ h1, h2, h3, p { margin: 0; }
     }
 
     &:active {
-      transform: translateY(.5px) scale(.985);
+      transform: translateY(.75px) scale(.985);
       filter: brightness(.98) saturate(1.04);
       border-color: transparent;
       // Keep transparent outer layers so the glow interpolates smoothly on release.
       box-shadow: 0 16px 52px #57b1ff00, 0 8px 16px #57b1ff00, 0 3px 6px #57b1ff00, 0 1px 2px #57b1ff00, inset 0 1px 12px #d2eaff99, inset 0 1px 3px #d2eaff8c;
-      transition-duration: .15s;
+      transition-duration: .18s, .15s, .15s, .15s;
+      transition-timing-function: cubic-bezier(.2, .8, .3, 1), ease, ease, ease;
     }
     &:active::after {
       opacity: 0;
       transition-duration: .15s;
+      animation: none;
     }
 
     span { flex: none; letter-spacing: -.65px; }
@@ -183,20 +186,97 @@ h1, h2, h3, p { margin: 0; }
   }
 
   &--secondary {
-    width: 191px;
+    --glass-x: 50%;
+    --glass-y: 50%;
+    --glass-pose: perspective(600px) translateY(0) rotateX(0deg) rotateY(0deg) scale(1);
+    width: auto;
     min-height: 40px;
     padding: 7px 16px;
-    border-color: #c4dcff;
-    background: linear-gradient(180deg, #dceaff33, #97c1ff33);
-    box-shadow: 0 12px 12px #356ab917, inset 0 -2px 1px #97c1ff66;
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
     color: $blue;
+    user-select: none;
 
-    &:hover { box-shadow: 0 12px 12px #356ab900, inset 0 -2px 1px #97c1ff66; }
-    &:active { box-shadow: 0 12px 12px #356ab900, inset 0 -2px 1px #97c1ff00; filter: brightness(.96); }
+    // A fixed hit area surrounds the moving glass and label.
+    &::before { content: none; }
+    > * {
+      transform: var(--glass-pose);
+      transition: transform .6s cubic-bezier(.2, 1.35, .4, 1);
+      pointer-events: none;
+    }
+    > .download-link__label { position: relative; z-index: 1; }
+    .download-link__label { flex: none; text-align: center; letter-spacing: -.8px; }
 
-    &::before { background: url('/assets/try-button-texture.png') top left / 1024px 1024px; opacity: .06; mix-blend-mode: soft-light; backdrop-filter: blur(2px); }
-    img { display: block; flex: none; }
-    span { flex: none; width: 128px; text-align: center; letter-spacing: -.8px; }
+    .download-link__glass {
+      position: absolute;
+      inset: -1px;
+      overflow: hidden;
+      border: 1px solid #c4dcff;
+      border-radius: inherit;
+      background: linear-gradient(180deg, #dceaff33, #97c1ff33);
+      -webkit-backdrop-filter: blur(2px) saturate(125%);
+      backdrop-filter: blur(2px) saturate(125%);
+      box-shadow: 0 12px 12px #356ab917, 0 3px 6px #356ab900, inset 0 1px 1px #ffffff80, inset 0 -2px 1px #97c1ff66, inset 0 0 12px #b9d9ff00;
+      transition: transform .6s cubic-bezier(.2, 1.35, .4, 1), box-shadow .25s ease, border-color .2s ease, background-color .2s ease;
+
+      &::before, &::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+      &::before { background: url('/assets/try-button-texture.png') top left / 1024px 1024px; opacity: .06; mix-blend-mode: soft-light; }
+      &::after {
+        background: radial-gradient(ellipse 85px 36px at var(--glass-x) var(--glass-y), #ffffffc7, #ffffff00 75%), radial-gradient(ellipse 100px 24px at var(--glass-x) 110%, #52aaff70, #74bcff00 80%);
+        opacity: 0;
+        transition: opacity .28s ease;
+      }
+    }
+    .download-link__glint {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(115deg, transparent 30%, #ffffff10 39%, #ffffffb3 46%, #ffffff26 50%, transparent 60%) 110% 0 / 250% 100% no-repeat;
+      opacity: 0;
+      transition: opacity .18s ease;
+    }
+
+    &:focus-visible .download-link__glass {
+      border-color: #8dbdff;
+      background-color: #daebff40;
+      box-shadow: 0 14px 22px #356ab922, 0 3px 6px #356ab90a, inset 0 1px 1px #fff, inset 0 -2px 1px #73b1ff80, inset 0 0 12px #b9d9ff26;
+      &::after { opacity: .65; }
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        --glass-pose: perspective(600px) translateY(-1.5px) rotateX(var(--glass-rotate-x, 0deg)) rotateY(var(--glass-rotate-y, 0deg)) scale(1.018);
+        > * { transition-duration: .36s, .22s, .22s, .22s; }
+        .download-link__glass {
+          border-color: #a3caff;
+          background-color: #daebff40;
+          box-shadow: 0 14px 22px #356ab922, 0 3px 6px #356ab90a, inset 0 1px 1px #fff, inset 0 -2px 1px #73b1ff80, inset 0 0 12px #b9d9ff26;
+          &::after { opacity: 1; }
+        }
+        .download-link__glint { opacity: 1; animation: download-button-shimmer .65s cubic-bezier(.25, .1, .25, 1) both; }
+      }
+    }
+
+    &:active {
+      --glass-pose: perspective(600px) translateY(.75px) rotateX(0deg) rotateY(0deg) scale(.97);
+      > * { transition-duration: .18s, .12s, .12s, .12s; transition-timing-function: cubic-bezier(.2, .8, .3, 1), cubic-bezier(.16, 1, .3, 1), cubic-bezier(.16, 1, .3, 1), cubic-bezier(.16, 1, .3, 1); }
+      .download-link__glass {
+        border-color: #8db8f052;
+        background-color: #adcfff40;
+        box-shadow: 0 3px 6px #356ab900, 0 1px 2px #356ab900, inset 0 2px 4px #427fb02b, inset 0 -1px 1px #ffffffd9, inset 0 0 12px #9ecaff4d;
+        &::after { opacity: .45; }
+      }
+      .download-link__glint { opacity: 0; animation: none; }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &--secondary {
+      &, &:hover, &:active { --glass-pose: none; }
+      > *, .download-link__glass, .download-link__glass::after { transition: none; }
+      .download-link__glint { display: none; animation: none; }
+    }
   }
 }
 
