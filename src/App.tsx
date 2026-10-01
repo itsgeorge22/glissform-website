@@ -2,6 +2,7 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import SeamlessCloseSection from './SeamlessCloseSection';
 import DownloadPanel from './DownloadPanel';
 import GlassDownloadLink from './GlassDownloadLink';
+import FutureField from './FutureField';
 
 const asset = (name: string) => '/assets/' + name;
 const downloadUrl = '/downloads/Glissform-0.1.0-beta.5.dmg';
@@ -266,7 +267,7 @@ function App() {
 
         <section className="section section--future shell" id="more-to-come" aria-label="More to come">
           <SectionIntro title={['More Thoughtful Touches', 'For Everyday Mac Moments']} copy={['Seamless Close and Battery Ripple are available now.', 'We’re building on these with more thoughtful additions for your Mac.']} />
-          <img className="future-field" src={asset('future-field.svg?v=figma-282')} width="1128" height="282" alt="" />
+          <FutureField />
         </section>
 
         <section className="section section--faq shell" id="good-to-know" aria-labelledby="faq-title">

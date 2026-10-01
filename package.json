@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "vite preview --host 127.0.0.1",
+    "test:future-field": "node --experimental-strip-types --test tests/future-field.test.mjs",
+    "generate:future-field": "node --experimental-strip-types scripts/render-future-field.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
