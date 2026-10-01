@@ -177,9 +177,9 @@ export default function SeamlessCloseSection() {
     >
       <div className="section-intro seamless-section__intro">
         <h2 id="seamless-title">
-          Your Lid Moves.
+          Your Lid Moves While
           <br />
-          Your Desktop Stays.
+          Your Desktop Stays In Place
         </h2>
         <p>
           As you close the lid, perspective, blur and shadow follow its
@@ -201,13 +201,13 @@ export default function SeamlessCloseSection() {
               } as CSSProperties
             }
             role="img"
-            aria-label="Seamless Close preview: scroll down to close the MacBook lid as the desktop changes perspective, blur and shadow, revealing ‘A Little Magic. Every Time You Close.’ Scroll up to reopen it."
+            aria-label="Seamless Close preview: scroll down to close the MacBook lid as the desktop changes perspective, blur and shadow, revealing ‘A Little Magic Every Time You Close’. Scroll up to reopen it."
           >
             <div className="seamless-macbook__drawing" aria-hidden="true">
               <p className="seamless-macbook__reveal">
-                A Little Magic.
+                A Little Magic
                 <br />
-                <span>Every Time You Close.</span>
+                <span>Every Time You Close</span>
               </p>
               <canvas className="seamless-macbook__gpu" ref={canvasRef} />
               <div className="seamless-macbook__contact-shadow" />
@@ -248,8 +248,7 @@ export default function SeamlessCloseSection() {
             </div>
           </div>
           <p className="seamless-section__footnote">
-            Normal system sleep stays enabled. Press Esc to return during the
-            effect.
+            Normal system sleep stays enabled.
           </p>
         </div>
       </div>
