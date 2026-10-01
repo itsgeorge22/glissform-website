@@ -47,6 +47,11 @@ in vec3 tint;
 flat in float kind;
 flat in float face;
 out vec4 outputColor;
+float roundedDistance(vec2 p, vec2 size, float topRadius, float bottomRadius) {
+  float r = p.y < size.y * .5 ? topRadius : bottomRadius;
+  vec2 q = abs(p - size * .5) - size * .5 + r;
+  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
+}
 void main() {
   bool back = degrees * (106.0 / 90.0) >= 90.0;
   if ((face > .5 && back) || (face < -.5 && !back)) discard;
@@ -54,17 +59,23 @@ void main() {
     outputColor = texture(atlas, texUV);
     outputColor.a *= .12 + degrees / 90.0 * .16;
   } else if (kind > 1.5) outputColor = vec4(tint, 1.0);
-  else if (kind > .5) {
-    // The same rounded aperture as the CSS screen; avoid square wallpaper corners.
-    vec2 p = texUV * vec2(799.739, 518.826);
-    float r = p.y < 259.0 ? 13.0 : 3.0;
-    vec2 q = abs(p - vec2(399.8695,259.413)) - vec2(399.8695,259.413) + r;
-    float edge = length(max(q,0.0)) + min(max(q.x,q.y),0.0) - r;
-    if (edge > 0.0) discard;
-    outputColor = texture(wallpaper, vec2(texUV.x, 1.0-texUV.y));
-  } else {
+  else {
     outputColor = texture(atlas, texUV);
-    if (outputColor.a < .01) discard;
+    if (face > .5) {
+      // Composite the display into the opaque lid face. A filtered alpha hole
+      // would let the page show through and write depth in front of the screen.
+      vec2 p = texUV * vec2(${A}.0, ${ATLAS_HEIGHT}.0) * .5;
+      vec2 screenPoint = p - vec2(50.13, 11.0);
+      vec2 screenSize = vec2(799.739, 518.826);
+      float aperture = roundedDistance(screenPoint, screenSize, 13.0, 3.0);
+      float notch = roundedDistance(p - vec2(407.0, 9.0), vec2(86.0, 21.0), 0.0, 7.0);
+      float boundary = max(aperture, -notch);
+      float feather = max(fwidth(boundary) * .5, .0001);
+      float coverage = 1.0 - smoothstep(-feather, feather, boundary);
+      vec2 screenUV = clamp(screenPoint / screenSize, 0.0, 1.0);
+      vec4 screenColor = texture(wallpaper, vec2(screenUV.x, 1.0 - screenUV.y));
+      outputColor = vec4(mix(outputColor.rgb, screenColor.rgb, coverage), 1.0);
+    } else if (outputColor.a < .01) discard;
   }
 }`;
 const quadVertex = `#version 300 es
@@ -176,8 +187,17 @@ function makeAtlas(
     c.scale(2, 2);
   };
   const width = macBookGeometry.width;
-  // Front bezel and camera. A transparent aperture is covered by the screen mesh.
+  // Opaque front bezel and camera; the shader composites the screen aperture.
   begin(0, 0);
+  // Opaque paint extends beyond the mesh so filtering cannot soften its silhouette.
+  const frontPaint = gradient(c, L, 0, width, D, 105, [
+    [0, "#191a1c"],
+    [0.28, "#070809"],
+    [0.74, "#111214"],
+    [1, "#1c1d1f"],
+  ]);
+  c.fillStyle = frontPaint;
+  c.fillRect(0, 0, 1024, 576);
   plate(
     c,
     L,
@@ -185,18 +205,10 @@ function makeAtlas(
     width,
     D,
     22,
-    gradient(c, L, 0, width, D, 105, [
-      [0, "#191a1c"],
-      [0.28, "#070809"],
-      [0.74, "#111214"],
-      [1, "#1c1d1f"],
-    ]),
+    frontPaint,
     "#929497",
     1.5,
   );
-  c.globalCompositeOperation = "destination-out";
-  plate(c, 50.13, 11, 799.739, 518.826, [13, 13, 3, 3], "black");
-  c.globalCompositeOperation = "source-over";
   plate(c, 407, 9, 86, 21, [0, 0, 7, 7], "#090a0c");
   for (const x of [431, 465]) plate(c, x, 14, 3, 3, 1.5, "#17191c");
   const lens = c.createRadialGradient(449, 14, 0, 450, 15, 4);
@@ -208,6 +220,15 @@ function makeAtlas(
   c.restore();
   // Outside of the lid. The mesh mirrors U just like the CSS rotateY(180deg).
   begin(2048, 0);
+  // Opaque paint extends beyond the mesh so filtering cannot soften its silhouette.
+  const lidPaint = gradient(c, L, 0, width, D, 120, [
+    [0, "#c4c7ca"],
+    [0.35, "#e0e2e4"],
+    [0.72, "#cbced1"],
+    [1, "#b5b9bd"],
+  ]);
+  c.fillStyle = lidPaint;
+  c.fillRect(0, 0, 1024, 576);
   plate(
     c,
     L,
@@ -215,12 +236,7 @@ function makeAtlas(
     width,
     D,
     22,
-    gradient(c, L, 0, width, D, 120, [
-      [0, "#c4c7ca"],
-      [0.35, "#e0e2e4"],
-      [0.72, "#cbced1"],
-      [1, "#b5b9bd"],
-    ]),
+    lidPaint,
     "#b1b5b9",
   );
   metalHighlight(c, width, 0.25, 0.12, 0.65, "#ffffff45");
@@ -242,6 +258,16 @@ function makeAtlas(
   c.restore();
   // Deck, including the original rounded keycaps, Touch ID and trackpad.
   begin(0, 1152);
+  // Opaque paint extends beyond the mesh so filtering cannot soften its silhouette.
+  const deckPaint = gradient(c, L, 0, width, D, 100, [
+    [0, "#b7bcc1"],
+    [0.17, "#d1d4d7"],
+    [0.5, "#e0e2e4"],
+    [0.83, "#c9cdd1"],
+    [1, "#aeb4ba"],
+  ]);
+  c.fillStyle = deckPaint;
+  c.fillRect(0, 0, 1024, 576);
   plate(
     c,
     L,
@@ -249,13 +275,7 @@ function makeAtlas(
     width,
     D,
     22,
-    gradient(c, L, 0, width, D, 100, [
-      [0, "#b7bcc1"],
-      [0.17, "#d1d4d7"],
-      [0.5, "#e0e2e4"],
-      [0.83, "#c9cdd1"],
-      [1, "#aeb4ba"],
-    ]),
+    deckPaint,
     "#a8aeb4",
   );
   metalHighlight(c, width, 0.45, 0.15, 0.6, "#ffffff38");
@@ -439,6 +459,10 @@ export async function createMacBookWebGL(
     };
     const modelProgram = program(vertexSource, fragmentSource),
       wallpaperProgram = program(quadVertex, desktopFragmentSource);
+    const anisotropy = gl.getExtension("EXT_texture_filter_anisotropic");
+    const maxAnisotropy = anisotropy
+      ? Math.min(16, gl.getParameter(anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT))
+      : 1;
     const texture = (
       source: TexImageSource | null,
       width = 960,
@@ -477,12 +501,20 @@ export async function createMacBookWebGL(
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      if (mipmaps) gl.generateMipmap(gl.TEXTURE_2D);
+      if (mipmaps) {
+        if (anisotropy)
+          gl.texParameterf(
+            gl.TEXTURE_2D,
+            anisotropy.TEXTURE_MAX_ANISOTROPY_EXT,
+            maxAnisotropy,
+          );
+        gl.generateMipmap(gl.TEXTURE_2D);
+      }
       return t;
     };
     const atlasTexture = texture(atlas, 0, 0, true),
       desktopTexture = texture(image, 0, 0, true),
-      wallpaperTexture = texture(null);
+      wallpaperTexture = texture(null, 960, 600, true);
     framebuffer = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(
@@ -550,31 +582,6 @@ export async function createMacBookWebGL(
           face,
         );
     };
-    const plane = (
-      x: number,
-      y: number,
-      w: number,
-      h: number,
-      z: number,
-      tile: number,
-      part: number,
-      kind = 0,
-      face = 0,
-      flip = false,
-    ) =>
-      quad(
-        [
-          [x, y, z],
-          [x + w, y, z],
-          [x + w, y + h, z],
-          [x, y + h, z],
-        ],
-        tile,
-        part,
-        kind,
-        face,
-        flip,
-      );
     // Shadow first, behind the depth-tested hardware.
     quad(
       [
@@ -596,20 +603,38 @@ export async function createMacBookWebGL(
       D + 3 + z,
       D - y,
     ];
-    quad(
+    const perimeter = (inset: number) =>
       [
-        deckPoint(-L, 0, -0.02),
-        deckPoint(900 - L, 0, -0.02),
-        deckPoint(900 - L, D, -0.02),
-        deckPoint(-L, D, -0.02),
-      ],
-      2,
-      0,
-    );
-    plane(0, 0, 900, D, -6, 1, 1, 0, -1, true);
-    // Screen behind a single bezel/notch plane: depth, not CSS layer ordering.
-    plane(50.13, 11, 799.739, 518.826, 0.05, 0, 1, 1, 1);
-    plane(0, 0, 900, D, 0.1, 0, 1, 0, 1);
+        [22, 22, Math.PI],
+        [macBookGeometry.width - 22, 22, Math.PI * 1.5],
+        [macBookGeometry.width - 22, D - 22, 0],
+        [22, D - 22, Math.PI * 0.5],
+      ].flatMap(([x, y, start]) =>
+        Array.from({ length: 9 }, (_, i) => [
+          x + (22 - inset) * Math.cos(start + (i * Math.PI) / 16),
+          y + (22 - inset) * Math.sin(start + (i * Math.PI) / 16),
+        ]),
+      );
+    // The faces and side walls use the exact same rounded boundary. Texture
+    // transparency no longer determines the silhouette at grazing angles.
+    const surface = (tile: number, part: number, z: number, face = 0, flip = false) => {
+      const edge = perimeter(0);
+      const center = [macBookGeometry.width / 2, D / 2];
+      const point = (p: number[]): Point => part
+        ? [L + p[0], p[1], z]
+        : deckPoint(p[0], p[1], z);
+      const uv = (p: number[]) => [
+        ((tile % 2) * 2048 + (flip ? 900 - L - p[0] : L + p[0]) * 2) / A,
+        (Math.floor(tile / 2) * 1152 + p[1] * 2) / ATLAS_HEIGHT,
+      ];
+      for (let i = 0; i < edge.length; i++) {
+        const points = [center, edge[i], edge[(i + 1) % edge.length]];
+        triangle(points.map(point), points.map(uv), part, 0, face);
+      }
+    };
+    surface(2, 0, 0);
+    surface(1, 1, -6, -1, true);
+    surface(0, 1, 0, 1);
     // Front recess and feet retain the original local depths.
     quad(
       [
@@ -639,18 +664,6 @@ export async function createMacBookWebGL(
         0,
         false,
         [x, 18, 42, 3],
-      );
-    const perimeter = (inset: number) =>
-      [
-        [22, 22, Math.PI],
-        [macBookGeometry.width - 22, 22, Math.PI * 1.5],
-        [macBookGeometry.width - 22, D - 22, 0],
-        [22, D - 22, Math.PI * 0.5],
-      ].flatMap(([x, y, start]) =>
-        Array.from({ length: 9 }, (_, i) => [
-          x + (22 - inset) * Math.cos(start + (i * Math.PI) / 16),
-          y + (22 - inset) * Math.sin(start + (i * Math.PI) / 16),
-        ]),
       );
     const shell = (
       part: number,
@@ -813,6 +826,9 @@ export async function createMacBookWebGL(
             0.035 + 0.2 * (1 - Math.exp(-degrees / 22)),
           );
           gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+          gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+          gl.bindTexture(gl.TEXTURE_2D, wallpaperTexture);
+          gl.generateMipmap(gl.TEXTURE_2D);
           previous = degrees;
         }
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
