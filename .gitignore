@@ -1,6 +1,8 @@
 node_modules/
 dist/
 src/generated/
+.prerender/
+public/assets/glissform-social.png
 .DS_Store
 .env
 .env.*

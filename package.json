@@ -3,11 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node scripts/optimize-assets.mjs",
-    "prebuild": "node scripts/optimize-assets.mjs",
+    "predev": "node scripts/optimize-assets.mjs && node scripts/generate-social-image.mjs",
+    "prebuild": "node scripts/optimize-assets.mjs && node scripts/generate-social-image.mjs",
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build && node scripts/compress-assets.mjs",
+    "build": "tsc --noEmit && node scripts/build.mjs",
     "preview": "vite preview --host 127.0.0.1",
+    "test:seo": "python3 -m unittest discover -s tests -p '*_test.py'",
     "test:future-field": "node --experimental-strip-types --test tests/future-field.test.mjs",
     "generate:future-field": "node --experimental-strip-types scripts/render-future-field.mjs"
   },

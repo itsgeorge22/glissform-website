@@ -1,5 +1,11 @@
 # Website roadmap
 
+- [x] Prerender the existing marketing content into the initial HTML and retain browser interactions through hydration.
+- [x] Prepare canonical/social metadata, the owner-approved dark social preview image, sitemap/robots files and accurate public-beta app data.
+- [x] Add build and receiver checks for content, metadata, assets and safe discovery-file publication.
+- [x] Install and verify the updated restricted receiver for prerendering/metadata deployment.
+- [ ] Verify indexing in Search Console and check social preview refresh after publication.
+
 - [x] Implement the 320–768px single-column layout with mobile/desktop content parity, accessible burger navigation, desktop-matched feature selection states, touch controls and a scaled MacBook preview.
 - [x] Obtain mobile and compact preview review and include the responsive layouts in website deployment.
 - [x] Implement and locally verify the 769–1155px compact layout while preserving the mobile and 1156px desktop baselines.

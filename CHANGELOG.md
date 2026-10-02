@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Use the exact approved dark social preview artwork, with glow, stars, the refined Glissform wordmark and the pure-white two-line headline “Subtle animations for everyday Mac moments”. Preserve the source PNG unchanged through development and production builds.
+
+- Prerender the full existing marketing page into the production HTML and hydrate its browser interactions. Preserve responsive content, wording, visual layout and direct section links as page geometry settles, with CSS-controlled headline breaks that work before JavaScript loads. Add canonical, Open Graph/Twitter metadata, a matching social image, sitemap/robots files and accurate public-beta `SoftwareApplication` data without invented ratings, reviews or pricing. Prepare restricted receiver support for the two discovery files and verify HTML/assets and deployment archive safety. Install and verify the updated restricted server receiver so automatic deployments accept the discovery files.
+
 - Let the “Before You Try It” headline wrap naturally at every width instead of forcing a line break after “Before”.
 
 - Add the 769–1155px compact layout with desktop navigation, fluid typography and spacing, side-by-side feature choices above a wide preview, and two-column settings, everyday controls, Privacy and FAQ. Enable the scaled MacBook scroll demo throughout this range, preserving reversal and reduced-motion/graphics fallback. Keep the mobile and full desktop layouts, product content and SEO metadata. Add a local compact preview. Verified locally and included in website deployment.

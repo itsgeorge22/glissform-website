@@ -5,8 +5,7 @@ import GlassDownloadLink from './GlassDownloadLink';
 import FutureField from './FutureField';
 import { asset, brandSrcSet } from './assets';
 import ResponsiveBreak from './ResponsiveBreak';
-
-const downloadUrl = '/downloads/Glissform-0.1.0-beta.5.dmg';
+import { downloadUrl } from './siteMetadata';
 
 function Brand({ homeLink = false }: { homeLink?: boolean }) {
   const icon = homeLink ? 'navbar-glissform-icon.png' : 'glissform-icon.png';
@@ -31,7 +30,39 @@ const sectionLinks = [
 ];
 
 function SectionNavigation({ onNavigate }: { onNavigate: () => void }) {
-  const [activeSection, setActiveSection] = useState(() => window.location.hash.slice(1));
+  const [activeSection, setActiveSection] = useState('');
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    const section = sectionLinks.find(({ id }) => hash === `#${id}`);
+    const target = section && document.getElementById(section.id);
+    const main = document.querySelector('main');
+    if (!target || !main) return;
+    let frame = 0;
+    let stopped = false;
+    const restoreAnchor = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        if (stopped || window.location.hash !== hash) return;
+        target.scrollIntoView({ behavior: 'instant', block: 'start' });
+      });
+    };
+    // Fonts and the animated track can settle after the browser's first jump.
+    // Stop following the initial anchor as soon as the visitor takes control.
+    const observer = new ResizeObserver(restoreAnchor);
+    const events = ['pointerdown', 'wheel', 'touchstart', 'keydown', 'hashchange', 'resize'];
+    const stop = () => {
+      stopped = true;
+      observer.disconnect();
+      window.cancelAnimationFrame(frame);
+      events.forEach(event => window.removeEventListener(event, stop));
+    };
+    observer.observe(main);
+    events.forEach(event => window.addEventListener(event, stop, { passive: true }));
+    void document.fonts.ready.then(restoreAnchor);
+    restoreAnchor();
+    return stop;
+  }, []);
 
   useEffect(() => {
     let animationFrame = 0;
@@ -90,13 +121,14 @@ function SectionNavigation({ onNavigate }: { onNavigate: () => void }) {
 }
 
 function SiteHeader() {
-  const [hasMaterial, setHasMaterial] = useState(() => window.scrollY > 0);
+  const [hasMaterial, setHasMaterial] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const updateHeader = () => setHasMaterial(window.scrollY > 0);
+    updateHeader();
     window.addEventListener('scroll', updateHeader, { passive: true });
     return () => window.removeEventListener('scroll', updateHeader);
   }, []);

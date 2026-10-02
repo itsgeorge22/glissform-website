@@ -25,6 +25,7 @@ a { color: $blue; }
 a:focus-visible, button:focus-visible { outline: 3px solid #1459d5; outline-offset: 4px; }
 h1, h2, h3, p { margin: 0; }
 .shell { width: min(1128px, calc(100% - 28px)); margin-inline: auto; }
+.responsive-break { display: block; }
 .desktop-site { position: relative; overflow: clip; }
 
 .brand {
@@ -993,6 +994,7 @@ h1, h2, h3, p { margin: 0; }
 }
 
 @media (max-width: 768px) {
+  .responsive-break { display: inline; }
   :root { --mobile-gutter: clamp(16px, 4vw, 32px); --mobile-header-height: 72px; }
   .desktop-site { display: block; }
   .shell { width: min(640px, calc(100% - var(--mobile-gutter) * 2)); }
