@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SeamlessCloseSection from './SeamlessCloseSection';
 import DownloadPanel from './DownloadPanel';
 import GlassDownloadLink from './GlassDownloadLink';
-import { asset, brandSrcSet, screenshotSrcSet, blurImageSizes } from './assets';
+import { asset, brandSrcSet } from './assets';
+import SeamlessFeatures from './SeamlessFeatures';
+import './features.scss';
 import ResponsiveBreak from './ResponsiveBreak';
 import { downloadUrl } from './siteMetadata';
 
@@ -23,7 +25,7 @@ function DownloadLink({ secondary = false }: { secondary?: boolean }) {
 }
 
 const sectionLinks = [
-  { id: 'customise', label: 'Customisable' },
+  { id: 'customise', label: 'Features' },
   { id: 'privacy', label: 'Private' },
   { id: 'good-to-know', label: 'F.A.Q' },
 ];
@@ -175,52 +177,6 @@ function SectionIntro({ title, copy }: { title: [string, string]; copy: [string,
   </div>;
 }
 
-function IllustrationSwitch({ label, checked, onChange }: { label: string; checked: boolean; onChange: (checked: boolean) => void }) {
-  return <button className="illustration-switch" type="button" role="switch" aria-label={label} aria-checked={checked} onClick={() => onChange(!checked)}><span /></button>;
-}
-
-function SettingRow({ label, switchValue, onSwitch, value, muted = false }: { label: string; switchValue?: boolean; onSwitch?: (checked: boolean) => void; value?: string; muted?: boolean }) {
-  return <div className={'setting-row' + (muted ? ' setting-row--muted' : '')}><span>{label}</span>{switchValue !== undefined && onSwitch
-    ? <IllustrationSwitch label={label} checked={switchValue} onChange={onSwitch} />
-    : <strong>{value}</strong>}</div>;
-}
-
-function CustomizationGrid() {
-  const [blur, setBlur] = useState<'high' | 'regular' | 'subtle'>('regular');
-  const [angle, setAngle] = useState(100);
-  const [detectAngle, setDetectAngle] = useState(true);
-  const [pauseReturn, setPauseReturn] = useState(true);
-  const blurChoices = [
-    { id: 'high', label: 'High', image: 'blur-high.png' },
-    { id: 'regular', label: 'Regular', image: 'blur-regular.png' },
-    { id: 'subtle', label: 'Subtle', image: 'blur-subtle.png' },
-  ] as const;
-
-  return <div className="customization-grid">
-    <article className="content-card blur-card">
-      <div className="card-copy"><h3>Blur that feels right</h3><p>Choose Subtle, Regular or High blur, or switch it off.</p></div>
-      <div className="blur-choices" aria-label="Blur strength">
-        {blurChoices.map((choice) => <button className={'blur-choice' + (blur === choice.id ? ' blur-choice--selected' : '')} type="button" aria-pressed={blur === choice.id} onClick={() => setBlur(choice.id)} key={choice.id}><span className="blur-choice__image"><img src={asset(choice.image)} srcSet={screenshotSrcSet(choice.image)} sizes={blurImageSizes} width="960" height="600" loading="lazy" decoding="async" alt="" /></span><span>{choice.label}</span></button>)}
-      </div>
-    </article>
-    <article className="content-card angle-card">
-      <div className="card-copy"><h3>Choose your<ResponsiveBreak />starting angle</h3><p>Set the lid angle that starts Seamless Close, or use the current angle.</p></div>
-      <div className="angle-illustration">
-        <div className="angle-illustration__value"><label htmlFor="starting-angle">Begin at</label><strong>{angle}°</strong></div>
-        <input id="starting-angle" className="angle-illustration__range" type="range" min="60" max="120" step="1" value={angle} aria-valuetext={`${angle} degrees`} onChange={(event) => setAngle(Number(event.target.value))} style={{ '--angle-progress': `${(angle - 60) / 60 * 100}%` } as CSSProperties} />
-      </div>
-    </article>
-    <article className="content-card settings-card">
-      <div className="card-copy"><h3>Let your lid<ResponsiveBreak />set the angle</h3><p>Hold the lid still to set a starting angle. Choose how long to wait.</p></div>
-      <div className="settings-card__rows"><SettingRow label="Detect starting angle" switchValue={detectAngle} onSwitch={setDetectAngle} /><SettingRow label="Wait time" value="1.0 s" muted={!detectAngle} /></div>
-    </article>
-    <article className="content-card settings-card">
-      <div className="card-copy"><h3>Pause to return<ResponsiveBreak />to your desktop</h3><p>Hold the lid still during the effect to restore your desktop after a delay.</p></div>
-      <div className="settings-card__rows"><SettingRow label="Pause to return" switchValue={pauseReturn} onSwitch={setPauseReturn} /><SettingRow label="Wait time" value="0.5 s" muted={!pauseReturn} /></div>
-    </article>
-  </div>;
-}
-
 const conveniences = [
   { icon: 'login.svg', title: 'Start at login', copy: 'Let Glissform open when you sign in, ready with your saved preferences.' },
   { icon: 'menubar.svg', title: 'Settings, close by', copy: 'Open Settings from the menu bar whenever you want to adjust an effect.' },
@@ -251,10 +207,7 @@ function App() {
 
         <SeamlessCloseSection />
 
-        <section className="section section--personalization shell" id="customise" aria-label="Personalization">
-          <SectionIntro title={['Make Each Moment', 'Feel More Like Yours']} copy={['Adjust how Seamless Close looks and when it begins.', 'Make the movement feel right for you.']} />
-          <CustomizationGrid />
-        </section>
+        <SeamlessFeatures />
 
         <section className="section section--conveniences shell" id="everyday" aria-label="Everyday controls">
           <SectionIntro title={['Feels At Home', 'And Stays Out Of Your Way']} copy={['Set Glissform to open at login, keep running when Settings closes,', 'and update the way you prefer.']} />

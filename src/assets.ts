@@ -34,5 +34,3 @@ export const screenshotSrcSet = (name: string) => {
   return [...widths.map(width => `${responsiveImages[`./generated/assets/${base}-${width}.webp`]} ${width}w`),
     `${asset(name)} ${originalWidth}w`].join(', ');
 };
-// object-fit: cover also needs enough pixels for the cropped image's height.
-export const blurImageSizes = '(max-width: 768px) max(205px, 28.8vw), (max-width: 1155px) 304px, 205px';

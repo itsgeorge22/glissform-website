@@ -1,4 +1,5 @@
 import { desktopFragmentSource } from "./seamlessWallpaper";
+import { desktopProjection, desktopShading } from "./desktopProjection";
 import { macBookGeometry } from "./MacBookShell";
 
 const W = 900;
@@ -803,27 +804,22 @@ export async function createMacBookWebGL(
           gl.bindVertexArray(quadVao);
           gl.activeTexture(gl.TEXTURE0);
           gl.bindTexture(gl.TEXTURE_2D, desktopTexture);
-          const radians = (degrees * Math.PI) / 180,
-            imageAngle =
-              0.22 * radians +
-              (0.78 * radians) / (1 + (degrees / 34) ** 4) ** 0.25,
-            p = Math.max(0, Math.min(1, degrees / 86)),
-            t = Math.min(1, p / 0.75),
-            strength = 0.65 * (0.6 + 0.4 * t * t * (3 - 2 * t));
-          gl.uniform1f(fold, radians);
+          const geometry = desktopProjection(degrees),
+            surface = desktopShading(degrees, image.naturalHeight);
+          gl.uniform1f(fold, geometry.radians);
           gl.uniform4f(
             projection,
-            Math.sin(imageAngle),
-            Math.cos(imageAngle),
-            1 - 0.58 * Math.min(1, degrees / 130),
-            p,
+            geometry.sine,
+            geometry.cosine,
+            geometry.topWidth,
+            geometry.progress,
           );
           gl.uniform4f(
             shading,
-            p ** 0.7 * image.naturalHeight * strength,
-            p ** 2.2,
-            0.88 * (1 - Math.exp(-degrees / 3)),
-            0.035 + 0.2 * (1 - Math.exp(-degrees / 22)),
+            surface.frost,
+            surface.broadShadow,
+            surface.contactShadow,
+            surface.contactWidth,
           );
           gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
           gl.bindFramebuffer(gl.FRAMEBUFFER, null);

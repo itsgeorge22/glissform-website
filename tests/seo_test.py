@@ -77,6 +77,16 @@ class SeoBuildTests(unittest.TestCase):
         self.assertTrue({'customise', 'privacy', 'good-to-know'} <= ids)
         self.assertEqual(sum(attrs.get('type') == 'module' for tag, attrs in self.page.tags if tag == 'script'), 1)
 
+    def test_seamless_close_features_available_without_interaction(self):
+        text = ''.join(self.page.text)
+        for fact in ['Subtle, Regular or High blur', '20° to 130°',
+                     'manual angle remains the fallback', '0.5 to 10 seconds',
+                     'Press Esc', 'Connection effect',
+                     'Switch the glow and sound off together in Settings.']:
+            self.assertIn(fact, text)
+        self.assertEqual(len([tag for tag, attrs in self.page.tags
+                              if tag == 'article' and attrs.get('aria-labelledby', '').startswith('feature-')]), 3)
+
     def test_canonical_and_social_metadata(self):
         self.assertLess(self.html.index('<meta charset='), 1024)
         canonicals = [attrs['href'] for tag, attrs in self.page.tags if tag == 'link' and attrs.get('rel') == 'canonical']
