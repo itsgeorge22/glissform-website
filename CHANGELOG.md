@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Verify the website's Search Console ownership after owner approval, confirm homepage indexing and matching Google canonical, and submit the public sitemap. Record the live loading measurements and the sitemap processing result separately from successful submission.
+
 - Activate production gzip compression for HTML, JavaScript, CSS and SVG, one-year immutable caching for fingerprinted assets, and revalidation for HTML, discovery files and unfingerprinted assets including the social image. Validate and gracefully reload the server, and verify identical decoded content, conditional cache responses and existing download/update policies. Reduce main JavaScript transfer from 415 KB to 139 KB and CSS from 42 KB to 9 KB.
 
 - Use the exact approved dark social preview artwork, with glow, stars, the refined Glissform wordmark and the pure-white two-line headline “Subtle animations for everyday Mac moments”. Preserve the source PNG unchanged through development and production builds.

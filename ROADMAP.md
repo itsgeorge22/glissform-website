@@ -4,8 +4,12 @@
 - [x] Prepare canonical/social metadata, the owner-approved dark social preview image, sitemap/robots files and accurate public-beta app data.
 - [x] Add build and receiver checks for content, metadata, assets and safe discovery-file publication.
 - [x] Install and verify the updated restricted receiver for prerendering/metadata deployment.
-- [ ] Verify indexing in Search Console and check social preview refresh after publication; deferred by the owner until a later task.
-- [ ] Measure live mobile/desktop loading and Core Web Vitals; deferred by the owner until a later task.
+- [x] Verify Search Console ownership, inspect homepage indexing and submit the sitemap on 2026-10-02. Google confirms the homepage is indexed with the intended canonical.
+- [ ] Confirm successful Google sitemap processing; submission accepted, but the initial report says Couldn't fetch. See the loading/indexing audit for diagnostic evidence.
+- [ ] Check social preview refresh after publication.
+- [x] Measure live mobile/desktop loading with three PageSpeed Insights runs on 2026-10-02; record all samples and remaining findings in the loading audit.
+- [ ] Assess real-user Core Web Vitals when sufficient CrUX data exists; PageSpeed currently reports No Data.
+- [ ] Address measured loading issues: font/style render delay and intermittent mobile layout shift, responsive screenshot delivery, and startup JavaScript blocking. Preserve accepted content, visuals and animation behavior.
 
 - [x] Implement the 320–768px single-column layout with mobile/desktop content parity, accessible burger navigation, desktop-matched feature selection states, touch controls and a scaled MacBook preview.
 - [x] Obtain mobile and compact preview review and include the responsive layouts in website deployment.
