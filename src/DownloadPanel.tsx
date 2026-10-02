@@ -95,7 +95,7 @@ export default function DownloadPanel({ children }: { children: ReactNode }) {
     </div>
     <div className="download-panel__copy">
       <h2 id="download-title">A Little More Magic</h2>
-      <p>Subtle animations and thoughtful details for your Mac.<ResponsiveBreak />Start with Seamless Close and Battery Ripple.</p>
+      <p>Subtle animations and thoughtful details for your Mac.<ResponsiveBreak />Start with Seamless Close.</p>
     </div>
     {children}
   </section>;

@@ -32,3 +32,5 @@
 - [x] Obtain owner confirmation that animations are smooth on 2026-10-02. This is owner acceptance; no browser-specific benchmark was recorded.
 
 Future product features are disclosed only after owner approval.
+
+- [x] Align the beta.6 download and current feature presentation with Battery Ripple removal.

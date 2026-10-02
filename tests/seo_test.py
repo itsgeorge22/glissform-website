@@ -63,7 +63,7 @@ class SeoBuildTests(unittest.TestCase):
         self.assertEqual(h1, ['Beautifully Polished Everyday Mac Moments'])
         self.assertIn(['h2', 'Before You Try It'], self.page.headings)
         text = ''.join(self.page.text)
-        for fact in ['Seamless Close', 'Battery Ripple', 'macOS 15 or later',
+        for fact in ['Seamless Close', 'macOS 15 or later',
                      'compatible lid-angle sensor', 'Screen Recording access',
                      'MacBook Air M5 15-inch', 'other models are not yet verified',
                      'Normal system sleep stays enabled.', 'No continuous recording',
@@ -136,7 +136,7 @@ class SeoBuildTests(unittest.TestCase):
                              for tag, attrs in self.page.tags))
         for tag, attrs in self.page.tags:
             if tag == 'img' and any(name in attrs.get('src', '') for name in
-                                   ['seamless-settings', 'battery-settings', 'blur-high', 'blur-regular', 'blur-subtle']):
+                                   ['seamless-settings', 'blur-high', 'blur-regular', 'blur-subtle']):
                 self.assertIn('srcset', attrs)
                 self.assertIn('sizes', attrs)
                 self.assertGreaterEqual(len(attrs['srcset'].split(',')), 3)

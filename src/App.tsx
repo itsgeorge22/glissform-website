@@ -191,8 +191,6 @@ function CustomizationGrid() {
   const [angle, setAngle] = useState(100);
   const [detectAngle, setDetectAngle] = useState(true);
   const [pauseReturn, setPauseReturn] = useState(true);
-  const [powerConnection, setPowerConnection] = useState(true);
-  const [batteryLow, setBatteryLow] = useState(true);
   const blurChoices = [
     { id: 'high', label: 'High', image: 'blur-high.png' },
     { id: 'regular', label: 'Regular', image: 'blur-regular.png' },
@@ -221,31 +219,13 @@ function CustomizationGrid() {
       <div className="card-copy"><h3>Pause to return<ResponsiveBreak />to your desktop</h3><p>Hold the lid still during the effect to restore your desktop after a delay.</p></div>
       <div className="settings-card__rows"><SettingRow label="Pause to return" switchValue={pauseReturn} onSwitch={setPauseReturn} /><SettingRow label="Wait time" value="0.5 s" muted={!pauseReturn} /></div>
     </article>
-    <article className="content-card settings-card">
-      <div className="card-copy"><h3>Choose your<ResponsiveBreak />battery ripples</h3><p>Choose each battery alert separately. Preview both in the app.</p></div>
-      <div className="settings-card__rows"><SettingRow label="Power connection" switchValue={powerConnection} onSwitch={setPowerConnection} /><SettingRow label="Battery at 20%" switchValue={batteryLow} onSwitch={setBatteryLow} /></div>
-    </article>
   </div>;
 }
 
 function FeatureShowcase() {
-  const [selected, setSelected] = useState<'seamless' | 'battery'>('seamless');
-  const [cycle, setCycle] = useState(0);
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => setSelected(current => current === 'seamless' ? 'battery' : 'seamless'), 10000);
-    return () => window.clearTimeout(timeout);
-  }, [selected, cycle]);
-
-  const selectFeature = (feature: 'seamless' | 'battery') => {
-    setSelected(feature);
-    setCycle(current => current + 1);
-  };
-
-  return <div className="feature-showcase" aria-label="Feature previews">
+  return <div className="feature-showcase" aria-label="Feature preview">
     <div className="feature-selector">
-      <article className={'feature-option' + (selected === 'seamless' ? ' feature-option--selected' : '')}>
-        {selected === 'seamless' && <span key={`seamless-${cycle}`} className="feature-option__progress" aria-hidden="true" />}
+      <article className="feature-option feature-option--selected">
         <div className="feature-option__copy">
           <div className="feature-option__title">
             <span className="feature-icon feature-icon--seamless"><img src={asset('seamless-close.svg')} width="24" height="24" alt="" /></span>
@@ -253,26 +233,11 @@ function FeatureShowcase() {
           </div>
           <p>A MacBook lid-closing animation that makes your desktop appear to stay in place.</p>
         </div>
-        <button className="feature-option__control" type="button" aria-label="Show Seamless Close preview" aria-pressed={selected === 'seamless'} aria-controls="feature-preview" onClick={() => selectFeature('seamless')} />
-      </article>
-      <article className={'feature-option' + (selected === 'battery' ? ' feature-option--selected' : '')}>
-        {selected === 'battery' && <span key={`battery-${cycle}`} className="feature-option__progress" aria-hidden="true" />}
-        <div className="feature-option__copy">
-          <div className="feature-option__title">
-            <span className="feature-icon feature-icon--battery"><img src={asset('battery-ripple.svg')} width="24" height="24" alt="" /></span>
-            <h2>Battery Ripple</h2>
-          </div>
-          <p>Charging and low-battery animations.<ResponsiveBreak />Green when power connects. Red at 20%.</p>
-        </div>
-        <button className="feature-option__control" type="button" aria-label="Show Battery Ripple preview" aria-pressed={selected === 'battery'} aria-controls="feature-preview" onClick={() => selectFeature('battery')} />
       </article>
     </div>
     <div className="feature-preview" id="feature-preview">
-      <div className={'feature-preview__screen' + (selected === 'seamless' ? ' feature-preview__screen--active' : '')} aria-hidden={selected !== 'seamless'}>
-        <img src={asset('seamless-settings.png')} srcSet={screenshotSrcSet('seamless-settings.png')} sizes={settingsImageSizes(false)} width="1660" height="1204" fetchPriority="high" alt="Still preview of Seamless Close settings in Glissform" />
-      </div>
-      <div className={'feature-preview__screen feature-preview__screen--battery' + (selected === 'battery' ? ' feature-preview__screen--active' : '')} aria-hidden={selected !== 'battery'}>
-        <img src={asset('battery-settings.png')} srcSet={screenshotSrcSet('battery-settings.png')} sizes={settingsImageSizes(true)} width="1620" height="1248" fetchPriority="low" decoding="async" alt="Still preview of Battery Ripple settings in Glissform" />
+      <div className="feature-preview__screen feature-preview__screen--active">
+        <img src={asset('seamless-settings.png')} srcSet={screenshotSrcSet('seamless-settings.png')} sizes={settingsImageSizes()} width="1660" height="1204" fetchPriority="high" alt="Still preview of Seamless Close settings in Glissform" />
       </div>
       <div className="feature-preview__fade" aria-hidden="true" />
     </div>
@@ -289,7 +254,7 @@ const conveniences = [
 const faq = [
   { question: 'Can I get an iPhone Duo-style animation on my MacBook?', answer: 'Seamless Close brings a similar visual effect to compatible MacBooks: perspective, blur and shadow follow the lid as it closes, making your desktop appear to stay in place. It is a Glissform feature, not an Apple feature or an exact recreation. Normal system sleep stays enabled, and there is no Lock Screen animation.' },
   { question: 'Will it work on my MacBook?', answer: 'Glissform requires macOS 15 or later. Seamless Close also needs a compatible lid-angle sensor. Tested on a MacBook Air M5 15-inch; other models are not yet verified.' },
-  { question: 'Why does it need Screen Recording access?', answer: 'macOS calls this permission Screen Recording. Seamless Close uses it for individual desktop screenshots, not continuous recording. Images stay on your Mac. Battery Ripple needs no screen access.' },
+  { question: 'Why does it need Screen Recording access?', answer: 'macOS calls this permission Screen Recording. Seamless Close uses it for individual desktop screenshots, not continuous recording. Images stay on your Mac.' },
   { question: 'Does it change sleep or the Lock Screen?', answer: 'Normal sleep stays enabled, and there is no Lock Screen animation. Before sleep, reopening the lid reverses the effect.' },
   { question: 'How do updates work?', answer: 'With Automatic updates enabled, new versions download in the background and install when you quit, when macOS allows. Otherwise, use the in-app Update button.' },
 ];
@@ -311,7 +276,7 @@ function App() {
         <SeamlessCloseSection />
 
         <section className="section section--personalization shell" id="customise" aria-label="Personalization">
-          <SectionIntro title={['Make Each Moment', 'Feel More Like Yours']} copy={['Adjust how Seamless Close looks and when it begins.', 'Choose which battery ripples you want to see.']} />
+          <SectionIntro title={['Make Each Moment', 'Feel More Like Yours']} copy={['Adjust how Seamless Close looks and when it begins.', 'Choose how it returns to your desktop.']} />
           <CustomizationGrid />
         </section>
 
@@ -332,7 +297,7 @@ function App() {
         </section>
 
         <section className="section section--future shell" id="more-to-come" aria-label="More to come">
-          <SectionIntro title={['More Thoughtful Touches', 'For Everyday Mac Moments']} copy={['Seamless Close and Battery Ripple are available now.', 'We’re building on these with more thoughtful additions for your Mac.']} />
+          <SectionIntro title={['More Thoughtful Touches', 'For Everyday Mac Moments']} copy={['Seamless Close is available now.', 'We’re building on it with more thoughtful additions for your Mac.']} />
           <FutureField />
         </section>
 

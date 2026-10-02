@@ -11,7 +11,6 @@ for (const file of await readdir(source)) {
   const input = path.join(source, file);
   const name = file.slice(0, -4);
   const sizes = name.endsWith('glissform-icon') ? [64, 128, 256]
-    : name === 'battery-settings' ? [480, 800, null]
     : name === 'seamless-settings' ? [480, 800, 1200, null]
     : name.startsWith('blur-') ? [240, 480, null] : [null];
   for (const size of sizes) {

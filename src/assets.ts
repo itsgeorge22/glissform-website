@@ -1,5 +1,4 @@
 import seamlessSettings from './generated/assets/seamless-settings.webp';
-import batterySettings from './generated/assets/battery-settings.webp';
 import blurHigh from './generated/assets/blur-high.webp';
 import blurRegular from './generated/assets/blur-regular.webp';
 import blurSubtle from './generated/assets/blur-subtle.webp';
@@ -12,7 +11,6 @@ import navbar256 from './generated/assets/navbar-glissform-icon-256.webp';
 
 const images: Record<string, string> = {
   'seamless-settings.png': seamlessSettings,
-  'battery-settings.png': batterySettings,
   'blur-high.png': blurHigh,
   'blur-regular.png': blurRegular,
   'blur-subtle.png': blurSubtle,
@@ -28,22 +26,20 @@ export const brandSrcSet = (navbar = false) => navbar
 // Keep original masters as the largest candidate for high-density screens.
 const responsiveImages = import.meta.glob([
   './generated/assets/seamless-settings-{480,800,1200}.webp',
-  './generated/assets/battery-settings-{480,800}.webp',
   './generated/assets/blur-{high,regular,subtle}-{240,480}.webp',
 ], {
   eager: true, query: '?url', import: 'default',
 }) as Record<string, string>;
 export const screenshotSrcSet = (name: string) => {
   const base = name.replace(/\.png$/, '');
-  const widths = base === 'battery-settings' ? [480, 800]
-    : base === 'seamless-settings' ? [480, 800, 1200] : [240, 480];
-  const originalWidth = base === 'seamless-settings' ? 1660 : base === 'battery-settings' ? 1620 : 960;
+  const widths = base === 'seamless-settings' ? [480, 800, 1200] : [240, 480];
+  const originalWidth = base === 'seamless-settings' ? 1660 : 960;
   return [...widths.map(width => `${responsiveImages[`./generated/assets/${base}-${width}.webp`]} ${width}w`),
     `${asset(name)} ${originalWidth}w`].join(', ');
 };
 // Include each screenshot's existing crop/overscan in the source-size calculation.
-export const settingsImageSizes = (battery = false) => {
-  const scale = battery ? 1.086 : 1.1126;
+export const settingsImageSizes = () => {
+  const scale = 1.1126;
   return `(max-width: 768px) calc((min(640px, 100vw - clamp(16px, 4vw, 32px) * 2) - 34px) * ${scale}), `
     + `(max-width: 1155px) calc((100vw - clamp(24px, 3vw, 32px) * 2 - 66px) * ${scale}), ${665 * scale}px`;
 };

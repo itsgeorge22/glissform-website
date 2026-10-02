@@ -710,7 +710,6 @@ h1, h2, h3, p { margin: 0; }
 
   img { display: block; width: 24px; height: 24px; }
   &--seamless { background: #eaedfa; }
-  &--battery { background: #e6f9eb; }
 }
 
 .preview-button {
@@ -772,7 +771,6 @@ h1, h2, h3, p { margin: 0; }
     img { position: absolute; top: -4.74%; left: -7.51%; width: 111.26%; height: 135.81%; max-width: none; }
   }
 
-  &__screen--battery img { top: -4.94%; left: -4.52%; width: 108.6%; height: 140.78%; }
 
   &__fade { position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 40px; background: linear-gradient(180deg, #edf2f800, #edf1f8); pointer-events: none; }
 }
@@ -836,7 +834,6 @@ h1, h2, h3, p { margin: 0; }
 .illustration-switch:focus-visible { outline: none; }
 .illustration-switch:focus-visible::before { background: #b9dfff; }
 .illustration-switch[aria-checked='true']:focus-visible::before { background: #39a3ff; }
-.settings-card:last-child .setting-row { color: $ink; font-weight: 500; }
 
 .conveniences-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
 .convenience { min-width: 0; padding-inline: 32px; }
@@ -977,7 +974,7 @@ h1, h2, h3, p { margin: 0; }
   .feature-selector { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
   .feature-preview { height: auto; aspect-ratio: 1.7; padding: 32px 32px 0; }
   .feature-preview__screen { left: 32px; right: 32px; height: calc(100% - 32px); }
-  .feature-preview__screen img, .feature-preview__screen--battery img { height: auto; }
+  .feature-preview__screen img { height: auto; }
 
   .section, .seamless-section { padding-block: 72px; }
   .section--personalization, .section--conveniences, .section--future, .seamless-section { gap: 48px; }
@@ -1091,7 +1088,6 @@ h1, h2, h3, p { margin: 0; }
   .feature-preview { height: auto; aspect-ratio: 1.4; padding: 20px 16px 0; }
   .feature-preview__screen { left: 16px; right: 16px; height: calc(100% - 20px); }
   .feature-preview__screen img { height: auto; }
-  .feature-preview__screen--battery img { height: auto; }
   .feature-preview__fade { height: 28px; }
 
   .section, .seamless-section { padding-block: 48px; }
