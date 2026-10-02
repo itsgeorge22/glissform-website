@@ -4,6 +4,12 @@
 
 - Update the public download and software metadata to beta.6. Remove Battery Ripple previews, controls and artwork now that the app focuses on Seamless Close.
 
+- Remove the “More Thoughtful Touches / For Everyday Mac Moments” section from the homepage. Preserve its dot-field animation component, model, styles, fallback artwork, generation script and tests for future reuse.
+
+- Remove the hero feature card and Settings screenshot. Move the existing 3D MacBook heading and description into the hero, leaving the animation and sleep note without a repeated introduction.
+
+- Remove Battery Ripple from website copy, customization controls, preview selection, search metadata and dedicated assets. Balance the four remaining customization cards in two columns.
+
 - Clarify homepage copy and search metadata around MacBook lid-closing, charging and low-battery animations. Add a concise homepage FAQ explaining the iPhone Duo-style visual resemblance and its limits. Keep the website on one page with its existing design, demonstration, canonical URL and sitemap. Publication through the existing website workflow authorized on 2026-10-02.
 
 - Improve initial loading: deliver the existing CSS and exact Inter fonts with the initial page, adjust fallback metrics, add responsive lossless settings/blur previews, and defer MacBook motion loading and offscreen future-field initialization. Preserve page content, settled visuals, animation timing, reduced-motion fallback and direct section links. Repeat local mobile/desktop Lighthouse tests and record their results separately from production. Search Console still reports Couldn't fetch for the sitemap. Publication through the website deployment workflow authorized on 2026-10-02.

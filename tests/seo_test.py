@@ -60,7 +60,7 @@ class SeoBuildTests(unittest.TestCase):
     def test_product_and_faq_available_in_initial_html(self):
         self.assertNotIn('<div id="root"></div>', self.html)
         h1 = [text for tag, text in self.page.headings if tag == 'h1']
-        self.assertEqual(h1, ['Beautifully Polished Everyday Mac Moments'])
+        self.assertEqual(h1, ['Your Lid Moves While Your Desktop Stays In Place'])
         self.assertIn(['h2', 'Before You Try It'], self.page.headings)
         text = ''.join(self.page.text)
         for fact in ['Seamless Close', 'macOS 15 or later',
@@ -69,6 +69,10 @@ class SeoBuildTests(unittest.TestCase):
                      'Normal system sleep stays enabled.', 'No continuous recording',
                      'Screen images stay in memory. They are never saved or sent.']:
             self.assertIn(fact, text)
+        self.assertNotIn('seamless-settings', self.html)
+        self.assertEqual(text.count('Perspective, blur and shadow follow the lid as it closes.'), 1)
+        self.assertNotRegex(self.html.lower(), r'battery|ripple|charging')
+        self.assertFalse(any('battery' in path.name for path in (DIST / 'assets').iterdir()))
         ids = {attrs['id'] for _, attrs in self.page.tags if 'id' in attrs}
         self.assertTrue({'customise', 'privacy', 'good-to-know'} <= ids)
         self.assertEqual(sum(attrs.get('type') == 'module' for tag, attrs in self.page.tags if tag == 'script'), 1)
@@ -136,7 +140,7 @@ class SeoBuildTests(unittest.TestCase):
                              for tag, attrs in self.page.tags))
         for tag, attrs in self.page.tags:
             if tag == 'img' and any(name in attrs.get('src', '') for name in
-                                   ['seamless-settings', 'blur-high', 'blur-regular', 'blur-subtle']):
+                                   ['blur-high', 'blur-regular', 'blur-subtle']):
                 self.assertIn('srcset', attrs)
                 self.assertIn('sizes', attrs)
                 self.assertGreaterEqual(len(attrs['srcset'].split(',')), 3)

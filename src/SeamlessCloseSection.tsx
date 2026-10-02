@@ -3,7 +3,6 @@ import type { CSSProperties } from "react";
 import MacBookKeyboard from "./MacBookKeyboard";
 import MacBookShell, { macBookGeometry } from "./MacBookShell";
 import stillUrl from './generated/assets/seamless-desktop-folded.webp';
-import ResponsiveBreak from './ResponsiveBreak';
 
 export default function SeamlessCloseSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -73,21 +72,9 @@ export default function SeamlessCloseSection() {
     <section
       className="seamless-section shell"
       id="seamless-close"
-      aria-labelledby="seamless-title"
+      aria-label="Seamless Close demonstration"
       ref={sectionRef}
     >
-      <div className="section-intro seamless-section__intro">
-        <h2 id="seamless-title">
-          Your Lid Moves While
-          <ResponsiveBreak />
-          Your Desktop Stays In Place
-        </h2>
-        <p>
-          An iPhone Duo-style animation for your MacBook.
-          <ResponsiveBreak />
-          Perspective, blur and shadow follow the lid as it closes.
-        </p>
-      </div>
       <div className="seamless-section__track" ref={trackRef}>
         <div className="seamless-section__scene" ref={sceneRef}>
           <div

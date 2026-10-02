@@ -1,5 +1,10 @@
 # Website roadmap
 
+- [x] Remove Battery Ripple from the website and retain four customization cards.
+- [x] Simplify the hero by removing its feature card and screenshot and moving the 3D MacBook introduction into it.
+- [x] Remove the future-features section from the homepage and preserve its dot-field animation for future reuse.
+- [x] Obtain authorization to commit and push the feature removal, hero simplification and section removal through the website workflow on 2026-10-02. Verify the live deployment marker and page after publication.
+
 - [x] Prepare clearer homepage discovery copy and metadata, plus a concise iPhone Duo-style FAQ. Keep one page, the broader Glissform positioning and documented feature limits.
 - [x] Obtain authorization to commit and push the homepage discovery update through the existing website workflow on 2026-10-02. Verify the live copy, metadata and deployment marker after publication.
 - [ ] Establish non-branded search impressions/clicks and repeatable unbranded AI-search mention/citation checks once data is available. Do not infer visibility from PageSpeed scores.

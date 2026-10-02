@@ -2,8 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import SeamlessCloseSection from './SeamlessCloseSection';
 import DownloadPanel from './DownloadPanel';
 import GlassDownloadLink from './GlassDownloadLink';
-import FutureField from './FutureField';
-import { asset, brandSrcSet, screenshotSrcSet, settingsImageSizes, blurImageSizes } from './assets';
+import { asset, brandSrcSet, screenshotSrcSet, blurImageSizes } from './assets';
 import ResponsiveBreak from './ResponsiveBreak';
 import { downloadUrl } from './siteMetadata';
 
@@ -222,28 +221,6 @@ function CustomizationGrid() {
   </div>;
 }
 
-function FeatureShowcase() {
-  return <div className="feature-showcase" aria-label="Feature preview">
-    <div className="feature-selector">
-      <article className="feature-option feature-option--selected">
-        <div className="feature-option__copy">
-          <div className="feature-option__title">
-            <span className="feature-icon feature-icon--seamless"><img src={asset('seamless-close.svg')} width="24" height="24" alt="" /></span>
-            <h2>Seamless Close</h2>
-          </div>
-          <p>A MacBook lid-closing animation that makes your desktop appear to stay in place.</p>
-        </div>
-      </article>
-    </div>
-    <div className="feature-preview" id="feature-preview">
-      <div className="feature-preview__screen feature-preview__screen--active">
-        <img src={asset('seamless-settings.png')} srcSet={screenshotSrcSet('seamless-settings.png')} sizes={settingsImageSizes()} width="1660" height="1204" fetchPriority="high" alt="Still preview of Seamless Close settings in Glissform" />
-      </div>
-      <div className="feature-preview__fade" aria-hidden="true" />
-    </div>
-  </div>;
-}
-
 const conveniences = [
   { icon: 'login.svg', title: 'Start at login', copy: 'Let Glissform open when you sign in, ready with your saved preferences.' },
   { icon: 'menubar.svg', title: 'Settings, close by', copy: 'Open Settings from the menu bar whenever you want to adjust an effect.' },
@@ -266,17 +243,16 @@ function App() {
       <main>
         <section className="hero shell" aria-labelledby="hero-title">
           <div className="hero__content">
-            <h1 id="hero-title">Beautifully Polished<ResponsiveBreak />Everyday Mac Moments</h1>
-            <p>Glissform adds subtle animations and thoughtful visual touches to everyday MacBook moments—from closing your lid to connecting power.</p>
+            <h1 id="hero-title">Your Lid Moves While<ResponsiveBreak />Your Desktop Stays In Place</h1>
+            <p>An iPhone Duo-style animation for your MacBook.<ResponsiveBreak />Perspective, blur and shadow follow the lid as it closes.</p>
             <DownloadLink />
           </div>
-          <FeatureShowcase />
         </section>
 
         <SeamlessCloseSection />
 
         <section className="section section--personalization shell" id="customise" aria-label="Personalization">
-          <SectionIntro title={['Make Each Moment', 'Feel More Like Yours']} copy={['Adjust how Seamless Close looks and when it begins.', 'Choose how it returns to your desktop.']} />
+          <SectionIntro title={['Make Each Moment', 'Feel More Like Yours']} copy={['Adjust how Seamless Close looks and when it begins.', 'Make the movement feel right for you.']} />
           <CustomizationGrid />
         </section>
 
@@ -294,11 +270,6 @@ function App() {
             <div><h3>Never saved or shared</h3><p>Screen images stay in memory. They are never saved or sent.</p></div>
             <div><h3>No analytics</h3><p>The app connects to this site for update checks and downloads.</p></div>
           </div>
-        </section>
-
-        <section className="section section--future shell" id="more-to-come" aria-label="More to come">
-          <SectionIntro title={['More Thoughtful Touches', 'For Everyday Mac Moments']} copy={['Seamless Close is available now.', 'We’re building on it with more thoughtful additions for your Mac.']} />
-          <FutureField />
         </section>
 
         <section className="section section--faq shell" id="good-to-know" aria-labelledby="faq-title">
