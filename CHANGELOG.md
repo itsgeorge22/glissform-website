@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Activate production gzip compression for HTML, JavaScript, CSS and SVG, one-year immutable caching for fingerprinted assets, and revalidation for HTML, discovery files and unfingerprinted assets including the social image. Validate and gracefully reload the server, and verify identical decoded content, conditional cache responses and existing download/update policies. Reduce main JavaScript transfer from 415 KB to 139 KB and CSS from 42 KB to 9 KB.
+
 - Use the exact approved dark social preview artwork, with glow, stars, the refined Glissform wordmark and the pure-white two-line headline “Subtle animations for everyday Mac moments”. Preserve the source PNG unchanged through development and production builds.
 
 - Prerender the full existing marketing page into the production HTML and hydrate its browser interactions. Preserve responsive content, wording, visual layout and direct section links as page geometry settles, with CSS-controlled headline breaks that work before JavaScript loads. Add canonical, Open Graph/Twitter metadata, a matching social image, sitemap/robots files and accurate public-beta `SoftwareApplication` data without invented ratings, reviews or pricing. Prepare restricted receiver support for the two discovery files and verify HTML/assets and deployment archive safety. Install and verify the updated restricted server receiver so automatic deployments accept the discovery files.
@@ -14,7 +16,7 @@
 
 - Add a fluid single-column website layout for 320–768px with the same desktop product content, headings, image descriptions, FAQ and download links. Keep the existing visual language with a compact single-row header with a burger menu for section links, naturally wrapping text, stacked cards, desktop-matched feature selection states and larger touch controls. Scale the MacBook scroll demo to mobile width/height and retain reversal and reduced-motion/graphics fallbacks. Keep the 1156px desktop layout; the compact layout is tracked separately. The original responsive layout was verified locally; the burger-menu follow-up passes build/source checks, with opening, Escape dismissal/focus return and dropdown alignment verified at 390px. Included in website deployment.
 
-- Reduce website image downloads with lossless WebP screenshots/textures, appropriately sized brand icons and a small favicon. Prioritize the first feature preview, lower the alternate preview's priority and lazily load lower-page images. Keep existing content, layout and animation timing. Generate compressed text assets, serve compression/caching in the local preview and prepare the corresponding production-server configuration; optimized images are included in website deployment, while production-server compression and caching activation remain pending.
+- Reduce website image downloads with lossless WebP screenshots/textures, appropriately sized brand icons and a small favicon. Prioritize the first feature preview, lower the alternate preview's priority and lazily load lower-page images. Keep existing content, layout and animation timing. Generate compressed text assets, serve compression/caching in the local preview and prepare the corresponding production-server configuration; optimized images are included in website deployment.
 
 - Remove CSS corner rounding from brand logos and make navbar and footer shadows follow the transparent logo shape, eliminating the rectangular corner artifact.
 
