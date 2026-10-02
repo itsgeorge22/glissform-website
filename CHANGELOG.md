@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Let the “Before You Try It” headline wrap naturally at every width instead of forcing a line break after “Before”.
+
 - Add the 769–1155px compact layout with desktop navigation, fluid typography and spacing, side-by-side feature choices above a wide preview, and two-column settings, everyday controls, Privacy and FAQ. Enable the scaled MacBook scroll demo throughout this range, preserving reversal and reduced-motion/graphics fallback. Keep the mobile and full desktop layouts, product content and SEO metadata. Add a local compact preview. Verified locally and included in website deployment.
 
 - Position the mobile navigation dropdown directly below the burger button, fit its width to the links and align their right edges.

@@ -304,7 +304,7 @@ function App() {
         </section>
 
         <section className="section section--faq shell" id="good-to-know" aria-labelledby="faq-title">
-          <div className="faq-intro"><h2 id="faq-title">Before<ResponsiveBreak />You Try It</h2><p>Requirements, permissions and a few useful details about the beta.</p></div>
+          <div className="faq-intro"><h2 id="faq-title">Before You Try It</h2><p>Requirements, permissions and a few useful details about the beta.</p></div>
           <div className="faq-list">
             {faq.map((item) => <div className="faq-item" key={item.question}><h3>{item.question}</h3><p>{item.answer}</p></div>)}
             <div className="faq-item"><h3>How do I install the beta?</h3><p>Open the DMG and drag Glissform to Applications. The beta is not Apple notarized. If macOS blocks the first launch, go to System Settings → Privacy &amp; Security → Open Anyway, if you trust the download.</p></div>
