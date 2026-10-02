@@ -1,5 +1,6 @@
 """Check the deployable HTML and discovery files, without executing JavaScript."""
 from html.parser import HTMLParser
+from html import unescape
 import json
 from pathlib import Path
 import re
@@ -87,7 +88,7 @@ class SeoBuildTests(unittest.TestCase):
         self.assertEqual(metadata['og:description'], metadata['description'])
         self.assertEqual(metadata['twitter:description'], metadata['description'])
         self.assertEqual(metadata['twitter:title'], metadata['og:title'])
-        self.assertEqual(re.search(r'<title>(.*?)</title>', self.html).group(1), metadata['og:title'])
+        self.assertEqual(unescape(re.search(r'<title>(.*?)</title>', self.html).group(1)), metadata['og:title'])
         self.assertEqual(metadata['twitter:card'], 'summary_large_image')
         self.assertEqual(metadata['og:image'], URL + 'assets/glissform-social.png')
         self.assertEqual(metadata['twitter:image'], metadata['og:image'])

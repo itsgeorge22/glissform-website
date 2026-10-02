@@ -83,10 +83,9 @@ export default function SeamlessCloseSection() {
           Your Desktop Stays In Place
         </h2>
         <p>
-          As you close the lid, perspective, blur and shadow follow its
-          movement,
+          An iPhone Duo-style animation for your MacBook.
           <ResponsiveBreak />
-          making your desktop appear to stay in place.
+          Perspective, blur and shadow follow the lid as it closes.
         </p>
       </div>
       <div className="seamless-section__track" ref={trackRef}>

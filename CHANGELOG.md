@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Clarify homepage copy and search metadata around MacBook lid-closing, charging and low-battery animations. Add a concise homepage FAQ explaining the iPhone Duo-style visual resemblance and its limits. Keep the website on one page with its existing design, demonstration, canonical URL and sitemap. Publication through the existing website workflow authorized on 2026-10-02.
+
 - Improve initial loading: deliver the existing CSS and exact Inter fonts with the initial page, adjust fallback metrics, add responsive lossless settings/blur previews, and defer MacBook motion loading and offscreen future-field initialization. Preserve page content, settled visuals, animation timing, reduced-motion fallback and direct section links. Repeat local mobile/desktop Lighthouse tests and record their results separately from production. Search Console still reports Couldn't fetch for the sitemap. Publication through the website deployment workflow authorized on 2026-10-02.
 
 - Verify the website's Search Console ownership after owner approval, confirm homepage indexing and matching Google canonical, and submit the public sitemap. Record the live loading measurements and the sitemap processing result separately from successful submission.

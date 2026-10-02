@@ -251,7 +251,7 @@ function FeatureShowcase() {
             <span className="feature-icon feature-icon--seamless"><img src={asset('seamless-close.svg')} width="24" height="24" alt="" /></span>
             <h2>Seamless Close</h2>
           </div>
-          <p>Your desktop appears to stay in place as you close your MacBook.</p>
+          <p>A MacBook lid-closing animation that makes your desktop appear to stay in place.</p>
         </div>
         <button className="feature-option__control" type="button" aria-label="Show Seamless Close preview" aria-pressed={selected === 'seamless'} aria-controls="feature-preview" onClick={() => selectFeature('seamless')} />
       </article>
@@ -262,7 +262,7 @@ function FeatureShowcase() {
             <span className="feature-icon feature-icon--battery"><img src={asset('battery-ripple.svg')} width="24" height="24" alt="" /></span>
             <h2>Battery Ripple</h2>
           </div>
-          <p>A green ripple when power connects.<ResponsiveBreak />A red ripple at 20% battery.</p>
+          <p>Charging and low-battery animations.<ResponsiveBreak />Green when power connects. Red at 20%.</p>
         </div>
         <button className="feature-option__control" type="button" aria-label="Show Battery Ripple preview" aria-pressed={selected === 'battery'} aria-controls="feature-preview" onClick={() => selectFeature('battery')} />
       </article>
@@ -287,6 +287,7 @@ const conveniences = [
 ];
 
 const faq = [
+  { question: 'Can I get an iPhone Duo-style animation on my MacBook?', answer: 'Seamless Close brings a similar visual effect to compatible MacBooks: perspective, blur and shadow follow the lid as it closes, making your desktop appear to stay in place. It is a Glissform feature, not an Apple feature or an exact recreation. Normal system sleep stays enabled, and there is no Lock Screen animation.' },
   { question: 'Will it work on my MacBook?', answer: 'Glissform requires macOS 15 or later. Seamless Close also needs a compatible lid-angle sensor. Tested on a MacBook Air M5 15-inch; other models are not yet verified.' },
   { question: 'Why does it need Screen Recording access?', answer: 'macOS calls this permission Screen Recording. Seamless Close uses it for individual desktop screenshots, not continuous recording. Images stay on your Mac. Battery Ripple needs no screen access.' },
   { question: 'Does it change sleep or the Lock Screen?', answer: 'Normal sleep stays enabled, and there is no Lock Screen animation. Before sleep, reopening the lid reverses the effect.' },
@@ -301,7 +302,7 @@ function App() {
         <section className="hero shell" aria-labelledby="hero-title">
           <div className="hero__content">
             <h1 id="hero-title">Beautifully Polished<ResponsiveBreak />Everyday Mac Moments</h1>
-            <p>Subtle animations and thoughtful improvements<ResponsiveBreak />for the way you use your MacBook.</p>
+            <p>Glissform adds subtle animations and thoughtful visual touches to everyday MacBook moments—from closing your lid to connecting power.</p>
             <DownloadLink />
           </div>
           <FeatureShowcase />

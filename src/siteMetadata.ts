@@ -1,6 +1,6 @@
 export const siteUrl = 'https://glissform.app/';
-export const siteTitle = 'Glissform — Beautifully Polished Everyday Mac Moments';
-export const siteDescription = 'Glissform brings subtle animations and thoughtful improvements to everyday Mac moments. Download the macOS public beta.';
+export const siteTitle = 'Glissform — MacBook Animations & Everyday Visual Touches';
+export const siteDescription = 'Add subtle animations to your MacBook with Glissform: a lid-closing effect, charging ripples and low-battery alerts. Explore the macOS public beta.';
 const publicBetaVersion = '0.1.0-beta.5';
 export const downloadUrl = `/downloads/Glissform-${publicBetaVersion}.dmg`;
 export const socialImage = new URL('assets/glissform-social.png', siteUrl).href;

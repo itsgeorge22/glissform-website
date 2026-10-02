@@ -1,5 +1,9 @@
 # Website roadmap
 
+- [x] Prepare clearer homepage discovery copy and metadata, plus a concise iPhone Duo-style FAQ. Keep one page, the broader Glissform positioning and documented feature limits.
+- [x] Obtain authorization to commit and push the homepage discovery update through the existing website workflow on 2026-10-02. Verify the live copy, metadata and deployment marker after publication.
+- [ ] Establish non-branded search impressions/clicks and repeatable unbranded AI-search mention/citation checks once data is available. Do not infer visibility from PageSpeed scores.
+
 - [x] Prerender the existing marketing content into the initial HTML and retain browser interactions through hydration.
 - [x] Prepare canonical/social metadata, the owner-approved dark social preview image, sitemap/robots files and accurate public-beta app data.
 - [x] Add build and receiver checks for content, metadata, assets and safe discovery-file publication.

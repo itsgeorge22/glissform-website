@@ -40,6 +40,7 @@ function mobilePreview(request: IncomingMessage, response: ServerResponse, next:
 }
 
 export default defineConfig({
+  appType: 'mpa',
   build: { assetsInlineLimit: 0 },
   plugins: [{
     name: 'site-metadata',
