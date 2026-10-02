@@ -3,7 +3,7 @@ import SeamlessCloseSection from './SeamlessCloseSection';
 import DownloadPanel from './DownloadPanel';
 import GlassDownloadLink from './GlassDownloadLink';
 import FutureField from './FutureField';
-import { asset, brandSrcSet } from './assets';
+import { asset, brandSrcSet, screenshotSrcSet, settingsImageSizes, blurImageSizes } from './assets';
 import ResponsiveBreak from './ResponsiveBreak';
 import { downloadUrl } from './siteMetadata';
 
@@ -203,7 +203,7 @@ function CustomizationGrid() {
     <article className="content-card blur-card">
       <div className="card-copy"><h3>Blur that feels right</h3><p>Choose Subtle, Regular or High blur, or switch it off.</p></div>
       <div className="blur-choices" aria-label="Blur strength">
-        {blurChoices.map((choice) => <button className={'blur-choice' + (blur === choice.id ? ' blur-choice--selected' : '')} type="button" aria-pressed={blur === choice.id} onClick={() => setBlur(choice.id)} key={choice.id}><span className="blur-choice__image"><img src={asset(choice.image)} width="960" height="600" loading="lazy" decoding="async" alt="" /></span><span>{choice.label}</span></button>)}
+        {blurChoices.map((choice) => <button className={'blur-choice' + (blur === choice.id ? ' blur-choice--selected' : '')} type="button" aria-pressed={blur === choice.id} onClick={() => setBlur(choice.id)} key={choice.id}><span className="blur-choice__image"><img src={asset(choice.image)} srcSet={screenshotSrcSet(choice.image)} sizes={blurImageSizes} width="960" height="600" loading="lazy" decoding="async" alt="" /></span><span>{choice.label}</span></button>)}
       </div>
     </article>
     <article className="content-card angle-card">
@@ -269,10 +269,10 @@ function FeatureShowcase() {
     </div>
     <div className="feature-preview" id="feature-preview">
       <div className={'feature-preview__screen' + (selected === 'seamless' ? ' feature-preview__screen--active' : '')} aria-hidden={selected !== 'seamless'}>
-        <img src={asset('seamless-settings.png')} width="1660" height="1204" fetchPriority="high" alt="Still preview of Seamless Close settings in Glissform" />
+        <img src={asset('seamless-settings.png')} srcSet={screenshotSrcSet('seamless-settings.png')} sizes={settingsImageSizes(false)} width="1660" height="1204" fetchPriority="high" alt="Still preview of Seamless Close settings in Glissform" />
       </div>
       <div className={'feature-preview__screen feature-preview__screen--battery' + (selected === 'battery' ? ' feature-preview__screen--active' : '')} aria-hidden={selected !== 'battery'}>
-        <img src={asset('battery-settings.png')} width="1620" height="1248" fetchPriority="low" decoding="async" alt="Still preview of Battery Ripple settings in Glissform" />
+        <img src={asset('battery-settings.png')} srcSet={screenshotSrcSet('battery-settings.png')} sizes={settingsImageSizes(true)} width="1620" height="1248" fetchPriority="low" decoding="async" alt="Still preview of Battery Ripple settings in Glissform" />
       </div>
       <div className="feature-preview__fade" aria-hidden="true" />
     </div>

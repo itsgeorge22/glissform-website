@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve, sep } from 'node:path';
+import { gzipSync } from 'node:zlib';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { siteUrl, siteTitle, siteDescription, socialImage, softwareApplication } from './src/siteMetadata';
 
 const mime: Record<string, string> = {
-  js: 'application/javascript', css: 'text/css', svg: 'image/svg+xml',
+  html: 'text/html; charset=utf-8', js: 'application/javascript', css: 'text/css', svg: 'image/svg+xml',
 };
 
 // A local-only viewer keeps the responsive page at a phone/tablet width
@@ -62,7 +63,7 @@ export default defineConfig({
       const root = resolve('dist');
       server.middlewares.use((request, response, next) => {
         const url = new URL(request.url ?? '/', 'http://localhost');
-        const file = resolve(root, '.' + decodeURIComponent(url.pathname));
+        const file = resolve(root, '.' + (url.pathname === '/' ? '/index.html' : decodeURIComponent(url.pathname)));
         if (!file.startsWith(root + sep)) return next();
         const hashed = /\/assets\/[^/]+-[A-Za-z0-9_-]{8,}\.[a-z0-9]+$/.test(url.pathname);
         response.setHeader('Cache-Control', hashed ? 'public, max-age=31536000, immutable' : 'no-cache');
@@ -70,8 +71,8 @@ export default defineConfig({
         if (!type) return next();
         response.setHeader('Vary', 'Accept-Encoding');
         if (!/\bgzip\b(?!\s*;\s*q=0(?:\.0*)?(?:\s*,|$))/.test(request.headers['accept-encoding'] ?? '')
-          || !existsSync(file + '.gz')) return next();
-        const body = readFileSync(file + '.gz');
+          || !(file.endsWith('.html') ? existsSync(file) : existsSync(file + '.gz'))) return next();
+        const body = file.endsWith('.html') ? gzipSync(readFileSync(file)) : readFileSync(file + '.gz');
         response.setHeader('Content-Type', type);
         response.setHeader('Content-Encoding', 'gzip');
         response.setHeader('Content-Length', body.length);

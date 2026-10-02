@@ -10,10 +10,13 @@ for (const file of await readdir(source)) {
   if (!file.endsWith('.png')) continue;
   const input = path.join(source, file);
   const name = file.slice(0, -4);
-  const sizes = name.endsWith('glissform-icon') ? [64, 128, 256] : [null];
+  const sizes = name.endsWith('glissform-icon') ? [64, 128, 256]
+    : name === 'battery-settings' ? [480, 800, null]
+    : name === 'seamless-settings' ? [480, 800, 1200, null]
+    : name.startsWith('blur-') ? [240, 480, null] : [null];
   for (const size of sizes) {
     const image = sharp(input);
-    if (size) image.resize(size, size);
+    if (size) image.resize({ width: size, withoutEnlargement: true });
     const target = path.join(output, `${name}${size ? `-${size}` : ''}.webp`);
     await image.webp({ lossless: true, effort: 6 }).toFile(target);
     console.log(`${path.basename(target)}: ${(await stat(target)).size} bytes`);

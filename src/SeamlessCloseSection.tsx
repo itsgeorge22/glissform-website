@@ -1,15 +1,9 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { CSSProperties } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { createMacBookWebGL } from "./macBookWebGL";
 import MacBookKeyboard from "./MacBookKeyboard";
 import MacBookShell, { macBookGeometry } from "./MacBookShell";
-import wallpaperUrl from './generated/assets/seamless-desktop.webp';
 import stillUrl from './generated/assets/seamless-desktop-folded.webp';
 import ResponsiveBreak from './ResponsiveBreak';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function SeamlessCloseSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -18,161 +12,60 @@ export default function SeamlessCloseSection() {
   const deviceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const scene = sceneRef.current!;
     const track = trackRef.current!;
     const device = deviceRef.current!;
     const canvas = canvasRef.current!;
-    const revealText = device.querySelector<HTMLElement>(
-      ".seamless-macbook__reveal",
-    )!;
-    const media = gsap.matchMedia();
-    let renderer: Awaited<ReturnType<typeof createMacBookWebGL>> = null;
+    const motion = window.matchMedia('(prefers-reduced-motion: no-preference)');
     let disposed = false;
-    const pose = { fold: 0 };
-    let benchmarkFreezeWallpaper = false;
-    const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
-    const scrollDistance = () => isMobile()
-      ? Math.max(450, window.innerHeight * .9)
-      : Math.max(800, window.innerHeight * 1.35);
-    const sceneTop = () => (window.innerHeight - scene.offsetHeight) / 2
-      + (document.querySelector('.site-header')?.getBoundingClientRect().height ?? 72) / 2;
-    const syncSceneLayout = () => {
-      if (!track.classList.contains("seamless-section__track--animated"))
-        return;
-      track.style.height = `${scene.offsetHeight + scrollDistance()}px`;
-      track.style.setProperty("--scene-top", `${sceneTop()}px`);
-    };
-    const render = () => {
-      const closure = pose.fold / 90;
-      const reveal = Math.max(0, Math.min(1, (closure - 0.25) / 0.45));
-      revealText.style.opacity = String(reveal * reveal * (3 - 2 * reveal));
-      renderer?.render(pose.fold, benchmarkFreezeWallpaper);
-    };
-    const resize = () => {
-      device.style.setProperty(
-        "--macbook-scale",
-        String(device.clientWidth / 900),
-      );
-      renderer?.resize(device.clientWidth, window.devicePixelRatio);
-      syncSceneLayout();
-      render();
-    };
-    const observer = new ResizeObserver(resize);
-    observer.observe(device);
-    observer.observe(scene);
-    resize();
-
-    const image = new Image();
-    image.onload = () => {
+    let loading = false;
+    let near = false;
+    let cleanup: (() => void) | undefined;
+    let settled = false;
+    // Reserve the final scroll distance before lazy setup so lower anchors and
+    // reverse scrolling do not move when the renderer becomes ready.
+    const reserveSpace = () => {
       if (disposed) return;
-      media.add(
-        "(prefers-reduced-motion: no-preference)",
-        () => {
-          let active = true;
-          const controller = new AbortController();
-          let timeline: gsap.core.Timeline | undefined;
-          let removeBenchmark: (() => void) | undefined;
-          void createMacBookWebGL(
-            canvas,
-            device,
-            image,
-            controller.signal,
-          ).then((nextRenderer) => {
-            if (!active || disposed) {
-              nextRenderer?.dispose();
-              return;
-            }
-            renderer = nextRenderer;
-            if (!renderer) return;
-            renderer.resize(device.clientWidth, window.devicePixelRatio);
-            render();
-            device.classList.add(
-              "seamless-macbook--animated",
-              "seamless-macbook--webgl",
-            );
-            track.classList.add("seamless-section__track--animated");
-            syncSceneLayout();
-            timeline = gsap.timeline({
-              scrollTrigger: {
-                trigger: track,
-                start: () => `top top+=${sceneTop()}`,
-                end: () => `+=${scrollDistance()}`,
-                // Native sticky positioning follows Safari's scrolling thread;
-                // JS only controls the pose, not the scene's viewport position.
-                onRefreshInit: syncSceneLayout,
-                scrub: 0.4,
-                invalidateOnRefresh: true,
-              },
-              onUpdate: render,
-            });
-            // One monotonic gesture: down closes the physical lid; up reopens it.
-            // The eased final degrees bring the lid gently onto the base.
-            timeline.to(pose, {
-              fold: 90,
-              duration: 1,
-              ease: "power1.inOut",
-            });
-            if (
-              import.meta.env.DEV &&
-              new URLSearchParams(location.search).has("motion-benchmark")
-            ) {
-              void import("./seamlessBenchmark").then(({ attachBenchmark }) => {
-                if (!active) return;
-                removeBenchmark = attachBenchmark(
-                  timeline!.scrollTrigger!,
-                  (frozen) => {
-                    benchmarkFreezeWallpaper = frozen;
-                    render();
-                  },
-                  () =>
-                    canvas
-                      .getContext("webgl2")
-                      ?.getExtension("WEBGL_lose_context")
-                      ?.loseContext(),
-                );
-              });
-            }
-            // Local fonts can settle after mount and change the sticky start offset.
-            void document.fonts.ready.then(() => {
-              if (!disposed) ScrollTrigger.refresh();
-            });
-          });
-          return () => {
-            active = false;
-            controller.abort();
-            timeline?.revert();
-            removeBenchmark?.();
-            device.classList.remove(
-              "seamless-macbook--animated",
-              "seamless-macbook--webgl",
-            );
-            track.classList.remove("seamless-section__track--animated");
-            track.style.removeProperty("height");
-            track.style.removeProperty("--scene-top");
-            renderer?.dispose();
-            renderer = null;
-            pose.fold = 0;
-            render();
-          };
-        },
-      );
+      // The still fallback must scale too, including when Reduce Motion skips JS motion.
+      device.style.setProperty('--macbook-scale', String(device.clientWidth / 900));
+      if (settled) return;
+      const mobile = window.matchMedia('(max-width: 768px)').matches;
+      const distance = mobile ? Math.max(450, window.innerHeight * .9) : Math.max(800, window.innerHeight * 1.35);
+      track.style.minHeight = motion.matches ? `${scene.offsetHeight + distance}px` : '';
     };
-    const handleContextLoss = (event: Event) => {
-      event.preventDefault();
-      media.revert();
+    const settle = () => {
+      settled = true;
+      track.style.removeProperty('min-height');
     };
-    canvas.addEventListener("webglcontextlost", handleContextLoss);
-    image.fetchPriority = 'low';
-    image.src = wallpaperUrl;
-
+    const sizeObserver = new ResizeObserver(reserveSpace);
+    sizeObserver.observe(scene);
+    window.addEventListener('resize', reserveSpace);
+    reserveSpace();
+    const prepare = () => {
+      reserveSpace();
+      if (!near || !motion.matches || loading || disposed) return;
+      loading = true;
+      void import('./seamlessMotion').then(({ mountSeamlessMotion }) => {
+        if (!disposed && motion.matches) cleanup = mountSeamlessMotion(scene, track, device, canvas, settle);
+        else loading = false;
+      }).catch(() => { loading = false; settle(); }); // Keep the existing still fallback on load failure.
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      near = entry.isIntersecting;
+      prepare();
+    }, { rootMargin: '400px 0px' });
+    observer.observe(scene);
+    motion.addEventListener('change', prepare);
     return () => {
       disposed = true;
-      image.onload = null;
       observer.disconnect();
-      media.revert();
-      canvas.removeEventListener("webglcontextlost", handleContextLoss);
-      device.style.removeProperty("--macbook-scale");
+      sizeObserver.disconnect();
+      window.removeEventListener('resize', reserveSpace);
+      settle();
+      motion.removeEventListener('change', prepare);
+      cleanup?.();
+      device.style.removeProperty('--macbook-scale');
     };
   }, []);
 

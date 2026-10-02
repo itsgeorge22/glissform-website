@@ -10,7 +10,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "test:seo": "python3 -m unittest discover -s tests -p '*_test.py'",
     "test:future-field": "node --experimental-strip-types --test tests/future-field.test.mjs",
-    "generate:future-field": "node --experimental-strip-types scripts/render-future-field.mjs"
+    "generate:future-field": "node --experimental-strip-types scripts/render-future-field.mjs",
+    "test:loading": "node --test tests/loading.test.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",

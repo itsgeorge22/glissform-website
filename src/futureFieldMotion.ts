@@ -83,10 +83,10 @@ function extendField(): LayoutDot[] {
   return result;
 }
 
-const extendedDots = extendField();
+let extendedDots: LayoutDot[] | undefined;
 
 export function createFieldParticles(): FieldParticle[] {
-  return extendedDots.map(({ dot: [x, y, radius, opacity, red, green, blue], flatY }) => ({
+  return (extendedDots ??= extendField()).map(({ dot: [x, y, radius, opacity, red, green, blue], flatY }) => ({
     homeX: x, homeY: y, flatY, radius, opacity, red, green, blue,
     elevation: 0,
     offsetX: 0, offsetY: 0, velocityX: 0, velocityY: 0, light: 0,

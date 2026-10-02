@@ -128,6 +128,19 @@ class SeoBuildTests(unittest.TestCase):
         self.assertFalse((DIST / 'entry-server.js').exists())
         self.assertFalse((DIST.parent / '.prerender').exists())
 
+    def test_loading_assets_are_available_without_javascript(self):
+        self.assertIn('<style data-site-styles>', self.html)
+        self.assertEqual(self.html.count('data:font/woff2;base64,'), 3)
+        self.assertFalse(any(tag == 'link' and attrs.get('rel') == 'stylesheet'
+                             for tag, attrs in self.page.tags))
+        for tag, attrs in self.page.tags:
+            if tag == 'img' and any(name in attrs.get('src', '') for name in
+                                   ['seamless-settings', 'battery-settings', 'blur-high', 'blur-regular', 'blur-subtle']):
+                self.assertIn('srcset', attrs)
+                self.assertIn('sizes', attrs)
+                self.assertGreaterEqual(len(attrs['srcset'].split(',')), 3)
+                self.assertIn('480w', attrs['srcset'])
+
     def test_sitemap_and_robots(self):
         sitemap = ET.parse(DIST / 'sitemap.xml')
         locations = [node.text for node in sitemap.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]

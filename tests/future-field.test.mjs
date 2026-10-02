@@ -234,8 +234,10 @@ function mountField({ reduced = false, available = true } = {}) {
 test('rendering suspends offscreen, hidden, below the breakpoint and with Reduce Motion', () => {
   const app = mountField();
   assert.equal(app.queue.size, 0);
-  assert.equal(app.canvas.width, 2256); // DPR is capped at 2, even on a 3x screen.
+  assert.equal(app.canvas.width, FIELD_WIDTH); // No backing-store allocation or drawing offscreen.
+  assert.equal(app.draws, 0);
   app.visible(true);
+  assert.equal(app.canvas.width, 2256); // DPR is capped at 2, even on a 3x screen.
   assert.equal(app.queue.size, 1);
   app.tick(100);
   assert.equal(app.field.dataset.ready, 'true');

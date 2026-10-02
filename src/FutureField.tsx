@@ -15,7 +15,7 @@ export default function FutureField() {
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const desktop = window.matchMedia('(min-width: 1156px)');
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const particles = createFieldParticles();
+    let particles: ReturnType<typeof createFieldParticles> = [];
     const pointer = { x: FIELD_WIDTH / 2, y: FIELD_HEIGHT / 2, strength: 0 };
     const target = { x: pointer.x, y: pointer.y, strength: 0 };
     let inView = false;
@@ -73,14 +73,16 @@ export default function FutureField() {
         }
         if (motion.matches || contextLost) field.dataset.ready = 'false';
       } else if (!frame) {
+        if (!particles.length) particles = createFieldParticles();
         field.dataset.playing = 'true';
         frame = window.requestAnimationFrame(tick);
       }
     };
 
     const resize = () => {
+      updatePlayback();
       const bounds = field.getBoundingClientRect();
-      if (!bounds.width || !bounds.height || contextLost) return;
+      if (!bounds.width || !bounds.height || contextLost || !desktop.matches || motion.matches || !inView) return;
       const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
       const width = Math.round(bounds.width * pixelRatio);
       const height = Math.round(bounds.height * pixelRatio);
@@ -116,6 +118,7 @@ export default function FutureField() {
     const observer = new IntersectionObserver(([entry]) => {
       inView = entry.isIntersecting;
       updatePlayback();
+      if (inView) resize();
     });
     const sizeObserver = new ResizeObserver(resize);
     observer.observe(field);
@@ -130,8 +133,8 @@ export default function FutureField() {
     window.addEventListener('scroll', resetPointer, { passive: true });
     window.addEventListener('resize', resize);
     document.addEventListener('visibilitychange', updatePlayback);
-    motion.addEventListener('change', updatePlayback);
-    desktop.addEventListener('change', updatePlayback);
+    motion.addEventListener('change', resize);
+    desktop.addEventListener('change', resize);
     finePointer.addEventListener('change', resetPointer);
     resize();
 
@@ -150,8 +153,8 @@ export default function FutureField() {
       window.removeEventListener('scroll', resetPointer);
       window.removeEventListener('resize', resize);
       document.removeEventListener('visibilitychange', updatePlayback);
-      motion.removeEventListener('change', updatePlayback);
-      desktop.removeEventListener('change', updatePlayback);
+      motion.removeEventListener('change', resize);
+      desktop.removeEventListener('change', resize);
       finePointer.removeEventListener('change', resetPointer);
     };
   }, []);

@@ -5,11 +5,13 @@
 - [x] Add build and receiver checks for content, metadata, assets and safe discovery-file publication.
 - [x] Install and verify the updated restricted receiver for prerendering/metadata deployment.
 - [x] Verify Search Console ownership, inspect homepage indexing and submit the sitemap on 2026-10-02. Google confirms the homepage is indexed with the intended canonical.
-- [ ] Confirm successful Google sitemap processing; submission accepted, but the initial report says Couldn't fetch. See the loading/indexing audit for diagnostic evidence.
+- [ ] Confirm successful Google sitemap processing; submission accepted, but the initial report and the 2026-10-02 follow-up still say Couldn't fetch (Unknown type, zero discovered pages). See the loading/indexing audit for diagnostic evidence.
 - [ ] Check social preview refresh after publication.
 - [x] Measure live mobile/desktop loading with three PageSpeed Insights runs on 2026-10-02; record all samples and remaining findings in the loading audit.
 - [ ] Assess real-user Core Web Vitals when sufficient CrUX data exists; PageSpeed currently reports No Data.
-- [ ] Address measured loading issues: font/style render delay and intermittent mobile layout shift, responsive screenshot delivery, and startup JavaScript blocking. Preserve accepted content, visuals and animation behavior.
+- [x] Implement and locally test fixes for font/style render delay and intermittent mobile layout shift, responsive screenshot delivery, and startup JavaScript blocking. Preserve accepted content, visuals and animation behavior; repeated results are in the loading audit.
+- [x] Obtain authorization to commit and push the loading improvements through the website deployment workflow on 2026-10-02.
+- [ ] Repeat live PageSpeed Insights against the deployed loading-improvements commit; local results remain separate.
 
 - [x] Implement the 320–768px single-column layout with mobile/desktop content parity, accessible burger navigation, desktop-matched feature selection states, touch controls and a scaled MacBook preview.
 - [x] Obtain mobile and compact preview review and include the responsive layouts in website deployment.

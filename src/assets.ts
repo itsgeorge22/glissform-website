@@ -24,3 +24,28 @@ export const asset = (name: string) => images[name] ?? '/assets/' + name;
 export const brandSrcSet = (navbar = false) => navbar
   ? `${navbar64} 64w, ${navbar128} 128w, ${navbar256} 256w`
   : `${glissform64} 64w, ${glissform128} 128w, ${glissform256} 256w`;
+
+// Keep original masters as the largest candidate for high-density screens.
+const responsiveImages = import.meta.glob([
+  './generated/assets/seamless-settings-{480,800,1200}.webp',
+  './generated/assets/battery-settings-{480,800}.webp',
+  './generated/assets/blur-{high,regular,subtle}-{240,480}.webp',
+], {
+  eager: true, query: '?url', import: 'default',
+}) as Record<string, string>;
+export const screenshotSrcSet = (name: string) => {
+  const base = name.replace(/\.png$/, '');
+  const widths = base === 'battery-settings' ? [480, 800]
+    : base === 'seamless-settings' ? [480, 800, 1200] : [240, 480];
+  const originalWidth = base === 'seamless-settings' ? 1660 : base === 'battery-settings' ? 1620 : 960;
+  return [...widths.map(width => `${responsiveImages[`./generated/assets/${base}-${width}.webp`]} ${width}w`),
+    `${asset(name)} ${originalWidth}w`].join(', ');
+};
+// Include each screenshot's existing crop/overscan in the source-size calculation.
+export const settingsImageSizes = (battery = false) => {
+  const scale = battery ? 1.086 : 1.1126;
+  return `(max-width: 768px) calc((min(640px, 100vw - clamp(16px, 4vw, 32px) * 2) - 34px) * ${scale}), `
+    + `(max-width: 1155px) calc((100vw - clamp(24px, 3vw, 32px) * 2 - 66px) * ${scale}), ${665 * scale}px`;
+};
+// object-fit: cover also needs enough pixels for the cropped image's height.
+export const blurImageSizes = '(max-width: 768px) max(205px, 28.8vw), (max-width: 1155px) 304px, 205px';
