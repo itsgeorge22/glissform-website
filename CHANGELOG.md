@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add the 769–1155px compact layout with desktop navigation, fluid typography and spacing, side-by-side feature choices above a wide preview, and two-column settings, everyday controls, Privacy and FAQ. Enable the scaled MacBook scroll demo throughout this range, preserving reversal and reduced-motion/graphics fallback. Keep the mobile and full desktop layouts, product content and SEO metadata. Add a local compact preview. Verified locally and included in website deployment.
+
+- Position the mobile navigation dropdown directly below the burger button, fit its width to the links and align their right edges.
+
+- Add a fluid single-column website layout for 320–768px with the same desktop product content, headings, image descriptions, FAQ and download links. Keep the existing visual language with a compact single-row header with a burger menu for section links, naturally wrapping text, stacked cards, desktop-matched feature selection states and larger touch controls. Scale the MacBook scroll demo to mobile width/height and retain reversal and reduced-motion/graphics fallbacks. Keep the 1156px desktop layout; the compact layout is tracked separately. The original responsive layout was verified locally; the burger-menu follow-up passes build/source checks, with opening, Escape dismissal/focus return and dropdown alignment verified at 390px. Included in website deployment.
+
+- Reduce website image downloads with lossless WebP screenshots/textures, appropriately sized brand icons and a small favicon. Prioritize the first feature preview, lower the alternate preview's priority and lazily load lower-page images. Keep existing content, layout and animation timing. Generate compressed text assets, serve compression/caching in the local preview and prepare the corresponding production-server configuration; optimized images are included in website deployment, while production-server compression and caching activation remain pending.
+
 - Remove CSS corner rounding from brand logos and make navbar and footer shadows follow the transparent logo shape, eliminating the rectangular corner artifact.
 
 - Animate the future-features dot field in a 360px-tall area with 64px of space below the section text, with the earlier left-to-right wave direction, blue shading tied to wave height, and two short diagonal depth fades from opposite corners. The wave keeps its speed and depth on hover while nearby dots lean toward the cursor and brighten; leaving smoothly releases the magnetic response. Preserve dot sizes and spacing, add rows for the taller field and reserve dots beyond every edge, and fade by rendered position to conceal its ends. Remove the oversized focal dot and fixed glow. Pause rendering offscreen, in hidden tabs and below the desktop breakpoint; use a matching static SVG for Reduce Motion or unavailable canvas rendering.

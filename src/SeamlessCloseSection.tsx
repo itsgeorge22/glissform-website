@@ -5,6 +5,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { createMacBookWebGL } from "./macBookWebGL";
 import MacBookKeyboard from "./MacBookKeyboard";
 import MacBookShell, { macBookGeometry } from "./MacBookShell";
+import wallpaperUrl from './generated/assets/seamless-desktop.webp';
+import stillUrl from './generated/assets/seamless-desktop-folded.webp';
+import ResponsiveBreak from './ResponsiveBreak';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,8 +31,12 @@ export default function SeamlessCloseSection() {
     let disposed = false;
     const pose = { fold: 0 };
     let benchmarkFreezeWallpaper = false;
-    const scrollDistance = () => Math.max(800, window.innerHeight * 1.35);
-    const sceneTop = () => (window.innerHeight - scene.offsetHeight) / 2 + 36;
+    const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+    const scrollDistance = () => isMobile()
+      ? Math.max(450, window.innerHeight * .9)
+      : Math.max(800, window.innerHeight * 1.35);
+    const sceneTop = () => (window.innerHeight - scene.offsetHeight) / 2
+      + (document.querySelector('.site-header')?.getBoundingClientRect().height ?? 72) / 2;
     const syncSceneLayout = () => {
       if (!track.classList.contains("seamless-section__track--animated"))
         return;
@@ -60,7 +67,7 @@ export default function SeamlessCloseSection() {
     image.onload = () => {
       if (disposed) return;
       media.add(
-        "(min-width: 1156px) and (prefers-reduced-motion: no-preference)",
+        "(prefers-reduced-motion: no-preference)",
         () => {
           let active = true;
           const controller = new AbortController();
@@ -156,7 +163,8 @@ export default function SeamlessCloseSection() {
       media.revert();
     };
     canvas.addEventListener("webglcontextlost", handleContextLoss);
-    image.src = "/assets/seamless-desktop.png";
+    image.fetchPriority = 'low';
+    image.src = wallpaperUrl;
 
     return () => {
       disposed = true;
@@ -178,13 +186,13 @@ export default function SeamlessCloseSection() {
       <div className="section-intro seamless-section__intro">
         <h2 id="seamless-title">
           Your Lid Moves While
-          <br />
+          <ResponsiveBreak />
           Your Desktop Stays In Place
         </h2>
         <p>
           As you close the lid, perspective, blur and shadow follow its
           movement,
-          <br />
+          <ResponsiveBreak />
           making your desktop appear to stay in place.
         </p>
       </div>
@@ -229,7 +237,9 @@ export default function SeamlessCloseSection() {
                       <div className="seamless-macbook__screen">
                         <img
                           className="seamless-macbook__still"
-                          src="/assets/seamless-desktop-folded.png"
+                          src={stillUrl}
+                          loading="lazy"
+                          decoding="async"
                           width="960"
                           height="600"
                           alt=""

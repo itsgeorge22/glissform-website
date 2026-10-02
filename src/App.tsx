@@ -1,15 +1,16 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import SeamlessCloseSection from './SeamlessCloseSection';
 import DownloadPanel from './DownloadPanel';
 import GlassDownloadLink from './GlassDownloadLink';
 import FutureField from './FutureField';
+import { asset, brandSrcSet } from './assets';
+import ResponsiveBreak from './ResponsiveBreak';
 
-const asset = (name: string) => '/assets/' + name;
 const downloadUrl = '/downloads/Glissform-0.1.0-beta.5.dmg';
 
 function Brand({ homeLink = false }: { homeLink?: boolean }) {
   const icon = homeLink ? 'navbar-glissform-icon.png' : 'glissform-icon.png';
-  const content = <><img src={asset(icon)} width="32" height="32" alt="" /><span>Glissform</span></>;
+  const content = <><img src={asset(icon)} srcSet={brandSrcSet(homeLink)} sizes="32px" width="32" height="32" alt="" /><span>Glissform</span></>;
   return homeLink
     ? <a className="brand brand--link" href="#" aria-label="Glissform — back to top">{content}</a>
     : <span className="brand">{content}</span>;
@@ -29,7 +30,7 @@ const sectionLinks = [
   { id: 'good-to-know', label: 'F.A.Q' },
 ];
 
-function SectionNavigation() {
+function SectionNavigation({ onNavigate }: { onNavigate: () => void }) {
   const [activeSection, setActiveSection] = useState(() => window.location.hash.slice(1));
 
   useEffect(() => {
@@ -41,7 +42,7 @@ function SectionNavigation() {
         return;
       }
 
-      const viewportTop = 72;
+      const viewportTop = document.querySelector('.site-header')?.getBoundingClientRect().bottom ?? 72;
       const viewportBottom = window.innerHeight;
       let nextSection = '';
       let largestVisibleArea = 0;
@@ -83,13 +84,16 @@ function SectionNavigation() {
     };
   }, []);
 
-  return <nav className="site-nav" aria-label="Main sections">
-    {sectionLinks.map(({ id, label }) => <a key={id} className="site-nav__link" href={`#${id}`} aria-current={activeSection === id ? 'location' : undefined}>{label}</a>)}
+  return <nav id="main-sections" className="site-nav" aria-label="Main sections">
+    {sectionLinks.map(({ id, label }) => <a key={id} className="site-nav__link" href={`#${id}`} onClick={onNavigate} aria-current={activeSection === id ? 'location' : undefined}>{label}</a>)}
   </nav>;
 }
 
 function SiteHeader() {
   const [hasMaterial, setHasMaterial] = useState(() => window.scrollY > 0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const updateHeader = () => setHasMaterial(window.scrollY > 0);
@@ -97,17 +101,46 @@ function SiteHeader() {
     return () => window.removeEventListener('scroll', updateHeader);
   }, []);
 
-  return <header className={'site-header shell' + (hasMaterial ? ' site-header--material' : '')}>
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOutside = (event: Event) => {
+      if (event.target instanceof Node && !headerRef.current?.contains(event.target)) setMenuOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setMenuOpen(false);
+      menuButtonRef.current?.focus();
+    };
+    const desktop = window.matchMedia('(min-width: 769px)');
+    const closeOnDesktop = () => { if (desktop.matches) setMenuOpen(false); };
+    document.addEventListener('pointerdown', closeOutside);
+    document.addEventListener('focusin', closeOutside);
+    document.addEventListener('keydown', closeOnEscape);
+    desktop.addEventListener('change', closeOnDesktop);
+    return () => {
+      document.removeEventListener('pointerdown', closeOutside);
+      document.removeEventListener('focusin', closeOutside);
+      document.removeEventListener('keydown', closeOnEscape);
+      desktop.removeEventListener('change', closeOnDesktop);
+    };
+  }, [menuOpen]);
+
+  return <header ref={headerRef} className={'site-header shell' + (hasMaterial ? ' site-header--material' : '') + (menuOpen ? ' site-header--menu-open' : '')} onClick={(event) => {
+    if (event.target instanceof Element && event.target.closest('.brand--link')) setMenuOpen(false);
+  }}>
     <Brand homeLink />
-    <SectionNavigation />
+    <button ref={menuButtonRef} className="site-menu-toggle" type="button" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen} aria-controls="main-sections" onClick={() => setMenuOpen(open => !open)}>
+      <span aria-hidden="true" /><span aria-hidden="true" />
+    </button>
+    <SectionNavigation onNavigate={() => setMenuOpen(false)} />
     <DownloadLink secondary />
   </header>;
 }
 
 function SectionIntro({ title, copy }: { title: [string, string]; copy: [string, string] }) {
   return <div className="section-intro">
-    <h2>{title[0]}<br />{title[1]}</h2>
-    <p>{copy[0]}<br />{copy[1]}</p>
+    <h2>{title[0]}<ResponsiveBreak />{title[1]}</h2>
+    <p>{copy[0]}<ResponsiveBreak />{copy[1]}</p>
   </div>;
 }
 
@@ -138,26 +171,26 @@ function CustomizationGrid() {
     <article className="content-card blur-card">
       <div className="card-copy"><h3>Blur that feels right</h3><p>Choose Subtle, Regular or High blur, or switch it off.</p></div>
       <div className="blur-choices" aria-label="Blur strength">
-        {blurChoices.map((choice) => <button className={'blur-choice' + (blur === choice.id ? ' blur-choice--selected' : '')} type="button" aria-pressed={blur === choice.id} onClick={() => setBlur(choice.id)} key={choice.id}><span className="blur-choice__image"><img src={asset(choice.image)} alt="" /></span><span>{choice.label}</span></button>)}
+        {blurChoices.map((choice) => <button className={'blur-choice' + (blur === choice.id ? ' blur-choice--selected' : '')} type="button" aria-pressed={blur === choice.id} onClick={() => setBlur(choice.id)} key={choice.id}><span className="blur-choice__image"><img src={asset(choice.image)} width="960" height="600" loading="lazy" decoding="async" alt="" /></span><span>{choice.label}</span></button>)}
       </div>
     </article>
     <article className="content-card angle-card">
-      <div className="card-copy"><h3>Choose your<br />starting angle</h3><p>Set the lid angle that starts Seamless Close, or use the current angle.</p></div>
+      <div className="card-copy"><h3>Choose your<ResponsiveBreak />starting angle</h3><p>Set the lid angle that starts Seamless Close, or use the current angle.</p></div>
       <div className="angle-illustration">
         <div className="angle-illustration__value"><label htmlFor="starting-angle">Begin at</label><strong>{angle}°</strong></div>
         <input id="starting-angle" className="angle-illustration__range" type="range" min="60" max="120" step="1" value={angle} aria-valuetext={`${angle} degrees`} onChange={(event) => setAngle(Number(event.target.value))} style={{ '--angle-progress': `${(angle - 60) / 60 * 100}%` } as CSSProperties} />
       </div>
     </article>
     <article className="content-card settings-card">
-      <div className="card-copy"><h3>Let your lid<br />set the angle</h3><p>Hold the lid still to set a starting angle. Choose how long to wait.</p></div>
+      <div className="card-copy"><h3>Let your lid<ResponsiveBreak />set the angle</h3><p>Hold the lid still to set a starting angle. Choose how long to wait.</p></div>
       <div className="settings-card__rows"><SettingRow label="Detect starting angle" switchValue={detectAngle} onSwitch={setDetectAngle} /><SettingRow label="Wait time" value="1.0 s" muted={!detectAngle} /></div>
     </article>
     <article className="content-card settings-card">
-      <div className="card-copy"><h3>Pause to return<br />to your desktop</h3><p>Hold the lid still during the effect to restore your desktop after a delay.</p></div>
+      <div className="card-copy"><h3>Pause to return<ResponsiveBreak />to your desktop</h3><p>Hold the lid still during the effect to restore your desktop after a delay.</p></div>
       <div className="settings-card__rows"><SettingRow label="Pause to return" switchValue={pauseReturn} onSwitch={setPauseReturn} /><SettingRow label="Wait time" value="0.5 s" muted={!pauseReturn} /></div>
     </article>
     <article className="content-card settings-card">
-      <div className="card-copy"><h3>Choose your<br />battery ripples</h3><p>Choose each battery alert separately. Preview both in the app.</p></div>
+      <div className="card-copy"><h3>Choose your<ResponsiveBreak />battery ripples</h3><p>Choose each battery alert separately. Preview both in the app.</p></div>
       <div className="settings-card__rows"><SettingRow label="Power connection" switchValue={powerConnection} onSwitch={setPowerConnection} /><SettingRow label="Battery at 20%" switchValue={batteryLow} onSwitch={setBatteryLow} /></div>
     </article>
   </div>;
@@ -197,17 +230,17 @@ function FeatureShowcase() {
             <span className="feature-icon feature-icon--battery"><img src={asset('battery-ripple.svg')} width="24" height="24" alt="" /></span>
             <h2>Battery Ripple</h2>
           </div>
-          <p>A green ripple when power connects.<br />A red ripple at 20% battery.</p>
+          <p>A green ripple when power connects.<ResponsiveBreak />A red ripple at 20% battery.</p>
         </div>
         <button className="feature-option__control" type="button" aria-label="Show Battery Ripple preview" aria-pressed={selected === 'battery'} aria-controls="feature-preview" onClick={() => selectFeature('battery')} />
       </article>
     </div>
     <div className="feature-preview" id="feature-preview">
       <div className={'feature-preview__screen' + (selected === 'seamless' ? ' feature-preview__screen--active' : '')} aria-hidden={selected !== 'seamless'}>
-        <img src={asset('seamless-settings.png')} alt="Still preview of Seamless Close settings in Glissform" />
+        <img src={asset('seamless-settings.png')} width="1660" height="1204" fetchPriority="high" alt="Still preview of Seamless Close settings in Glissform" />
       </div>
       <div className={'feature-preview__screen feature-preview__screen--battery' + (selected === 'battery' ? ' feature-preview__screen--active' : '')} aria-hidden={selected !== 'battery'}>
-        <img src={asset('battery-settings.png')} alt="Still preview of Battery Ripple settings in Glissform" />
+        <img src={asset('battery-settings.png')} width="1620" height="1248" fetchPriority="low" decoding="async" alt="Still preview of Battery Ripple settings in Glissform" />
       </div>
       <div className="feature-preview__fade" aria-hidden="true" />
     </div>
@@ -235,8 +268,8 @@ function App() {
       <main>
         <section className="hero shell" aria-labelledby="hero-title">
           <div className="hero__content">
-            <h1 id="hero-title">Beautifully Polished<br />Everyday Mac Moments</h1>
-            <p>Subtle animations and thoughtful improvements<br />for the way you use your MacBook.</p>
+            <h1 id="hero-title">Beautifully Polished<ResponsiveBreak />Everyday Mac Moments</h1>
+            <p>Subtle animations and thoughtful improvements<ResponsiveBreak />for the way you use your MacBook.</p>
             <DownloadLink />
           </div>
           <FeatureShowcase />
@@ -257,7 +290,7 @@ function App() {
         </section>
 
         <section className="privacy-panel shell" id="privacy" aria-labelledby="privacy-title">
-          <div className="privacy-panel__intro"><span className="privacy-panel__icon"><img src={asset('privacy-shield.svg')} width="34" height="40" alt="" /></span><h2 id="privacy-title">Your Screen<br />Stays Private</h2><p>Seamless Close uses a temporary image of your desktop. That image stays on your Mac.</p></div>
+          <div className="privacy-panel__intro"><span className="privacy-panel__icon"><img src={asset('privacy-shield.svg')} width="34" height="40" alt="" /></span><h2 id="privacy-title">Your Screen<ResponsiveBreak />Stays Private</h2><p>Seamless Close uses a temporary image of your desktop. That image stays on your Mac.</p></div>
           <div className="privacy-panel__facts">
             <div><h3>No continuous recording</h3><p>One temporary screenshot powers each gesture.</p></div>
             <div><h3>Never saved or shared</h3><p>Screen images stay in memory. They are never saved or sent.</p></div>
@@ -271,7 +304,7 @@ function App() {
         </section>
 
         <section className="section section--faq shell" id="good-to-know" aria-labelledby="faq-title">
-          <div className="faq-intro"><h2 id="faq-title">Before<br />You Try It</h2><p>Requirements, permissions and a few useful details about the beta.</p></div>
+          <div className="faq-intro"><h2 id="faq-title">Before<ResponsiveBreak />You Try It</h2><p>Requirements, permissions and a few useful details about the beta.</p></div>
           <div className="faq-list">
             {faq.map((item) => <div className="faq-item" key={item.question}><h3>{item.question}</h3><p>{item.answer}</p></div>)}
             <div className="faq-item"><h3>How do I install the beta?</h3><p>Open the DMG and drag Glissform to Applications. The beta is not Apple notarized. If macOS blocks the first launch, go to System Settings → Privacy &amp; Security → Open Anyway, if you trust the download.</p></div>
@@ -282,7 +315,6 @@ function App() {
       </main>
       <footer className="site-footer shell"><Brand /><span>© 2026 Glissform</span></footer>
     </div>
-    <div className="small-screen"><Brand /><p>Glissform is a macOS app.<br />Please use a MacBook to view this website.</p></div>
   </>;
 }
 

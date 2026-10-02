@@ -157,7 +157,7 @@ export default function FutureField() {
   }, []);
 
   return <div ref={fieldRef} className="future-field" aria-hidden="true">
-    <img className="future-field__still" src="/assets/future-field.svg?v=corner-depth-360" width={FIELD_WIDTH} height={FIELD_HEIGHT} alt="" draggable="false" />
+    <img className="future-field__still" src="/assets/future-field.svg?v=corner-depth-360" width={FIELD_WIDTH} height={FIELD_HEIGHT} loading="lazy" decoding="async" alt="" draggable="false" />
     <canvas ref={canvasRef} className="future-field__canvas" width={FIELD_WIDTH} height={FIELD_HEIGHT} />
   </div>;
 }

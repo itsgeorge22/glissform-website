@@ -1,4 +1,6 @@
 import { useEffect, useRef, type ReactNode, type CSSProperties } from 'react';
+import { asset, brandSrcSet } from './assets';
+import ResponsiveBreak from './ResponsiveBreak';
 
 const sparks = Array.from({ length: 40 }, (_, index) => ({
   left: `${4 + ((index * 37) % 92)}%`,
@@ -88,12 +90,12 @@ export default function DownloadPanel({ children }: { children: ReactNode }) {
       } as CSSProperties}><b className="download-panel__spark-core" /></i>)}
     </div>
     <div className="download-panel__brand">
-      <img src="/assets/navbar-glissform-icon.png" width="28" height="28" alt="" />
+      <img src={asset('navbar-glissform-icon.png')} srcSet={brandSrcSet(true)} sizes="28px" width="28" height="28" loading="lazy" decoding="async" alt="" />
       <span>Glissform</span>
     </div>
     <div className="download-panel__copy">
       <h2 id="download-title">A Little More Magic</h2>
-      <p>Subtle animations and thoughtful details for your Mac.<br />Start with Seamless Close and Battery Ripple.</p>
+      <p>Subtle animations and thoughtful details for your Mac.<ResponsiveBreak />Start with Seamless Close and Battery Ripple.</p>
     </div>
     {children}
   </section>;
