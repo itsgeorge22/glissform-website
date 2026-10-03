@@ -10,7 +10,7 @@ import sys
 import tarfile
 import tempfile
 
-ROOT_FILES = {'index.html', 'robots.txt', 'sitemap.xml'}
+ROOT_FILES = {'index.html', 'robots.txt', 'sitemap.xml', 'hero-test.html'}
 
 
 def extract_build(stream, stage):
@@ -25,7 +25,8 @@ def extract_build(stream, stage):
                 continue
             root_file = len(parts) == 1 and parts[0] in ROOT_FILES and member.isfile()
             asset = parts and parts[0] == 'assets' and (len(parts) > 1 or member.isdir())
-            if not (root_file or asset) or not (member.isfile() or member.isdir()):
+            hero = (parts == ('hero-test',) and member.isdir()) or (parts == ('hero-test', 'index.html') and member.isfile())
+            if not (root_file or asset or hero) or not (member.isfile() or member.isdir()):
                 raise ValueError('Unexpected archive member')
             total += member.size
             if total > 250_000_000:
@@ -45,9 +46,10 @@ def extract_build(stream, stage):
 def publish_build(stage, root, commit):
     # Publish dependencies and discovery files before replacing the page.
     shutil.copytree(stage / 'assets', root / 'assets', dirs_exist_ok=True)
-    for name in ('robots.txt', 'sitemap.xml', 'index.html'):
+    for name in ('robots.txt', 'sitemap.xml', 'hero-test.html', 'hero-test/index.html', 'index.html'):
         if not (stage / name).is_file():
             continue
+        (root / name).parent.mkdir(parents=True, exist_ok=True)
         temporary = root / (name + '.new')
         shutil.copyfile(stage / name, temporary)
         temporary.chmod(0o644)

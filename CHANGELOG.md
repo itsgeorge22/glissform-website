@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Publish the standalone noindex hero test page at `/hero-test/`; extend the restricted deployment receiver to accept only its specific HTML entries while preserving the homepage, downloads and updates.
+
 - Replace the local hero’s exported glow image with three rounded, blurred CSS ellipses using the original Figma fills and bottom/stretch constraints, guarded against collapsed side ellipses on narrow desktops. Add independent 16–20-second breathing and drift with staggered phases, 28px downward travel, 40–60px sideways drift, 8% expansion and 54–66% opacity so movement remains perceptible through the broad blur, pausing hidden/offscreen and respecting Reduce Motion. Included only on the separate noindex hero test page.
 
 - Add the homepage download card’s interactive stars to the local hero study, with area-based density, fine points and a soft clearing around the main offer and navbar. Refine the hero stars to be 10% larger and drift 25% faster than the initial study. Add rare, brighter shooting stars with larger tips, compact tails that grow and retract, eased flight and a small finishing glint, spaced 16–26 seconds apart after each flight. Fit the longer tails into narrower desktop side lanes by adapting flight length. Keep one active at a time and confine its full flight, tail and finishing glow to the top 70% of the screen, away from the offer and navbar; cancel on hide, resize, viewport exit or Reduce Motion. Share the star animation and pointer attraction while preserving the card’s layout and timing. Pause hidden/offscreen motion, respect Reduce Motion and clean up on desktop-breakpoint changes. Included only on the separate noindex hero test page.
