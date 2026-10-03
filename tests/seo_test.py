@@ -82,7 +82,7 @@ class SeoBuildTests(unittest.TestCase):
         for fact in ['Subtle, Regular or High blur', '20° to 130°',
                      'manual angle remains the fallback', '0.5 to 10 seconds',
                      'Press Esc', 'Connection effect',
-                     'Switch the glow and sound off together in Settings.']:
+                     'A soft edge glow and a short click finish the return. Switch it on and off in Settings.']:
             self.assertIn(fact, text)
         self.assertEqual(len([tag for tag, attrs in self.page.tags
                               if tag == 'article' and attrs.get('aria-labelledby', '').startswith('feature-')]), 3)

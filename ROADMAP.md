@@ -1,7 +1,7 @@
 # Website roadmap
 
 - [x] Replace the Customisable grid with an interactive Seamless Close feature story covering blur, starting angle, automatic selection, pause/Esc return and Connection effect. Keep the explanatory content in initial HTML and adapt the layout to all supported widths.
-- [ ] Review the feature-story redesign and obtain authorization to publish it.
+- [x] Obtain authorization to commit and push the feature-story redesign on 2026-10-03. Verify the live deployment marker and page after publication.
 
 - [x] Remove Battery Ripple from the website and retain four customization cards.
 - [x] Simplify the hero by removing its feature card and screenshot and moving the 3D MacBook introduction into it.
