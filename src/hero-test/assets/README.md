@@ -9,4 +9,4 @@ Source: [New Version, Figma node 132:326](https://www.figma.com/design/IkSrf5xF8
 - `glass-texture.png`: original Figma navigation texture retained as a design reference; the revamped dock uses CSS material styling. Buttons use the existing website textures/components.
 - `manrope-400.ttf`, `manrope-500.ttf`, `manrope-600.ttf`, `manrope-700.ttf`: self-hosted Manrope from Google Fonts. See `manrope-license.txt` for the SIL Open Font License.
 
-No temporary Figma URLs are referenced at runtime. These files are imported only by the development test entry and excluded from the normal production build.
+No temporary Figma URLs are referenced at runtime. Runtime assets are imported only by the separate hero test entry; reference-only assets are not bundled.
