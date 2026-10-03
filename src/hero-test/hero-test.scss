@@ -96,6 +96,7 @@
   // Share the star field's visibility and motion-preference lifecycle.
   &__atmosphere:has(.hero-test__stars[data-playing='true']) &__glow { animation-play-state: running; }
   &__stars { position: absolute; inset: 0; pointer-events: none; }
+  .ambient-star__wave { display: block; width: 100%; height: 100%; }
   &__stars[data-playing='true'] .ambient-star__core { animation-play-state: running; }
   &__shooting-star {
     position: absolute;

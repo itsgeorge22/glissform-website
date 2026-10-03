@@ -3,13 +3,17 @@ type StarFieldOptions = {
   field?: HTMLElement;
   starSelector: string;
   radius?: number | ((width: number) => number);
+  hoverScale?: (influence: number) => number;
+  // Maximum cursor parallax per axis, in pixels, for each star. Opt-in for the hero.
+  parallaxDepth?: (index: number) => number;
 };
 
 // Shared with the download card so attraction, brightness and release stay in sync.
-export function connectStarField({ surface, field = surface, starSelector, radius = 190 }: StarFieldOptions) {
+export function connectStarField({ surface, field = surface, starSelector, radius = 190, hoverScale = influence => 1 + influence * .65, parallaxDepth }: StarFieldOptions) {
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const pointer = window.matchMedia('(hover: hover) and (pointer: fine)');
   const stars = Array.from(field.querySelectorAll<HTMLElement>(starSelector));
+  const depths = stars.map((_, index) => parallaxDepth?.(index) ?? 0);
   let inView = false;
   let frame = 0;
   let clientX = 0;
@@ -37,13 +41,16 @@ export function connectStarField({ surface, field = surface, starSelector, radiu
       const x = clientX - bounds.left;
       const y = clientY - bounds.top;
       const reach = typeof radius === 'function' ? radius(bounds.width) : radius;
+      const viewX = Math.max(-1, Math.min(1, x / Math.max(1, bounds.width) * 2 - 1));
+      const viewY = Math.max(-1, Math.min(1, y / Math.max(1, bounds.height) * 2 - 1));
       // Read all home positions before writing transforms; offsets exclude drift.
       const positions = stars.map(star => ({ x: star.offsetLeft, y: star.offsetTop }));
       stars.forEach((star, index) => {
         const dx = x - positions[index].x;
         const dy = y - positions[index].y;
         const influence = Math.max(0, 1 - Math.hypot(dx, dy) / reach);
-        star.style.transform = `translate(${dx * influence * .18}px, ${dy * influence * .18}px) scale(${1 + influence * .65})`;
+        // Layer drift adds to attraction without changing hover scale or the click wrapper.
+        star.style.transform = `translate(${dx * influence * .18 - viewX * depths[index]}px, ${dy * influence * .18 - viewY * depths[index]}px) scale(${hoverScale(influence)})`;
         star.style.filter = `brightness(${1 + influence * 1.8})`;
       });
       frame = 0;

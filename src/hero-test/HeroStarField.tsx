@@ -2,6 +2,9 @@ import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 
 import { connectStarField } from '../starFieldInteraction';
 import { createHeroStars, type HeroStar } from './heroStarLayout';
 import { connectShootingStars } from './shootingStars';
+import { connectStarRipples } from './starRipple';
+
+const starDepths = [2, 5, 8];
 
 export default function HeroStarField({ surfaceRef }: { surfaceRef: RefObject<HTMLElement | null> }) {
   const fieldRef = useRef<HTMLDivElement>(null);
@@ -12,7 +15,7 @@ export default function HeroStarField({ surfaceRef }: { surfaceRef: RefObject<HT
     const field = fieldRef.current;
     const surface = surfaceRef.current;
     if (!field || !surface) return;
-    const quietElements = Array.from(surface.querySelectorAll('.hero-test__offer, .hero-test__nav'));
+    const quietElements = Array.from(surface.querySelectorAll('.hero-test__offer'));
     let frame = 0;
     const measure = () => {
       frame = 0;
@@ -39,10 +42,15 @@ export default function HeroStarField({ surfaceRef }: { surfaceRef: RefObject<HT
     const surface = surfaceRef.current;
     const field = fieldRef.current;
     if (!surface || !field || !stars.length) return;
-    return connectStarField({
+    const disconnectField = connectStarField({
       surface, field, starSelector: '.ambient-star',
       radius: width => Math.max(220, Math.min(300, width * .16)),
+      // A fuller, rounded swell that holds while the cursor stays nearby.
+      hoverScale: influence => 1 + 1.1 * influence * influence * (3 - 2 * influence),
+      parallaxDepth: index => starDepths[index % starDepths.length],
     });
+    const disconnectRipples = connectStarRipples(surface, field);
+    return () => { disconnectRipples(); disconnectField(); };
   }, [surfaceRef, stars.length]);
 
   useEffect(() => {
@@ -59,7 +67,7 @@ export default function HeroStarField({ surfaceRef }: { surfaceRef: RefObject<HT
       '--spark-size': `${star.size}px`,
       '--spark-duration': `${star.duration}s`,
       '--spark-delay': `${star.delay}s`,
-    } as CSSProperties}><b className="ambient-star__core" /></i>)}
+    } as CSSProperties}><span className="ambient-star__wave"><b className="ambient-star__core" /></span></i>)}
     <i className="hero-test__shooting-star" ref={shootingRef} />
   </div>;
 }
