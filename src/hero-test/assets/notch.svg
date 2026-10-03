@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="214" height="42" viewBox="0 0 214 42" fill="none">
+  <!-- Fixed-size original notch contour, with a black cap covering the frame's top edge. -->
+  <path d="M0 0H214V1H213C209.686 1 207 3.6863 207 7V25C207 33.8366 199.837 41 191 41H23C14.1634 41 7 33.8366 7 25V7C7 3.6863 4.3137 1 1 1H0Z" fill="black"/>
+  <path d="M0 1H1C4.3137 1 7 3.6863 7 7V25C7 33.8366 14.1634 41 23 41H191C199.837 41 207 33.8366 207 25V7C207 3.6863 209.686 1 213 1H214" stroke="#A6BFE6" stroke-opacity="0.12"/>
+  <g transform="translate(-854 -16)"><g xmlns="http://www.w3.org/2000/svg" id="camera">
+<g id="Lens housing">
+<circle cx="961" cy="34" r="7" fill="#090A0E" />
+<circle cx="961" cy="34" r="6.7" stroke="#333B47" stroke-opacity="0.65" stroke-width="0.6" />
+</g>
+<g id="Optical glass">
+<circle cx="961" cy="34" r="4.5" fill="url(#paint0_linear_0_62)" />
+<circle cx="961" cy="34" r="4.2" stroke="#213045" stroke-opacity="0.65" stroke-width="0.6" />
+</g>
+<circle id="Deep aperture" cx="961" cy="34" r="2.25" fill="#020304" />
+<circle id="Lens reflection" cx="959" cy="31.3" r="1" fill="#618CC2" fill-opacity="0.45" />
+<circle id="Secondary reflection" cx="962.6" cy="36.2" r="0.5" fill="#2B5775" fill-opacity="0.35" />
+</g>
+</g>
+<defs xmlns="http://www.w3.org/2000/svg">
+<linearGradient id="paint0_linear_0_62" x1="961" y1="29.5" x2="961" y2="38.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#142640" />
+<stop offset="0.45" stop-color="#05070D" />
+<stop offset="1" stop-color="#0B131A" />
+</linearGradient>
+</defs>
+</svg>

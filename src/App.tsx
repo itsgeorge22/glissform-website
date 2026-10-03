@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import SeamlessCloseSection from './SeamlessCloseSection';
 import DownloadPanel from './DownloadPanel';
-import GlassDownloadLink from './GlassDownloadLink';
+import DownloadLink from './DownloadLink';
 import { asset, brandSrcSet } from './assets';
 import SeamlessFeatures from './SeamlessFeatures';
 import './features.scss';
 import ResponsiveBreak from './ResponsiveBreak';
-import { downloadUrl } from './siteMetadata';
 
 function Brand({ homeLink = false }: { homeLink?: boolean }) {
   const icon = homeLink ? 'navbar-glissform-icon.png' : 'glissform-icon.png';
@@ -14,14 +13,6 @@ function Brand({ homeLink = false }: { homeLink?: boolean }) {
   return homeLink
     ? <a className="brand brand--link" href="#" aria-label="Glissform — back to top">{content}</a>
     : <span className="brand">{content}</span>;
-}
-
-function DownloadLink({ secondary = false }: { secondary?: boolean }) {
-  if (secondary) return <GlassDownloadLink href={downloadUrl} />;
-  return <a className={secondary ? 'download-link download-link--secondary' : 'download-link'} href={downloadUrl}>
-    {secondary && <img src={asset('download.svg')} width="24" height="24" alt="" />}
-    <span>Download Glissform</span>
-  </a>;
 }
 
 const sectionLinks = [

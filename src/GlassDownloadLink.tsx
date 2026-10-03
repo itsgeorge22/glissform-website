@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 
-export default function GlassDownloadLink({ href }: { href: string }) {
+export default function GlassDownloadLink({ href, label = 'Download for MacOS', icon }: { href: string; label?: string; icon?: ReactNode }) {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -65,6 +65,6 @@ export default function GlassDownloadLink({ href }: { href: string }) {
 
   return <a ref={linkRef} className="download-link download-link--secondary" href={href}>
     <span className="download-link__glass" aria-hidden="true"><span className="download-link__glint" /></span>
-    <span className="download-link__label">Download for MacOS</span>
+    <span className="download-link__label">{label}{icon}</span>
   </a>;
 }

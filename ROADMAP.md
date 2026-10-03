@@ -1,5 +1,11 @@
 # Website roadmap
 
+- [x] Prepare a separate, static local `/hero-test` page from the original Figma hero, preserving current download-button interactions, using vector menu icons, native text, a live device-local clock and independently resizing frame with a fixed-size notch/camera, showing a placeholder below 1156px, and preserving the homepage.
+- [x] Create a floating navbar study with larger section-link targets and the original glass Download pill with extra space inside a rounded rectangular dock.
+- [x] Adapt the download card’s interactive stars for the full-screen hero, with responsive density, protected content space, rare short-tailed shooting stars, reduced-motion support and lifecycle cleanup.
+- [x] Recreate the Figma glow as three CSS ellipses with subtle independent breathing, visibility pausing and a static Reduce Motion fallback.
+- [ ] Obtain owner review of the screen hero before considering scene animation, homepage adoption or publication.
+
 - [x] Prepare a free-availability FAQ and matching metadata, with “Download Glissform” primary buttons and “Download for MacOS” in the navbar. No payment or licensing flow is present on the site. Publication authorized on 2026-10-03; any future paid flow requires a new product decision.
 
 - [x] Replace the Customisable grid with an interactive Seamless Close feature story covering blur, starting angle, automatic selection, pause/Esc return and Connection effect. Keep the explanatory content in initial HTML and adapt the layout to all supported widths.

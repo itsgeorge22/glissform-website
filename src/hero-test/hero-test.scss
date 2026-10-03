@@ -1,0 +1,362 @@
+@each $weight in 400, 500, 600, 700 {
+  @font-face {
+    font-family: 'Hero Manrope';
+    font-style: normal;
+    font-weight: $weight;
+    font-display: swap;
+    src: url('./assets/manrope-#{$weight}.ttf') format('truetype');
+  }
+}
+
+.hero-test-page { background: #000; color: #fff; }
+
+.hero-test-placeholder {
+  min-height: 100svh;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+  background: #0b121e;
+  font-family: 'Hero Manrope', sans-serif;
+
+  img { display: block; margin-bottom: 4px; }
+  h1 { font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: -.6px; }
+  p { max-width: 360px; font-size: 16px; line-height: 26px; color: #ffffffb3; }
+}
+
+.hero-test {
+  position: relative;
+  isolation: isolate;
+  min-height: 720px;
+  height: 100svh;
+  padding: 16px;
+  overflow: hidden;
+  font-family: 'Hero Manrope', sans-serif;
+  background: #000;
+
+  .download-link { font-family: 'Hero Manrope', sans-serif; font-weight: 700; }
+  .download-link:not(.download-link--secondary) { width: auto; padding-inline: 24px; }
+  .download-link:not(.download-link--secondary) > span,
+  .download-link--secondary .download-link__label { letter-spacing: -.3px; }
+
+  &__screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    background: #0b121e;
+    border-radius: 17px;
+  }
+
+  &__atmosphere { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  &__glow {
+    position: absolute;
+    border-radius: 50%;
+    opacity: .6;
+    // Figma layer blur 500 exports with a Gaussian standard deviation of 250.
+    filter: blur(250px);
+    height: 320px;
+    bottom: -160px;
+    // Match Figma's stretch constraints; keep side ellipses alive on narrow desktops.
+    width: max(160px, calc(100% - 1320px));
+    animation: hero-glow-breathe var(--glow-duration) ease-in-out infinite;
+    animation-delay: var(--glow-delay, 0s);
+    animation-play-state: paused;
+
+    &--blue {
+      left: 160px;
+      right: 160px;
+      width: auto;
+      height: 640px;
+      bottom: -320px;
+      background: #0088ff;
+      filter: blur(300px);
+      --glow-duration: 18s;
+      --glow-delay: -4s;
+      --glow-drift: 48px;
+    }
+    &--violet {
+      right: 160px;
+      background: rgb(106.25 0 255);
+      --glow-duration: 16s;
+      --glow-delay: -7s;
+      --glow-drift: -60px;
+    }
+    &--teal {
+      left: 160px;
+      background: rgb(0 178.5 255);
+      --glow-duration: 20s;
+      --glow-delay: -13s;
+      --glow-drift: 40px;
+    }
+    @media (prefers-reduced-motion: reduce) { animation: none; }
+  }
+  // Share the star field's visibility and motion-preference lifecycle.
+  &__atmosphere:has(.hero-test__stars[data-playing='true']) &__glow { animation-play-state: running; }
+  &__stars { position: absolute; inset: 0; pointer-events: none; }
+  &__stars[data-playing='true'] .ambient-star__core { animation-play-state: running; }
+  &__shooting-star {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--shooting-size, 5.2px);
+    height: var(--shooting-size, 5.2px);
+    opacity: 0;
+    pointer-events: none;
+
+    &::before {
+      content: '';
+      position: absolute;
+      right: 50%;
+      top: 50%;
+      width: var(--shooting-tail, 48px);
+      height: 1.8px;
+      transform: translateY(-50%);
+      transform-origin: right center;
+      border-radius: 50%;
+      background: linear-gradient(90deg, transparent, #9ed7ff30 30%, #c7eaff99 75%, #effaff);
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: #f1fbff;
+      box-shadow: 0 0 7px #d9f2ffb3, 0 0 14px #82bfff70;
+    }
+    &[data-shooting='true'] {
+      opacity: 1;
+      animation: hero-shooting-star var(--shooting-duration) cubic-bezier(.28, .02, .65, .86) both;
+      &::before { animation: hero-shooting-tail var(--shooting-duration) ease-in-out both; }
+      &::after { animation: hero-shooting-core var(--shooting-duration) ease-in-out both; }
+    }
+    @media (prefers-reduced-motion: reduce) { display: none; animation: none; }
+  }
+
+  &__menu {
+    position: absolute;
+    z-index: 1;
+    inset: 0 0 auto;
+    height: 48px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    font: 590 13px/16px -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro', system-ui, sans-serif;
+    letter-spacing: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+  &__menu-group { display: flex; align-items: center; height: 24px; }
+  &__menu-label { padding: 4px 12px; }
+  &__menu-app { font-weight: 700; }
+  &__menu-clock { display: flex; gap: 8px; padding: 4px 12px; font-variant-numeric: tabular-nums; }
+  // Crop only the original vector symbols; all menu labels are live system text.
+  &__menu-icon {
+    position: relative;
+    display: block;
+    flex: none;
+    height: 24px;
+    overflow: hidden;
+    img { position: absolute; top: -12px; max-width: none; width: 1888px; height: 48px; }
+    &--apple { width: 33px; img { left: -12px; } }
+    &--wifi { width: 40px; img { left: -1643px; } }
+    &--controls { width: 38px; img { left: -1683px; } }
+  }
+
+  &__offer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    width: min(744px, calc(100% - 48px));
+    margin: clamp(140px, calc(50svh - 300px), 240px) auto 140px;
+  }
+
+  &__intro { display: flex; flex-direction: column; align-items: center; gap: 32px; width: 100%; }
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 500;
+    letter-spacing: -1px;
+
+    span { opacity: .8; }
+    img { display: block; border-radius: 1px; filter: drop-shadow(0 0 12px #00000029); }
+  }
+  &__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    text-align: center;
+
+    h1 { font: 600 64px/72px 'Hero Manrope', sans-serif; letter-spacing: -.04em; }
+    p { font-size: 18px; line-height: 28px; font-weight: 400; opacity: .8; }
+    p span { display: block; }
+  }
+
+  // Resize the screen outline independently from the fixed-size notch and lens.
+  &__frame {
+    position: absolute;
+    inset: 16px;
+    z-index: 2;
+    border: 1px solid rgb(166 191 230 / 12%);
+    border-radius: 17px;
+    pointer-events: none;
+  }
+  &__notch {
+    position: absolute;
+    top: 15.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    width: 214px;
+    height: 42px;
+    max-width: none;
+    pointer-events: none;
+  }
+
+  &__nav {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: max-content;
+
+    .download-link--secondary {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .download-link__glass::after {
+      background: radial-gradient(ellipse 85px 36px at var(--glass-x) var(--glass-y), rgb(255 255 255 / 30%), #ffffff00 75%), radial-gradient(ellipse 100px 24px at var(--glass-x) 110%, #52aaff70, #74bcff00 80%);
+    }
+    .download-link--secondary:hover:not(:active):not(:focus-visible) .download-link__glass {
+      border-color: #c4dcff;
+      background-color: transparent;
+      box-shadow: 0 12px 12px #356ab917, 0 3px 6px #356ab900, inset 0 1px 1px #ffffff80, inset 0 -2px 1px #97c1ff66, inset 0 0 12px #b9d9ff00;
+    }
+    .download-link--secondary:focus-visible { outline: 2px solid #d6efff; outline-offset: 4px; }
+  }
+  &__download-slot {
+    display: grid;
+    place-items: center;
+    flex: none;
+    height: 48px;
+    // Dock inset (8px) + 4px keeps the outer button margins at 12px.
+    padding: 4px 4px 4px 0;
+  }
+
+  &__nav-dock {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 64px;
+    padding: 7px;
+    border: 1px solid #cbddff30;
+    border-radius: 22px;
+    background: linear-gradient(140deg, #14263be6, #101e35db);
+    box-shadow: 0 12px 28px rgb(0 0 0 / 12%), 0 3px 8px rgb(0 0 0 / 6%), inset 0 1px 0 rgb(255 255 255 / 4%);
+    backdrop-filter: blur(24px) saturate(135%);
+    -webkit-backdrop-filter: blur(24px) saturate(135%);
+  }
+  &__home {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 48px;
+    // Equal 16px visible icon insets at the left, top and bottom.
+    margin-inline: 0 -8px;
+    height: 48px;
+    border-radius: 14px;
+    transition: background-color .2s ease, transform .18s ease;
+    img { display: block; filter: drop-shadow(0 2px 5px #00000033); }
+    &:hover { background: #ffffff0d; }
+    &:active { transform: scale(.95); }
+  }
+  &__nav-divider { flex: none; width: 1px; height: 22px; margin-inline: 24px; background: rgb(212 231 255 / 9%); }
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    // Cancel outer label padding so divider gaps follow the visible text.
+    margin-inline: -16px;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+    letter-spacing: -.3px;
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #e5edf9;
+      text-decoration: none;
+      transition: color .2s ease, background-color .2s ease, transform .18s ease;
+      &:hover { color: #fff; background: #ffffff0d; }
+      &:active { transform: translateY(1px); background: #ffffff14; }
+    }
+  }
+  &__nav-dock a:focus-visible { outline: 2px solid #c4e4ff; outline-offset: -2px; }
+  @media (prefers-reduced-motion: reduce) {
+    &__home, &__links a { transition: none; }
+    &__home:active, &__links a:active { transform: none; }
+  }
+  a:focus-visible { outline-color: #fff; }
+
+}
+
+@keyframes hero-glow-breathe {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: .54; }
+  50% { transform: translate3d(var(--glow-drift), 28px, 0) scale(1.08); opacity: .66; }
+}
+
+@keyframes hero-shooting-star {
+  0% {
+    transform: translate3d(var(--shooting-x), var(--shooting-y), 0) rotate(var(--shooting-angle));
+  }
+  100% {
+    transform: translate3d(calc(var(--shooting-x) + var(--shooting-dx)), calc(var(--shooting-y) + var(--shooting-dy)), 0) rotate(var(--shooting-angle));
+  }
+}
+
+@keyframes hero-shooting-tail {
+  0% { transform: translateY(-50%) scaleX(.25); opacity: 0; }
+  24% { transform: translateY(-50%) scaleX(.65); opacity: .6; }
+  62% { transform: translateY(-50%) scaleX(1); opacity: .95; }
+  80% { transform: translateY(-50%) scaleX(.85); opacity: .65; }
+  92% { transform: translateY(-50%) scaleX(.3); opacity: .15; }
+  100% { transform: translateY(-50%) scaleX(0); opacity: 0; }
+}
+
+@keyframes hero-shooting-core {
+  0% { transform: scale(.6); opacity: 0; }
+  12% { transform: scale(.9); opacity: .9; }
+  60%, 76% {
+    transform: scale(1);
+    opacity: .95;
+    box-shadow: 0 0 7px #d9f2ffb3, 0 0 14px #82bfff70;
+  }
+  86% {
+    transform: scale(1.6);
+    opacity: 1;
+    box-shadow: 0 0 10px #edf9ffe6, 0 0 20px #8dceff99;
+  }
+  93% { transform: scale(1.1); opacity: .55; }
+  100% { transform: scale(.2); opacity: 0; box-shadow: 0 0 12px #8dceff00; }
+}

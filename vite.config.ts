@@ -44,7 +44,8 @@ export default defineConfig({
   build: { assetsInlineLimit: 0 },
   plugins: [{
     name: 'site-metadata',
-    transformIndexHtml() {
+    transformIndexHtml(_html, context) {
+      if (context.path !== '/' && context.path !== '/index.html') return [];
       const meta = (property: string, content: string) => ({ tag: 'meta', attrs: { property, content } });
       return [
         { tag: 'link', attrs: { rel: 'canonical', href: siteUrl } },
@@ -58,7 +59,15 @@ export default defineConfig({
     },
   }, {
     name: 'compressed-production-preview',
-    configureServer(server) { server.middlewares.use(mobilePreview); },
+    configureServer(server) {
+      server.middlewares.use((request, response, next) => {
+        const url = new URL(request.url ?? '/', 'http://localhost');
+        if (url.pathname === '/hero-test' || url.pathname === '/hero-test/') request.url = '/hero-test.html' + url.search;
+        if (url.pathname.startsWith('/hero-test')) response.setHeader('X-Robots-Tag', 'noindex, nofollow');
+        next();
+      });
+      server.middlewares.use(mobilePreview);
+    },
     configurePreviewServer(server) {
       server.middlewares.use(mobilePreview);
       const root = resolve('dist');
