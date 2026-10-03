@@ -65,6 +65,6 @@ export default function GlassDownloadLink({ href }: { href: string }) {
 
   return <a ref={linkRef} className="download-link download-link--secondary" href={href}>
     <span className="download-link__glass" aria-hidden="true"><span className="download-link__glint" /></span>
-    <span className="download-link__label">Download for Mac</span>
+    <span className="download-link__label">Download for MacOS</span>
   </a>;
 }

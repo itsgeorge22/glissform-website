@@ -118,6 +118,9 @@ class SeoBuildTests(unittest.TestCase):
         self.assertNotIn('aggregateRating', self.schema)
         self.assertNotIn('review', self.schema)
         self.assertNotIn('offers', self.schema)
+        self.assertTrue(self.schema['isAccessibleForFree'])
+        self.assertIn('Is Glissform free?', self.html)
+        self.assertIn('Glissform is fully free to use.', self.html)
         downloads = {attrs['href'] for tag, attrs in self.page.tags if tag == 'a' and attrs.get('href', '').startswith('/downloads/')}
         self.assertEqual(len(downloads), 1)
         download = downloads.pop()

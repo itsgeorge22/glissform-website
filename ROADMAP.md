@@ -1,5 +1,7 @@
 # Website roadmap
 
+- [x] Prepare a free-availability FAQ and matching metadata, with “Download Glissform” primary buttons and “Download for MacOS” in the navbar. No payment or licensing flow is present on the site. Publication authorized on 2026-10-03; any future paid flow requires a new product decision.
+
 - [x] Replace the Customisable grid with an interactive Seamless Close feature story covering blur, starting angle, automatic selection, pause/Esc return and Connection effect. Keep the explanatory content in initial HTML and adapt the layout to all supported widths.
 - [x] Obtain authorization to commit and push the feature-story redesign on 2026-10-03. Verify the live deployment marker and page after publication.
 

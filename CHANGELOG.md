@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Present Glissform as fully free in the FAQ and search metadata. Use “Download Glissform” for primary buttons and “Download for MacOS” in the navbar. Rename the navbar’s “Private” link to “Privacy”. Keep the existing layout and download destination. Publication authorized on 2026-10-03.
+
 - Align the deployment content check with the approved Connection effect wording so the feature-story update can publish.
 
 - Correct the pause/Esc preview's perspective using the MacBook demo's shared wallpaper projection and shader. Narrow the upper edge inside the screen while keeping the bottom edge anchored and the top covered, removing the gap caused by rotating a separate image plane. Preserve wallpaper orientation, the card's viewing angle, pause/return timing and connection glow. Keep a static fallback when graphics are unavailable. Publication authorized on 2026-10-03.

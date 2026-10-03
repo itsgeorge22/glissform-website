@@ -20,13 +20,13 @@ function DownloadLink({ secondary = false }: { secondary?: boolean }) {
   if (secondary) return <GlassDownloadLink href={downloadUrl} />;
   return <a className={secondary ? 'download-link download-link--secondary' : 'download-link'} href={downloadUrl}>
     {secondary && <img src={asset('download.svg')} width="24" height="24" alt="" />}
-    <span>{secondary ? 'Download for Mac' : 'Download Glissform'}</span>
+    <span>Download Glissform</span>
   </a>;
 }
 
 const sectionLinks = [
   { id: 'customise', label: 'Features' },
-  { id: 'privacy', label: 'Private' },
+  { id: 'privacy', label: 'Privacy' },
   { id: 'good-to-know', label: 'F.A.Q' },
 ];
 
@@ -185,6 +185,7 @@ const conveniences = [
 ];
 
 const faq = [
+  { question: 'Is Glissform free?', answer: 'Yes. Glissform is fully free to use. Download the app and enjoy Seamless Close on a compatible MacBook.' },
   { question: 'Can I get an iPhone Duo-style animation on my MacBook?', answer: 'Seamless Close brings a similar visual effect to compatible MacBooks: perspective, blur and shadow follow the lid as it closes, making your desktop appear to stay in place. It is a Glissform feature, not an Apple feature or an exact recreation. Normal system sleep stays enabled, and there is no Lock Screen animation.' },
   { question: 'Will it work on my MacBook?', answer: 'Glissform requires macOS 15 or later. Seamless Close also needs a compatible lid-angle sensor. Tested on a MacBook Air M5 15-inch; other models are not yet verified.' },
   { question: 'Why does it need Screen Recording access?', answer: 'macOS calls this permission Screen Recording. Seamless Close uses it for individual desktop screenshots, not continuous recording. Images stay on your Mac.' },
