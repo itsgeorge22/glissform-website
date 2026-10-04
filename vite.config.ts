@@ -63,6 +63,7 @@ export default defineConfig({
       server.middlewares.use((request, response, next) => {
         const url = new URL(request.url ?? '/', 'http://localhost');
         if (url.pathname === '/hero-test' || url.pathname === '/hero-test/') request.url = '/hero-test.html' + url.search;
+        if (url.pathname === '/hero-test-animation' || url.pathname === '/hero-test-animation/') request.url = '/hero-test-animation.html' + url.search;
         if (url.pathname.startsWith('/hero-test')) response.setHeader('X-Robots-Tag', 'noindex, nofollow');
         next();
       });

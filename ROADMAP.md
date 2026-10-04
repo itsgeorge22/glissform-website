@@ -1,12 +1,22 @@
 # Website roadmap
 
+- [x] Implement a separate `/hero-test-animation` study with the existing live hero inside a scroll-driven MacBook reveal and closure, reversible motion and a reduced-motion fallback.
+- [x] Replace the study's CSS hardware with an isolated GPU renderer, keep the opening hero flat, consolidate closing filters and coordinate pointer updates without repeated layout measurements.
+- [ ] Obtain owner visual and performance review in Safari and Chrome before homepage adoption or publication. The receiver update and new route are local.
+
+- [x] Add a faint trail of twinkles through the local hero’s existing stars, with path-based activation, gentle fading and motion cleanup. Owner visual review is pending.
+
+- [x] Add a local three-layer star-depth study driven by cursor movement, preserving existing hover/ripple behavior and reduced-motion support. Owner visual review is pending.
+
+- [x] Add a local background-click star ripple study to the screen hero, with reduced-motion support and control exclusion.
+
 - [x] Include `/hero-test/` as a separate noindex production page after owner requested the live preview.
 
 - [x] Prepare a separate, static local `/hero-test` page from the original Figma hero, preserving current download-button interactions, using vector menu icons, native text, a live device-local clock and independently resizing frame with a fixed-size notch/camera, showing a placeholder below 1156px, and preserving the homepage.
 - [x] Create a floating navbar study with larger section-link targets and the original glass Download pill with extra space inside a rounded rectangular dock.
-- [x] Adapt the download card’s interactive stars for the full-screen hero, with responsive density, protected content space, rare short-tailed shooting stars, reduced-motion support and lifecycle cleanup.
+- [x] Adapt the download card’s interactive stars for the full-screen hero, with responsive density, ambient-star fading only around the main offer, rare short-tailed shooting stars, reduced-motion support and lifecycle cleanup.
 - [x] Recreate the Figma glow as three CSS ellipses with subtle independent breathing, visibility pausing and a static Reduce Motion fallback.
-- [ ] Obtain owner review of the screen hero before considering scene animation or homepage adoption.
+- [ ] Obtain owner review of the screen hero before homepage adoption; the separate animation study was authorized on 2026-10-04.
 
 - [x] Prepare a free-availability FAQ and matching metadata, with “Download Glissform” primary buttons and “Download for MacOS” in the navbar. No payment or licensing flow is present on the site. Publication authorized on 2026-10-03; any future paid flow requires a new product decision.
 

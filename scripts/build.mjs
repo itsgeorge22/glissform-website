@@ -3,10 +3,12 @@ import { readFile, writeFile, rm, mkdir, copyFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 
-await build({ build: { rollupOptions: { input: { main: resolve('index.html'), heroTest: resolve('hero-test.html') } } } });
+await build({ build: { rollupOptions: { input: { main: resolve('index.html'), heroTest: resolve('hero-test.html'), heroAnimation: resolve('hero-test-animation.html') } } } });
 // Directory entry lets the static host serve /hero-test/ without a rewrite.
 await mkdir('dist/hero-test', { recursive: true });
 await copyFile('dist/hero-test.html', 'dist/hero-test/index.html');
+await mkdir('dist/hero-test-animation', { recursive: true });
+await copyFile('dist/hero-test-animation.html', 'dist/hero-test-animation/index.html');
 try {
   await build({
     build: { ssr: 'src/entry-server.tsx', outDir: '.prerender', emptyOutDir: true, copyPublicDir: false },

@@ -66,9 +66,21 @@ class ReceiverTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             receiver.extract_build(archive(discovery=False), Path(directory))
 
+    def test_animation_page_is_accepted_and_published(self):
+        entries = [tarfile.TarInfo('hero-test-animation.html'), tarfile.TarInfo('hero-test-animation/index.html')]
+        with tempfile.TemporaryDirectory() as directory:
+            stage, root = Path(directory) / 'stage', Path(directory) / 'root'
+            stage.mkdir(); root.mkdir()
+            receiver.extract_build(archive(entries), stage)
+            receiver.publish_build(stage, root, 'c' * 40)
+            self.assertTrue((root / 'hero-test-animation/index.html').is_file())
+            self.assertTrue((root / 'hero-test-animation.html').is_file())
+
     def test_unsafe_and_unrelated_archive_members_rejected(self):
         for name in ('../index.html', '/index.html', 'assets/../escape', 'downloads/new.dmg',
-                     'updates/appcast.xml', 'hero-test/other.html', 'hero-test/assets/bad.js', 'deployment.json', 'robots.txt/nested', 'assets'):
+                     'updates/appcast.xml', 'hero-test/other.html', 'hero-test/assets/bad.js',
+                     'hero-test-animation/other.html', 'hero-test-animation/assets/bad.js',
+                     'deployment.json', 'robots.txt/nested', 'assets'):
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 with self.assertRaises(ValueError):
                     receiver.extract_build(archive([tarfile.TarInfo(name)]), Path(directory))
