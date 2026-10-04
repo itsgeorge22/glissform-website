@@ -36,6 +36,11 @@
   overflow: hidden;
   font-family: 'Hero Manrope', sans-serif;
   background: #000;
+  // Keep selection disabled within this hero, including in Safari.
+  &, & * {
+    -webkit-user-select: none;
+    user-select: none;
+  }
 
   .download-link { font-family: 'Hero Manrope', sans-serif; font-weight: 700; }
   .download-link:not(.download-link--secondary) { width: auto; padding-inline: 24px; }
@@ -48,6 +53,7 @@
     overflow: hidden;
     background: #0b121e;
     border-radius: 17px;
+    cursor: default;
   }
 
   &__atmosphere { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
