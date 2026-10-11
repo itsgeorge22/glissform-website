@@ -1,0 +1,107 @@
+.home-next-page { background: #fff; color-scheme: light; overflow-x: clip; }
+
+.home-next-page, .home-next {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar { display: none; width: 0; height: 0; }
+}
+
+.home-next {
+  background: #fff;
+  color: #171c24;
+
+  // Match choreography's completion point; retain the original motion distance.
+  .hero-animation {
+    background: #fff;
+    height: calc(100svh + (max(340svh, 2300px) - 100svh) * .94);
+    min-height: 0;
+  }
+  .hero-animation__stage { overflow: visible; z-index: 2; pointer-events: none; }
+  .hero-animation__hardware { z-index: 2; transform-origin: 0 0; }
+  .hero-animation__surface { z-index: 3; color: #fff; color-scheme: dark; pointer-events: auto; }
+  .hero-animation__screen-content {
+    position: absolute;
+    inset: 0;
+    background: #0b121e;
+    transform: translateZ(0);
+  }
+  .hero-animation__ending {
+    position: absolute;
+    z-index: 1;
+    top: calc(clamp(112px, 15svh, 190px) + 32px);
+    left: 32px;
+    right: 32px;
+    text-align: center;
+    pointer-events: none;
+
+    h2 { margin: 0 auto; max-width: 1300px; color: #090b0e;  }
+  }
+  .hero-animation__ending .text-reveal__content { opacity: 0; }
+  .hero-animation__action { display: flex; }
+  // Hide only the entry targets before hydration; Reduced Motion and no-JS
+  // visits retain the complete stationary hero from their first paint.
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-animation__screen-content[data-entrance='pending'] {
+      .hero-test__menu, .hero-test__brand, .hero-animation__action,
+      .hero-test__nav-dock, .text-reveal__content { opacity: 0; }
+    }
+  }
+  .hero-animation__description {
+    margin: 24px auto 0; color: #555b63;
+  }
+  .hero-animation__navigation {
+    position: fixed; z-index: 1; top: 24px; left: 0; right: 0; height: 64px;
+    opacity: 0; color-scheme: dark; pointer-events: none; transform-origin: 50% 0;
+    font-family: 'Hero Manrope', sans-serif;
+    .hero-test__nav { bottom: 0; pointer-events: auto; }
+    .hero-test__nav-dock { box-shadow: none; }
+    .hero-test__nav-motion {
+      transition: transform 500ms cubic-bezier(.22, 1, .36, 1), opacity 350ms ease;
+      &[data-scroll-hidden='true'] {
+        transform: translateY(calc(-100% - 64px));
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+    .hero-test__links a { color: #fff; }
+    .download-link { font-family: 'Hero Manrope', sans-serif; }
+    .download-link__label { letter-spacing: -.3px; }
+  }
+  .hero-animation--static { height: 100svh; min-height: 720px; }
+  .hero-animation--static .hero-animation__ending,
+  .hero-animation--static ~ .hero-animation__navigation { display: none; }
+
+  // The screen geometry is stable before the React island hydrates.
+  .hero-animation__surface { width: 100%; height: max(720px, 100svh); border-radius: 0; }
+  // Only the display is composited above WebGL. The model owns the surrounding
+  // bezel from the first moving frame, so its depth ordering never switches.
+  .hero-animation__surface--moving { background: transparent; }
+  .hero-test__screen, .hero-test__frame {
+    border-radius: 17px;
+    transform-origin: 0 0;
+  }
+  .hero-test__notch { transform-origin: 50% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-next .hero-test__nav-motion { transition: none; }
+}
+
+// Both scenes use the same fixed desktop typography.
+.home-next {
+  .hero-test__copy h1, .hero-animation__ending h2 {
+    font: 600 64px/72px 'Hero Manrope', sans-serif;
+    letter-spacing: -.04em;
+  }
+  .hero-test__copy p, .hero-animation__description {
+    font: 400 18px/28px 'Hero Manrope', sans-serif;
+    letter-spacing: normal;
+  }
+}
+
+.home-next-placeholder { display: none; color: #fff; }
+@media (width < 1056px) {
+  .home-next .home-next-desktop { display: none; }
+  .home-next-placeholder { display: flex; }
+}

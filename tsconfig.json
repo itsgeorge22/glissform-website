@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
@@ -15,5 +19,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": ["src"]
+  "include": [
+    ".astro/types.d.ts",
+    "src/vite-env.d.ts",
+    "src/pages/**/*",
+    "src/home-next/**/*"
+  ],
+  "extends": "astro/tsconfigs/strict",
+  "exclude": [
+    "dist"
+  ]
 }

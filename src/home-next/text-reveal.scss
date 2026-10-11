@@ -1,0 +1,12 @@
+.text-reveal__line {
+  display: block;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.text-reveal__content {
+  display: block;
+  white-space: nowrap;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}

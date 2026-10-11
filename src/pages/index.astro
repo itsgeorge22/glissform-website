@@ -1,0 +1,47 @@
+---
+import Hero from '../home-next/Hero';
+import SettingsFeatures from '../home-next/SettingsFeatures';
+import logo from '../hero-test/assets/glissform.webp?url';
+import favicon from '../generated/assets/favicon.png?url';
+import { siteUrl, siteTitle, siteDescription, socialImage, softwareApplication } from '../siteMetadata';
+---
+<!doctype html>
+<html lang="en" class="home-next-page">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="robots" content="noindex, nofollow" />
+    <noscript><style is:global>
+      .home-next .hero-animation__screen-content[data-entrance='pending'] :is(.hero-test__menu, .hero-test__brand, .hero-animation__action, .hero-test__nav-dock, .text-reveal__content) { opacity: 1; }
+    </style></noscript>
+    <title>{siteTitle}</title>
+    <meta name="description" content={siteDescription} />
+    <link rel="canonical" href={siteUrl} />
+    <link rel="icon" type="image/png" sizes="64x64" href={favicon} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Glissform" />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={siteDescription} />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(softwareApplication)} />
+  </head>
+  <body class="home-next">
+    <main>
+      <div class="hero-test-placeholder home-next-placeholder">
+        <img src={logo} width="48" height="48" alt="Glissform" />
+        <h1>A little more room, please.</h1>
+        <p>Open this preview on your MacBook or widen your browser window to at least 1056px to view the desktop design.</p>
+      </div>
+      <Hero client:load />
+      <SettingsFeatures client:load />
+    </main>
+    <script>
+      if (import.meta.env.DEV && new URLSearchParams(location.search).has('profile')) {
+        import('../hero-test-animation/frameProbe').then(({ mountFrameProbe }) => mountFrameProbe());
+      }
+    </script>
+  </body>
+</html>

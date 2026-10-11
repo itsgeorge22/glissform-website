@@ -2,6 +2,100 @@
 
 ## Unreleased
 
+- Keep the local v2 hero navbar visible. Hide only the fixed top navbar after the MacBook section releases and another 80px of downward movement, then return it after 40px upward. Keep it shown throughout the pinned MacBook scene and while it has keyboard focus; support consumed wheel/key input in the subsequent pinned features. Use an independent smooth slide so entrance and projection motion remain intact; reduced motion switches immediately. Local only.
+
+- Adapt Potion's whole-line text entrance for the local v2 hero, Mac copy and gesture-triggered features, retaining the hero's 1050ms/900ms speeds and reading cue. Feature headlines and subtitle lines share one physical travel distance and translation progress, retaining line-by-line unfolding and fading without separating the message. Scroll reversals retrace the active handoff continuously from its current position. Exits reverse the line poses with their tilt, scale, skew and opacity. Stagger both entry and exit in the direction of travel: top line first when moving up, bottom line first when moving down. Both departing and arriving text move upward on down-scroll and downward on up-scroll, with headline and supporting lines following the current gesture regardless of their previous entrance. Remove the separate block glide and fade. Start outgoing copy with the placeholder, then start incoming copy immediately when the outgoing copy fully disappears, without overlap or an extra pause; retain their existing durations and line motion. Keep all four feature messages in screen-reader reading order independently of the visual sequence. Preserve the existing Mac copy cues and reveal spans, one feature per gesture, static fallbacks and other object motion. Local only.
+
+- Replace the empty space after the local v2 MacBook scene with Start at login, Easy to reach, Always active and Stay updated. Hold one copy/panel pair for reading, with panels fitting the viewport and 64px top and bottom margins. Each new scroll gesture triggers one timed handoff: incoming copy uses the shared whole-line reveal at the hero's 1050ms/900ms speeds, and panels follow each other with a gentle 1450ms ease-in-out slide. Ignore same-direction momentum during playback; reverse the active handoff on opposite input and never queue automatic advances. Support backward gestures and scroll keys, preserve reduced-motion/static content, the MacBook scene and the desktop boundary. Local only.
+
+- Document reusable v2 motion rules for text, visuals, composed units and collections in `docs/MOTION.md`. Treat emphasis, size and timing driver as separate choices; keep exact hero settings in `docs/MOTION_HERO_REFERENCE.md`. Link both from AGENTS.md and README. Documentation only; no animation changes. Local only.
+
+- Add coordinated local v2 hero entrances: reveal the headline over 1050ms, start the subtitle 80ms after its final line begins and reveal it over 900ms, and bring in Download at 550ms. The menu bar enters as one object at a fixed scale. The navbar starts alongside it with a short rise, subtle scale and gentle spring settle, without tilt. Bring in the brand 180ms later; retain spring motion for the brand and Download button. Both copy sections share the character animation, with documented separate rules for timed and scroll-controlled staggering. Remove excess space between the status icons and date. Preserve reduced motion, static fallbacks and the completed MacBook scroll scene. Local only.
+
+- Simplify the v2 website workflow with dedicated AGENTS.md rules, a concise README and a retained changelog. Archive the roadmap and older reference notes; use v2 as the sole visual reference, preserve the 1056px boundary, refresh previews after website changes and reserve routine tests for authorized pushes/uploads. Local only.
+
+- Increase the local v2 keyboard-well-to-trackpad gap by exactly 50% and match that clearance between the trackpad and scoop. Extend the trackpad vertically to fit those equal gaps while retaining its width, finish and the surrounding model. Local only.
+
+- Refine the local v2 model using MacBook Air references. Replace the flat hinge-end blocks with the original housing’s continuous curved profile: inner 30% dark and outer 70% chassis silver on each formerly exposed end, with the central cover unchanged. Extend the rear deck over the hidden hinge mounts. Move the keyboard toward the trackpad, leave more silver surface above the function row, and seat the keys in a shallow beveled silver recess. Preserve the approved body silhouette, trackpad and animations. Local only.
+
+- Keep the local v2 fixed navbar above the copy as the section scrolls away. Switch its layer at the native sticky-release boundary instead of waiting for the smoothed model pose to reach exactly its endpoint, and apply the layer change directly on scroll. Retain the MacBook overlap while the scene is pinned. Local only.
+
+- Remove the local v2 scroll transition zone and all of its follow-up release curves, overlaps, layout offsets and fixed-stage movement changes. Restore native sticky positioning and the original scroll driver, retaining the earlier removal of the idle tail and the independently adjusted subtitle entrance. Local only.
+
+- Make the local v2 section position follow native scroll directly so the copy and Mac do not keep drifting in the old direction during quick scroll reversals. Retain 65ms smoothing for the Mac pose, the 280px release overlap, subtitle timing and the shared frame scheduler. Local only.
+
+- Start the local v2 section transition 280px before the Mac animation ends, retaining the 256px transition length and current subtitle timing. Local only.
+
+- Set the local v2 section transition to begin 200px before the Mac animation ends. Preserve the 256px transition length and current subtitle timing; keep the layout aligned with the earlier exit. Local only.
+
+- Start the local v2 section transition another 32px earlier, now 96px before the Mac animation ends. Retain the release curve and subtitle timing. Local only.
+
+- Finish the local v2 subtitle entrance a little earlier, shortening its reveal span from 0.28 to 0.24 while retaining its start, character motion and final position. Local only.
+
+- Start the local v2 section transition 64px of scroll before the Mac animation ends, gently overlapping its final settling motion. Keep the 256px release curve, shared timing and original reveal distance; adjust the reserved layout space to match. Local only.
+
+- Remove the remaining local v2 release twitch by driving the Mac pose and section position from one continuous scroll coordinate with the existing 65ms smoothing. Remove the forced endpoint snap and the separate sticky-to-page positioning handoff. The 256px release still starts only after the model reaches its final pose and reverses along the same path. Native scroll input is unchanged. Local only.
+
+- Fix the brief vertical bounce when the local v2 reveal ends. Keep the stage pinned throughout the 256px release transition and move it only upward before native scrolling takes over, instead of counteracting native movement with a downward correction. Preserve the reveal distance, resting pose and reverse transition. Local only.
+
+- Add a reversible 256px scroll transition after the local v2 Mac animation is fully complete. Ease the section from pinned to normal page movement, and gently settle it back into the pin on reverse scroll. Keep the completed model pose throughout the transition and align following content with its final offset. No timed pause or scroll-input interception. Local only.
+
+- Remove the remaining pause after the local v2 reveal by trimming the unused final 6% of its scroll travel. Release the sticky section at the animation endpoint while preserving the motion pacing, resting pose and layout. Local only.
+
+- Remove the local v2 closing-and-lifting experiment, including its rear twist and extra scroll pause. End the original reveal with the Mac resting 28° open on the surface, then let the composition scroll away normally. Preserve its size, 128px copy gap and soft contact shadow; bring the fixed navbar forward at the resting pose. Local only.
+
+- Keep the original hero navbar visible inside the MacBook screen throughout closing, following the existing screen perspective and blur without fading it out. Preserve the separate fixed navbar and its phase-dependent layering. Local only.
+
+- Keep the local v2 fixed navbar behind the MacBook during the scroll animation, then raise it above the page when the final pose is reached. Reverse scrolling into the animation restores the lower layer. Preserve the navbar's top position, model size, 128px copy gap and animation timing; empty stage space passes pointer input through to the navbar. Local only.
+
+- Give the local v2 second section a distinct subtitle about customizing the MacBook lid animation, naming Seamless Close, Glissform and macOS. Preserve the hero copy, two-line layout and character animation. Local only.
+
+- Hide the local v2 page scrollbar with standard and browser-specific CSS while preserving native scrolling and the scroll-driven animation. Local only.
+
+- Add a height-responsive ground shadow beneath the local v2 MacBook. Vary separation, spread, softness and opacity through the descent, bringing in a narrow shadow beneath the inset underside as the feet reach the surface. Preserve softer middle and ambient layers for a wide, gentle falloff without a floating appearance. Remove stage clipping and extend the drawing canvas beyond the section boundary to prevent cutting off the shadow. Keep the opening hero's outer bezel square and apply lower corner rounding only to the content. Local only.
+
+- Keep the local v2 ending copy's 32px downward offset and enlarge the centered MacBook, facing directly forward with no sideways turn or roll. Position the top of its projected silhouette exactly 128px below the copy block and fit the model within the available viewport. Retain the copy's internal spacing, lid animation, character reveals, navigation timing and interactions. Local only.
+
+- Restore the local v2 fixed navbar’s dark translucent palette with white links and the hero navbar’s original glass Download styling. Preserve the fixed layout, blur, entrance animation and shadow-free dock.
+
+- Round the local v2 opening hero’s lower content corners to 17px, then gradually square them over the first 20% of the scroll animation. Reverse scrolling restores the content rounding; the outer bezel remains square.
+
+- Restyle the local v2 fixed navbar for the white page with a 16% white blurred surface, charcoal links, neutral borders and dividers, and a pale blue Download pill with dark text. Preserve its layout, animation and the dark hero navbar.
+
+- Fix the local v2 screen shrinking into the upper-left corner during scrolling in Safari by separating the blurred content layer from its perspective transform. Preserve the existing camera, lid motion and blur progression. Reproduced and visually verified in Safari.
+
+- Set the local v2 fixed navbar background to 16% opacity, preserving its blur and fully visible text and icons.
+
+- Replace the v2 compact layouts with a placeholder below 1056px and unmount the desktop scene at that boundary. Match the ending headline and subtitle to the hero’s fixed typography while preserving their current colors and character animation. Local only.
+
+- Match the local v2 ending to the supplied white reference: use the two-line “Satisfying even when / it’s time to close” headline and original hero subtitle with reversible character animations, and retain the original silver Mac finish. Add a matching fixed top navbar with an entrance animation, background blur, increased transparency and no dock shadow; keep it visible across the empty continuation and return to the screen navbar on reverse scroll. Preserve the dark opening hero and stationary fallbacks. Local only.
+- Rework the local v2 closing scene with a light page and stage, a centered Mac beneath “You’ve closed it a thousand times. Never like this.” and its supporting subtitle. Replace the two-stage vertical recentering with one continuous centered pullback and turn, ending 28° open. Keep the ending limited to its headline, subtitle and Mac. Preserve the dark opening hero, original hardware details, reverse scrolling and empty continuation for future content. Local only.
+
+- Restore the original v2 keyboard and plain lower screen edge; remove the added screen-light emitter and surrounding glow while retaining the Pro hinge and original-sized scoop. End the front-facing 30° scroll scene with “A calmer way to close.” as the Mac settles beneath it, then release the complete composition into normal scrolling. Add one empty viewport for future content; keep compact and reduced-motion fallbacks stationary. Local only.
+
+- Restore the original v2 MacBook body and retain selected M5 Pro details: its keycaps/lettering without the black surround, the scoop shape at the original size, the hinge seated inside the base, and the lower display plastic. Center the Mac facing forward on deep dark blue, add restrained screen spill, and stop the reversible animation at 30° open. Remove the outside closing heading and reopen button. Keep the original opening hero and hero-only scope; local only.
+
+- Replace the local v2 hero’s hand-built laptop with Apple’s MacBook Pro 14-inch M5 model in its native Silver variant. Retain the real keyboard/lettering, speaker grilles, ports, camera notch, Touch ID and enclosure; connect the separate lid to the reversible animation and map the live hero to its measured LCD. Compress the local asset to about 2 MB, remove the old hidden keyboard template, and retain stationary/graphics fallbacks. Preserve the opening hero and hero-only scope. Local only; v1 and glissform.app are unchanged.
+
+- Refine the local MacBook's Touch ID and front opening recess from Apple's product photographs. Replace the grey Touch ID disc and outline with a shallow black circular well. Cut a flat sloped scoop with sharp angled shoulders into the aluminium deck and lip below the trackpad, and correct the front body's rippled shading. Keep the existing hero, bezel proportions and animation. Local only.
+
+- Reduce the local candidate's top, left and right bezels by another 10%, retaining their optical proportions, the lower border and the stationary hero. Local only.
+
+- Match the local candidate's top bezel visually to the side bezels in the wide pullback view with a small fixed optical correction. Preserve the side and lower borders, opening hero, notch and reversible motion. Local only.
+
+- Slightly slim the local candidate's side screen bezels by 11%, preserving the lower hinge border, fixed proportions during the pullback and the stationary hero's 16px frame. Local only.
+
+- Keep the local candidate's bezel and hinge geometry fixed throughout the pullback, cropping the extra case outside the opening viewport. Remove independent screen-inset and notch resizing. Render the frame and base together from the first moving frame to eliminate the lower rim's overlap and layer jump. Preserve the stationary 16px hero frame and reverse scrolling. Local only.
+
+- Lower and recess the local candidate's lid toward the base underside, add rotating hinge arms, and preserve its closed fit. Fill the stationary hero's outer corners without changing the 16px screen frame or white page background. Keep reverse scrolling and display projection aligned.
+- Add Mac keyboard lettering, shifted punctuation, modifier and arrow symbols, and the brightness, Mission Control, Spotlight, dictation, Focus, playback and volume icons. Use one cached atlas and merged legend mesh, preserving the original homepage keyboard. Local only.
+
+- Refine the local candidate's MacBook display using Apple's product references: use a wider physical bezel and deeper lower rail, round only the screen's top corners, expose a fine metal rim, and connect the lid to the deck with coaxial hinge geometry. Retain the full-screen hero's 16px frame, content and effects; keep projected controls aligned while reversing. Local only.
+
+- Give the local hero candidate a white page and laptop-stage background, with readable dark transition text and controls. Preserve the screen hero's original background and effects.
+
+- Prepare a separate local hero-only Astro/React/Three.js candidate on `codex/homepage-v2`: preserve the existing screen hero, introduce physical MacBook materials and static studio lighting, retain reversible scrolling and compact/reduced-motion/graphics fallbacks, and add camera/geometry checks. No lower sections are included. Keep the canonical checkout and public website untouched; no push or deployment.
+
 - Add the separate `/hero-test-animation` scroll study: preserve the live screen hero while revealing the homepage's silver MacBook, coordinate the pullback, spatial movement and lid closure, and apply screen-local perspective, blur and shadow. Support reverse scrolling, resize, reduced motion and the existing desktop breakpoint. Keep the homepage and `/hero-test` unchanged. Include noindex build entries and prepare the restricted receiver for the new route. Local, not yet published.
 - Optimize the animation study with GPU-rendered hardware and one precisely projected live screen. Keep the opening hero flat with its original glow, stars, content and controls; remove overlapping closing blur passes, repeated pointer geometry reads and redundant playback updates. Preserve reversal, pause hidden screen work, and restore the stationary interactive hero if graphics become unavailable. Add development-only comparison controls. Local, not yet published.
 

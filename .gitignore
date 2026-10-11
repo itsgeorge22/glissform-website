@@ -10,3 +10,4 @@ public/assets/glissform-social.png
 *.pem
 *.key
 __pycache__/
+.astro/

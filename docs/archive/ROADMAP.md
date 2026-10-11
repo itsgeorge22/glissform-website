@@ -1,4 +1,21 @@
+> Archived on 2026-10-05. This records earlier plans and completion claims; unchecked items are not an active work queue. No ongoing maintenance required. Follow [AGENTS.md](../../AGENTS.md) for current working rules.
+
 # Website roadmap
+
+- [x] Create an isolated local hero-only Astro/React/Three.js/GSAP candidate using the existing hero design and interactions.
+- [x] Add physical laptop materials, cached studio lighting, render-on-demand motion, native-scroll reversal and compact/graphics fallbacks.
+- [x] Integrate the premade M5 MacBook Pro with its native Silver finish, articulated lid, measured live-display projection and compressed local asset.
+- [x] Restore the original body with selected Pro keycaps, scoop, hinge and lower display plastic. Exclude the dark keyboard surround, retain the original scoop size, use centered front-facing motion ending 30° open, and remove outside copy/controls on a dark blue stage with screen glow.
+- [x] Restore the original keyboard and lower display edge, remove added glow, and create a minimal closing headline with a reversible settling motion and native-scroll exit into empty space for future content.
+- [x] Make the v2 page and closing stage light, keep the original dark opening hero, and center the revised headline/subtitle above a continuous Mac sweep without vertical backtracking or decorative controls.
+- [x] Match the supplied white ending reference with the original silver finish, equal-size headline lines, reversible character reveals, and an animated fixed navbar with a transparent blurred background and no dock shadow.
+- [x] Restrict the v2 design to widths of at least 1056px, show only a placeholder below that boundary, and share the fixed hero typography with the second scene.
+- [x] Fix and verify Safari’s shrinking screen-content layer during the Mac reveal without changing the animation.
+- [x] Remove the closing-and-lifting experiment and its extra scroll pause; retain the approved 28° resting composition and normal scroll continuation. Trim the original reveal’s remaining idle tail so the section releases at the motion endpoint.
+- [x] Remove the transition-zone experiment and its follow-up timing/positioning changes; restore native sticky release at the reveal endpoint.
+- [x] Refine the local model’s hinge sleeves, rear deck surface and recessed keyboard placement using MacBook Air references, preserving the approved motion and overall body.
+- [ ] Obtain owner review of the hero candidate in Safari and Chrome on target hardware.
+- [ ] Any lower-section work or homepage replacement requires a separate instruction. No publication has been performed.
 
 - [x] Implement a separate `/hero-test-animation` study with the existing live hero inside a scroll-driven MacBook reveal and closure, reversible motion and a reduced-motion fallback.
 - [x] Replace the study's CSS hardware with an isolated GPU renderer, keep the opening hero flat, consolidate closing filters and coordinate pointer updates without repeated layout measurements.

@@ -1,0 +1,99 @@
+import { ease, timedCopyRevealTiming, subtitleRevealCue } from './choreography';
+import { createTextReveal } from './textRevealMotion';
+import { cancelHeroFrame, requestSceneFrame } from '../hero-test-animation/frameSync';
+
+/** Damped spring displacement, starting at rest. Feather its tiny remaining
+ * energy to zero so removing the entrance transform never produces a snap. */
+function springDisplacement(progress: number, damping: number, frequency: number) {
+  return Math.exp(-damping * progress)
+    * (Math.cos(frequency * progress) + damping / frequency * Math.sin(frequency * progress))
+    * (1 - ease((progress - .72) / .28));
+}
+
+/** A single opening sequence; scrolling takes over with fully settled content. */
+export function playHeroEntrance(content: HTMLElement) {
+  const headline = content.querySelector<HTMLElement>('h1')!;
+  const heading = createTextReveal(headline);
+  const description = createTextReveal(content.querySelector<HTMLElement>('.hero-test__copy p')!);
+  const { headline: headlineDuration, subtitle: subtitleDuration } = timedCopyRevealTiming;
+  // Supporting copy follows the final headline line's start by the shared lag.
+  const lineCount = headline.querySelectorAll('.text-reveal__content').length;
+  const subtitleDelay = subtitleRevealCue(lineCount) * headlineDuration;
+  const groups = [
+    { selector: '.hero-test__menu', start: 0, duration: 880, y: -18, scale: 1, tilt: 0, damping: 8, frequency: 10 },
+    { selector: '.hero-test__brand', start: 180, duration: 920, y: 16, scale: .94, tilt: 0, damping: 8, frequency: 11 },
+    { selector: '.hero-animation__action', start: 550, duration: 1100, y: 36, scale: .86, tilt: -10, damping: 7.8, frequency: 12.5 },
+    { selector: '.hero-test__nav-dock', start: 0, duration: 1000, y: 24, scale: .98, tilt: 0, damping: 9, frequency: 10 },
+  ].map(group => ({ ...group, element: content.querySelector<HTMLElement>(group.selector)!, previous: -1 }));
+  const duration = Math.max(subtitleDelay + subtitleDuration, ...groups.map(group => group.start + group.duration));
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let frame = 0, start: number | undefined, finished = false, disposed = false;
+  const progress = (time: number, delay: number, duration: number) => Math.max(0, Math.min(1, (time - delay) / duration));
+  const draw = (time: number) => {
+    heading(progress(time, 0, headlineDuration));
+    description(progress(time, subtitleDelay, subtitleDuration));
+    for (const group of groups) {
+      const phase = progress(time, group.start, group.duration);
+      if (phase === group.previous) continue;
+      group.previous = phase;
+      const remaining = springDisplacement(phase, group.damping, group.frequency);
+      // Become clear early, leaving the visible spring to carry the arrival.
+      // Opacity stays monotonic while position and scale gently overshoot.
+      group.element.style.opacity = String(ease(phase / .24));
+      group.element.style.transform = phase === 1 ? 'none'
+        : `perspective(800px) translate3d(0, ${remaining * group.y}px, 0) rotateX(${remaining * group.tilt}deg) scale(${1 + (group.scale - 1) * remaining})`;
+    }
+  };
+  const stopListening = () => {
+    window.removeEventListener('scroll', finish);
+    window.removeEventListener('pagehide', finish);
+    document.removeEventListener('visibilitychange', visibility);
+    content.removeEventListener('focusin', finish);
+    motion.removeEventListener('change', preference);
+  };
+  const finish = () => {
+    if (disposed || finished) return;
+    finished = true;
+    cancelHeroFrame(frame); frame = 0;
+    draw(duration);
+    content.dataset.entrance = 'complete';
+    // The dock's centering and the button's hover remain owned by their CSS.
+    for (const { element } of groups) {
+      element.style.removeProperty('opacity');
+      element.style.removeProperty('transform');
+    }
+    stopListening();
+  };
+  const visibility = () => { if (document.hidden) finish(); };
+  const preference = () => { if (motion.matches) finish(); };
+  const tick = (time: number) => {
+    frame = 0;
+    if (disposed || finished) return;
+    start ??= time;
+    const elapsed = time - start;
+    if (elapsed >= duration) { finish(); return; }
+    draw(elapsed);
+    frame = requestSceneFrame(tick);
+  };
+
+  if (motion.matches || window.scrollY > 0 || document.hidden) finish();
+  else {
+    draw(0);
+    content.dataset.entrance = 'running';
+    window.addEventListener('scroll', finish, { passive: true });
+    window.addEventListener('pagehide', finish);
+    document.addEventListener('visibilitychange', visibility);
+    content.addEventListener('focusin', finish);
+    motion.addEventListener('change', preference);
+    // Begin after the final font metrics are ready, including a cold load.
+    void document.fonts.ready.then(() => {
+      if (!disposed && !finished) frame = requestSceneFrame(tick);
+    });
+  }
+  return () => {
+    finish();
+    disposed = true;
+    cancelHeroFrame(frame);
+    stopListening();
+  };
+}

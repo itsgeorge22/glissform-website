@@ -1,3 +1,5 @@
+> Archived on 2026-10-05. Historical evidence only; not a current specification, task list, or authorization to publish. No ongoing maintenance required.
+
 # Live loading and indexing audit — 2026-10-02
 
 Tested URL: https://glissform.app/. The live deployment marker reported commit `e88c9ea3c0c4ed2657404b17dad7f194fe6d128d`. No website content, styling or animation behavior changed during this audit.
