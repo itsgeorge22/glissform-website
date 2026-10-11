@@ -82,7 +82,7 @@ test('feature playback preserves semantic content, reversed line exits and lifec
       && scale(items[0].lines[1]) < scale(items[0].lines[2]),
     'upward departure folds headline, first subtitle line, then second subtitle line');
     assert.deepEqual(visible(), [0], 'only the outgoing copy is visible during departure');
-    key('ArrowDown'); step(858);
+    window.emit('keydown', { key: 'ArrowDown', repeat: true }); step(858);
     assert.deepEqual(visible(), [1], 'incoming copy follows the completed exit');
     assert.ok(scale(items[1].lines[0]) > scale(items[1].lines[1])
       && scale(items[1].lines[1]) > scale(items[1].lines[2]), 'upward arrival unfolds top to bottom');
@@ -177,6 +177,68 @@ test('feature playback preserves semantic content, reversed line exits and lifec
       semanticContentAvailable();
       assert.equal(frames.size, 0);
     }
+    const restart = () => {
+      stop(); now += 1000; pinned = true;
+      stop = animateSettingsFeatures(section);
+    };
+    // Entering the section must not inherit a consumed gesture from the page.
+    restart(); pinned = false; wheel(1); step(40); pinned = true; wheel(1);
+    step(2000); assert.deepEqual(visible(), [1], 'entry scroll starts the first handoff');
+
+    // A long decaying tail advances only once, even beyond animation completion.
+    restart(); wheel(1);
+    for (let i = 0; i < 100; i++) {
+      step(40); window.emit('wheel', { deltaY: 120 * Math.pow(.94, i + 1), deltaX: 0 });
+    }
+    assert.deepEqual(visible(), [1]); assert.equal(frames.size, 0);
+
+    // A deliberate request during the quiet ending is retained without
+    // shortening the animation or accumulating a multi-feature queue.
+    restart(); wheel(1); step(1600); wheel(1);
+    step(199); assert.deepEqual(visible(), [1]);
+    step(1); step(1);
+    assert.equal(frames.size, 1, 'the next handoff begins after the full 1800ms');
+    step(2000); assert.deepEqual(visible(), [2]);
+    step(2000); assert.equal(frames.size, 0, 'no automatic third advance');
+
+    restart(); wheel(1); step(500); wheel(1); step(500); wheel(1);
+    step(800); step(1800);
+    assert.deepEqual(visible(), [2], 'multiple early requests coalesce to one adjacent step');
+    assert.equal(frames.size, 0);
+
+    // A wheel event can complete the old timeline before its scheduled frame.
+    restart(); wheel(1); step(1600); wheel(1);
+    now += 160; window.emit('wheel', { deltaY: 100, deltaX: 0 });
+    now += 41; window.emit('wheel', { deltaY: 90, deltaX: 0 });
+    step(16); assert.equal(frames.size, 1, 'pending request survives completion outside RAF');
+    step(2000); assert.deepEqual(visible(), [2]); assert.equal(frames.size, 0);
+
+    // Reversing clears a pending request and retraces the same rendered poses.
+    restart(); wheel(1); step(500); wheel(1);
+    before = snapshot(); wheel(-1); assert.deepEqual(snapshot(), before);
+    step(2000); assert.deepEqual(visible(), [0]); assert.equal(frames.size, 0);
+
+    // Short separate strokes and renewed input during a momentum tail both work.
+    restart(); wheel(1); step(2000);
+    window.emit('wheel', { deltaY: 1, deltaX: 0 }); step(150); wheel(1);
+    step(2000); assert.deepEqual(visible(), [2], '150ms pause is enough for a new strong stroke');
+
+    restart(); wheel(1);
+    for (let i = 0; i < 50; i++) {
+      step(40); window.emit('wheel', { deltaY: 120 * Math.pow(.9, i + 1), deltaX: 0 });
+    }
+    step(20); window.emit('wheel', { deltaY: 12, deltaX: 0 });
+    step(20); window.emit('wheel', { deltaY: 24, deltaX: 0 });
+    step(2000); assert.deepEqual(visible(), [2], 'renewed swipe is not merged with the old tail');
+
+    // Pending input never survives backgrounding or a preference reset.
+    restart(); wheel(1); step(500); wheel(1);
+    document.hidden = true; document.emit('visibilitychange');
+    document.hidden = false; document.emit('visibilitychange');
+    step(2000); assert.deepEqual(visible(), [1]); assert.equal(frames.size, 0);
+    restart(); wheel(1); step(500); wheel(1);
+    pinned = false; window.emit('scroll'); pinned = true; step(2000);
+    assert.deepEqual(visible(), [1]); assert.equal(frames.size, 0, 'leaving the section clears pending input');
     stop(); stop = undefined;
     assert.equal(window.size() + document.size() + reduced.size() + desktop.size(), 0);
     assert.equal(frames.size, 0); semanticContentAvailable();

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Make feature scroll triggers recognize renewed input and section entry reliably. Retain only one deliberate next-feature request while an animation completes, discard momentum, and clear pending input on reversal or lifecycle reset. Preserve all copy and panel animation timing. V2 branch only; not deployed.
+
+- Shorten feature copy entrances and exits to 900ms, preserving their shared line motion and immediate handoff. Hero and placeholder timing are unchanged. V2 branch only; not deployed.
+
+- Set the v2 feature placeholder gap to 24px, preserving panel size and showing neighboring panels above and below without inset clipping. Give the pinned stage one scroll hit area across the copy, placeholders and surrounding space, with wheel handling in capture phase. V2 branch only; not deployed.
+
 - Keep the local v2 hero navbar visible. Hide only the fixed top navbar after the MacBook section releases and another 80px of downward movement, then return it after 40px upward. Keep it shown throughout the pinned MacBook scene and while it has keyboard focus; support consumed wheel/key input in the subsequent pinned features. Use an independent smooth slide so entrance and projection motion remain intact; reduced motion switches immediately. Local only.
 
 - Adapt Potion's whole-line text entrance for the local v2 hero, Mac copy and gesture-triggered features, retaining the hero's 1050ms/900ms speeds and reading cue. Feature headlines and subtitle lines share one physical travel distance and translation progress, retaining line-by-line unfolding and fading without separating the message. Scroll reversals retrace the active handoff continuously from its current position. Exits reverse the line poses with their tilt, scale, skew and opacity. Stagger both entry and exit in the direction of travel: top line first when moving up, bottom line first when moving down. Both departing and arriving text move upward on down-scroll and downward on up-scroll, with headline and supporting lines following the current gesture regardless of their previous entrance. Remove the separate block glide and fade. Start outgoing copy with the placeholder, then start incoming copy immediately when the outgoing copy fully disappears, without overlap or an extra pause; retain their existing durations and line motion. Keep all four feature messages in screen-reader reading order independently of the visual sequence. Preserve the existing Mac copy cues and reveal spans, one feature per gesture, static fallbacks and other object motion. Local only.

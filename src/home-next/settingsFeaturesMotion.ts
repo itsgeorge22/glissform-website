@@ -1,5 +1,6 @@
 import { createTextReveal } from './textRevealMotion.ts';
-import { settingsFeaturesPose, nextSettingsFeature, isNewSettingsGesture, settingsFeaturesTiming } from './settingsFeaturesChoreography.ts';
+import { settingsFeaturesPose, nextSettingsFeature, settingsFeaturesTiming } from './settingsFeaturesChoreography.ts';
+import { createSettingsWheelGesture } from './settingsFeaturesInput.ts';
 import { cancelHeroFrame, requestSceneFrame } from '../hero-test-animation/frameSync.ts';
 
 /** One gesture starts a handoff; opposite input retraces it without a jump. */
@@ -17,7 +18,8 @@ export function animateSettingsFeatures(section: HTMLElement) {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const desktop = window.matchMedia('(min-width: 1056px)');
   let frame = 0, height = 1, animated = false, disposed = false, current = 0;
-  let lastWheelTime = -Infinity, lastWheelDirection = 0;
+  const gesture = createSettingsWheelGesture();
+  let pendingDirection = 0;
   let transition: { from: number; to: number; elapsed: number; updatedAt: number; playback: 1 | -1 } | undefined;
   const styles = new WeakMap<HTMLElement, Map<string, string>>();
   const setStyle = (element: HTMLElement, property: string, value: string) => {
@@ -31,7 +33,6 @@ export function animateSettingsFeatures(section: HTMLElement) {
     section.removeAttribute('data-motion');
     for (const { copy, panel } of items) {
       copy.style.removeProperty('visibility');
-      panel.style.removeProperty('visibility');
       panel.style.removeProperty('transform');
       for (const line of copy.querySelectorAll<HTMLElement>('.text-reveal__content')) {
         line.style.removeProperty('opacity');
@@ -43,7 +44,7 @@ export function animateSettingsFeatures(section: HTMLElement) {
   const draw = (elapsed = 0) => {
     const pose = settingsFeaturesPose(elapsed);
     const direction = transition ? Math.sign(transition.to - transition.from) : 1;
-    const distance = height - 64;
+    const distance = height - 128 + 24; // Panel height plus the inter-panel gap.
     items.forEach((item, index) => {
       const outgoing = !!transition && index === transition.from;
       const incoming = !!transition && index === transition.to;
@@ -60,12 +61,10 @@ export function animateSettingsFeatures(section: HTMLElement) {
       } else if (settled) {
         item.reveal(1);
       }
-      const visiblePanel = settled || (outgoing && pose.panel < 1) || (incoming && pose.panel > 0);
-      setStyle(item.panel, 'visibility', visiblePanel ? 'visible' : 'hidden');
-      if (outgoing || incoming || settled) {
-        const y = settled ? 0 : direction * distance * (outgoing ? -pose.panel : 1 - pose.panel);
-        setStyle(item.panel, 'transform', y === 0 ? 'none' : `translate3d(0, ${y}px, 0)`);
-      }
+      // Keep the whole panel column connected, including neighboring previews.
+      const position = transition ? transition.from + direction * pose.panel : current;
+      const y = (index - position) * distance;
+      setStyle(item.panel, 'transform', y === 0 ? 'none' : `translate3d(0, ${y}px, 0)`);
     });
   };
   const advance = (time: number) => {
@@ -81,29 +80,40 @@ export function animateSettingsFeatures(section: HTMLElement) {
   };
   const tick = (time: number) => {
     frame = 0;
-    if (!animated || disposed || !transition || document.hidden) return;
+    if (!animated || disposed || (!transition && !pendingDirection) || document.hidden) return;
     advance(time);
     draw(transition?.elapsed);
-    if (transition) frame = requestSceneFrame(tick);
+    if (!transition && pendingDirection) {
+      const direction = pendingDirection;
+      pendingDirection = 0;
+      if (pinned()) start(direction);
+    }
+    if (transition && !frame) frame = requestSceneFrame(tick);
   };
   const pinned = () => {
     const bounds = section.getBoundingClientRect();
     return animated && bounds.top <= 1 && bounds.bottom >= height - 1;
   };
+  const pageScroll = () => {
+    if (!pinned()) { gesture.reset(); pendingDirection = 0; }
+  };
   const start = (direction: number) => {
     if (disposed) return;
+    advance(performance.now());
     if (transition) {
       const playback = direction === Math.sign(transition.to - transition.from) ? 1 : -1;
-      if (playback === transition.playback) return;
-      advance(performance.now());
-      if (transition) {
-        // Keep the original pair/poses and turn time around at this exact point.
-        transition.playback = playback;
-        draw(transition.elapsed);
+      if (playback === transition.playback) {
+        // Keep at most one deliberate next request; momentum never calls start.
+        pendingDirection = direction;
         return;
       }
-      draw();
+      pendingDirection = 0;
+      // Keep the original pair/poses and turn time around at this exact point.
+      transition.playback = playback;
+      draw(transition.elapsed);
+      return;
     }
+    pendingDirection = 0;
     const next = nextSettingsFeature(current, direction, items.length);
     if (next === current) return;
     transition = { from: current, to: next, elapsed: 0, updatedAt: performance.now(), playback: 1 };
@@ -112,12 +122,16 @@ export function animateSettingsFeatures(section: HTMLElement) {
   };
   const wheel = (event: WheelEvent) => {
     if (!event.deltaY || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+    if (!pinned()) {
+      gesture.reset(); pendingDirection = 0;
+      return;
+    }
     const time = performance.now(), direction = Math.sign(event.deltaY);
-    const fresh = isNewSettingsGesture(time, lastWheelTime, direction, lastWheelDirection);
-    lastWheelTime = time; lastWheelDirection = direction;
-    if (!pinned()) return;
-    // Momentum never queues advances. A direction change reverses the active
-    // handoff immediately, including when it happens within the same gesture.
+    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? height : 1;
+    const fresh = gesture.read(time, event.deltaY * unit);
+    advance(time);
+    // Direction changes retrace the active handoff immediately. Only a fresh
+    // gesture can request the next adjacent feature or release a boundary.
     const boundary = nextSettingsFeature(current, direction, items.length) === current;
     if (!transition && fresh && boundary) return;
     event.preventDefault();
@@ -142,6 +156,7 @@ export function animateSettingsFeatures(section: HTMLElement) {
     draw(transition?.elapsed);
   };
   const settle = () => {
+    pendingDirection = 0; gesture.reset();
     cancelHeroFrame(frame); frame = 0;
     if (transition) current = transition.playback === 1 ? transition.to : transition.from;
     transition = undefined;
@@ -159,7 +174,9 @@ export function animateSettingsFeatures(section: HTMLElement) {
   const visibility = () => { if (document.hidden) settle(); else measure(); };
   const observer = new ResizeObserver(measure);
   observer.observe(stage);
-  window.addEventListener('wheel', wheel, { passive: false });
+  // Capture wheel input before it reaches any rendered child/layer.
+  window.addEventListener('wheel', wheel, { passive: false, capture: true });
+  window.addEventListener('scroll', pageScroll, { passive: true });
   window.addEventListener('keydown', key);
   window.addEventListener('resize', measure);
   window.addEventListener('pageshow', measure);
@@ -173,7 +190,8 @@ export function animateSettingsFeatures(section: HTMLElement) {
     disposed = true;
     cancelHeroFrame(frame);
     observer.disconnect();
-    window.removeEventListener('wheel', wheel);
+    window.removeEventListener('wheel', wheel, true);
+    window.removeEventListener('scroll', pageScroll);
     window.removeEventListener('keydown', key);
     window.removeEventListener('resize', measure);
     window.removeEventListener('pageshow', measure);

@@ -1,8 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { timedCopyRevealTiming } from '../src/home-next/choreography.ts';
 import { textLinePose } from '../src/home-next/textRevealMotion.ts';
-import { settingsFeaturesPose, nextSettingsFeature, isNewSettingsGesture, settingsFeaturesTiming } from '../src/home-next/settingsFeaturesChoreography.ts';
+import { settingsFeaturesPose, nextSettingsFeature, settingsFeaturesTiming } from '../src/home-next/settingsFeaturesChoreography.ts';
 
 test('one gesture advances only one feature, regardless of its scroll distance', () => {
   assert.equal(nextSettingsFeature(0, 10000, 4), 1);
@@ -13,14 +12,8 @@ test('one gesture advances only one feature, regardless of its scroll distance',
   assert.equal(nextSettingsFeature(0, -10000, 4), 0);
 });
 
-test('trackpad momentum belongs to the same gesture until a pause or reversal', () => {
-  for (let time = 40; time <= 3000; time += 40) assert.equal(isNewSettingsGesture(time, time - 40, 1, 1), false);
-  assert.equal(isNewSettingsGesture(3280, 3000, 1, 1), true);
-  assert.equal(isNewSettingsGesture(3040, 3000, -1, 1), true);
-});
-
 test('headline and supporting lines share one entrance and exit clock', () => {
-  assert.equal(settingsFeaturesTiming.enterCopy.duration, timedCopyRevealTiming.headline);
+  assert.equal(settingsFeaturesTiming.enterCopy.duration, 900);
   assert.equal(settingsFeaturesTiming.exitCopy.duration, settingsFeaturesTiming.enterCopy.duration);
 });
 
@@ -39,18 +32,18 @@ test('copy exits with the panel and hands off immediately without overlap', () =
   }
 });
 
-test('the panel keeps progressing with elapsed time and clears the viewport', () => {
+test('the panel keeps progressing with a 24px gap and visible neighboring edge', () => {
   let previous = 0;
   for (let elapsed = 0; elapsed <= settingsFeaturesTiming.duration; elapsed++) {
     const pose = settingsFeaturesPose(elapsed);
     assert.ok(pose.panel >= previous);
     previous = pose.panel;
     for (const height of [600, 900, 1080]) {
-      const distance = height - 64, panelHeight = height - 128;
+      const panelHeight = height - 128, distance = panelHeight + 24;
       const outgoingBottom = 64 - pose.panel * distance + panelHeight;
       const incomingTop = 64 + (1 - pose.panel) * distance;
-      assert.ok(Math.abs(incomingTop - outgoingBottom - 64) < 1e-8);
-      if (pose.panel === 1) assert.ok(Math.abs(outgoingBottom) < 1e-8);
+      assert.ok(Math.abs(incomingTop - outgoingBottom - 24) < 1e-8);
+      if (pose.panel === 1) assert.equal(outgoingBottom, 40, 'previous panel remains visible above the 24px gap');
     }
   }
   assert.deepEqual(settingsFeaturesPose(settingsFeaturesTiming.duration), {

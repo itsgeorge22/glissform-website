@@ -4,7 +4,7 @@
 
   &__stage {
     display: grid;
-    gap: 64px;
+    gap: 24px;
     padding: 64px max(32px, calc((100% - 1416px) / 2));
   }
 
@@ -73,8 +73,13 @@
     .settings-features__item {
       position: absolute;
       inset: 64px max(32px, calc((100% - 1416px) / 2));
+      // Presentational layers share the stage's scroll hit area, including
+      // inactive articles that still occupy this same rectangle.
+      pointer-events: none;
     }
 
-    .settings-features__panel { height: 100%; }
+    .settings-features__panel {
+      height: 100%;
+    }
   }
 }
