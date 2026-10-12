@@ -33,6 +33,7 @@ export type ThreeHardwarePose = {
   perspective: number;
   elevation?: number;
   opacity?: number;
+  shadowOpacity?: number;
 };
 export type ThreeHardwareRenderer = {
   resize(width: number, height: number, dpr: number): void;
@@ -502,7 +503,7 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
     }
     add(root, merge(feet), rubber);
 
-    const mask = document.createElement('canvas'); mask.width = 312; mask.height = 360;
+    const mask = document.createElement('canvas'); mask.width = 1560; mask.height = 1800;
     const brush = mask.getContext('2d');
     if (!brush) throw Error('MacBook lid mark unavailable');
     brush.drawImage(logo, 0, 0, mask.width, mask.height); brush.globalCompositeOperation = 'source-in';
@@ -525,7 +526,7 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
     canvas.style.left = canvas.style.top = `${-canvasPadding}px`;
     canvas.style.transformOrigin = `${canvasPadding}px ${canvasPadding}px`;
     const previousMatrix = new Float32Array(16), nextMatrix = new Float32Array(16);
-    let width = 1, height = 1, perspective = 2400, dirty = true, lastFold = NaN, lastOpacity = NaN, lastElevation = NaN;
+    let width = 1, height = 1, perspective = 2400, dirty = true, lastFold = NaN, lastOpacity = NaN, lastElevation = NaN, lastShadowOpacity = NaN;
     configureThreeCamera(camera, width, height, perspective, canvasPadding);
     // Compile PBR programs once while the caller is warming the hidden canvas.
     renderer.compile(scene, camera);
@@ -567,6 +568,8 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
         if (fold !== lastFold) changed = true;
         const elevation = Math.max(0, Number.isFinite(pose.elevation) ? pose.elevation! : 0);
         if (elevation !== lastElevation) changed = true;
+        const shadowOpacity = Math.max(0, Math.min(1, pose.shadowOpacity ?? 1));
+        if (shadowOpacity !== lastShadowOpacity) changed = true;
         if (pose.perspective !== perspective) {
           perspective = pose.perspective; configureThreeCamera(camera, width, height, perspective, canvasPadding); changed = true;
         }
@@ -586,12 +589,12 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
         groundLayers.forEach(({ mesh, paint }, index) => {
           mesh.matrix.copy(cssToThree).multiply(groundModel).multiply(shadowSpread);
           mesh.matrixWorldNeedsUpdate = true;
-          paint.opacity = index === 0 ? .18 * Math.exp(-elevation / 8)
-            : index === 1 ? .10 * (1 - airborne) ** 2 : .08 + .035 * airborne;
+          paint.opacity = shadowOpacity * (index === 0 ? .18 * Math.exp(-elevation / 8)
+            : index === 1 ? .10 * (1 - airborne) ** 2 : .08 + .035 * airborne);
         });
         renderer.render(scene, camera);
         previousMatrix.set(nextMatrix);
-        lastFold = fold; lastElevation = elevation; dirty = false;
+        lastFold = fold; lastElevation = elevation; lastShadowOpacity = shadowOpacity; dirty = false;
         return true;
       },
       dispose,

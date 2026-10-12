@@ -15,6 +15,8 @@ import { TextLine } from './TextReveal';
 import { createTextReveal } from './textRevealMotion';
 import { playHeroEntrance } from './heroEntrance';
 import { trackNavigationScroll } from './navigationScroll';
+import { createMacFeatureTransition, macFeatureHoldDistance, macFeatureReturnPose } from './macFeatureTransition';
+import { setFeatureEntry } from './featureEntry';
 import { compose, identity, projectQuad, translate } from '../hero-test-animation/sceneProjection';
 import { sceneProjection, lidClearProgress } from './sceneProjection';
 import { connectProjectedGlass } from '../hero-test-animation/projectedGlass';
@@ -69,6 +71,7 @@ function DesktopHero() {
     const screenEdges = [surface.querySelector<HTMLElement>('.hero-test__screen')!, surface.querySelector<HTMLElement>('.hero-test__frame')!];
     const shadow = stage.querySelector<HTMLElement>('.hero-animation__screen-shadow')!;
     const contact = stage.querySelector<HTMLElement>('.hero-animation__contact-shadow')!;
+    const white = stage.querySelector<HTMLElement>('.hero-animation__white')!;
     gsap.registerPlugin(ScrollTrigger);
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const compact = window.matchMedia('(width < 1056px)');
@@ -76,10 +79,12 @@ function DesktopHero() {
     let scroll: ScrollTrigger | undefined;
     const controller = new AbortController();
     let renderer: ThreeHardwareRenderer | null = null;
-    let width = 0, height = 0, openingHeight = 0, travel = 1, top = 0;
+    let width = 0, height = 0, openingHeight = 0, travel = 1, firstTravel = 1, transitionTravel = 1, transitionStart = 1, top = 0;
+    let projectTransition: ReturnType<typeof createMacFeatureTransition>['project'] | undefined;
     let endingScale = 1, endingTranslationY = 0;
     let headlineClearance = 1, subtitleClearance = 1;
     let current = 0, target = 0, frame = 0, previousTime = 0;
+    let featureReached = false, featureReturning = false;
     let disposed = false, failed = false, initializing = false, lastVisible = true, lastActive = false;
     // Cache individual properties. No inherited custom properties invalidate the
     // whole hero, and settled phases do not repeat identical DOM mutations.
@@ -93,14 +98,26 @@ function DesktopHero() {
     const inert = (element: HTMLElement, value: boolean) => { if (element.inert !== value) element.inert = value; };
     const syncNavigationLayer = () => {
       // The copy moves with native sticky release, not the smoothed Mac pose.
-      // Raise the dock at that same boundary in both scroll directions.
-      const released = !isStatic() && window.scrollY >= top + travel;
+      // Keep the same subpixel tolerance as feature entry so the fixed dock
+      // remains above the section when its scroll-up gesture reveals it.
+      const released = !isStatic() && window.scrollY >= top + travel - 1;
       style(navigation, 'z-index', released ? '8' : '1');
     };
     const draw = () => {
       const active = current > 0 && !!renderer && !isStatic();
-      const pose = scenePose(active ? current : 0, width, height, openingHeight);
-      const projection = sceneProjection(pose, width, height, openingHeight);
+      const firstProgress = active ? Math.min(1, current) : 0;
+      const transitionProgress = active ? Math.max(0, Math.min(1, (current * firstTravel - transitionStart) / transitionTravel)) : 0;
+      const atFeatureEntry = active && window.scrollY >= top + travel - 1;
+      if (!active) featureReached = featureReturning = false;
+      else if (atFeatureEntry) {
+        featureReached = true;
+        featureReturning = false;
+      } else if (transitionProgress === 0) featureReached = featureReturning = false;
+      else if (featureReached) featureReturning = true;
+      const returning = featureReturning ? macFeatureReturnPose(transitionProgress, height, transitionTravel) : undefined;
+      const continuation = transitionProgress > 0 ? projectTransition?.(returning?.scene ?? transitionProgress) : undefined;
+      const pose = scenePose(firstProgress, width, height, openingHeight);
+      const projection = continuation ?? sceneProjection(pose, width, height, openingHeight);
       // Enlarge the finished model and anchor its actual silhouette below the
       // copy. Hardware and the live screen share the same reversible layout.
       const deviceScale = 1 + (endingScale - 1) * pose.reveal;
@@ -108,15 +125,24 @@ function DesktopHero() {
       deviceLayout[0] = deviceLayout[5] = deviceScale;
       deviceLayout[12] = (1 - deviceScale) * width / 2;
       deviceLayout[13] = endingTranslationY * pose.reveal;
-      projection.screen = compose(deviceLayout, projection.screen);
-      style(canvas, 'transform', pose.reveal ? `matrix3d(${deviceLayout.join(',')})` : 'none');
+      if (!continuation) projection.screen = compose(deviceLayout, projection.screen);
+      style(canvas, 'transform', pose.reveal && !continuation ? `matrix3d(${deviceLayout.join(',')})` : 'none');
       if (active !== lastActive) {
         surface.classList.toggle('hero-animation__surface--moving', active);
         lastActive = active;
       }
       style(canvas, 'display', active && renderer ? 'block' : 'none');
-      if (active && renderer) renderer.render({ fold: pose.fold, modelMatrix: projection.model,
-        perspective: projection.perspective, elevation: 208 * (1 - pose.reveal), opacity: 1 });
+      if (active && renderer) renderer.render({ fold: continuation?.fold ?? pose.fold, modelMatrix: projection.model,
+        perspective: projection.perspective, elevation: 208 * (1 - pose.reveal), opacity: 1,
+        shadowOpacity: continuation?.shadow ?? 1 });
+      // Start the feature at the native endpoint instead of waiting for the
+      // smoothed camera to settle. The last invisible camera frames stay behind white.
+      const coverage = atFeatureEntry ? 1 : continuation?.white ?? 0;
+      style(white, 'opacity', String(coverage));
+      const transitioning = String(transitionProgress > 0);
+      if (stage.dataset.transitioning !== transitioning) stage.dataset.transitioning = transitioning;
+      setFeatureEntry({ linked: !isStatic(), coverage: returning?.content ?? coverage,
+        ready: atFeatureEntry, returning: featureReturning });
       for (const property of ['border-bottom-left-radius', 'border-bottom-right-radius']) {
         for (const edge of screenEdges) style(edge, property, `${17 * pose.cornerRoundness}px`);
       }
@@ -126,9 +152,9 @@ function DesktopHero() {
         style(surface, 'visibility', visible ? 'visible' : 'hidden');
         inert(surface, !visible); lastVisible = visible;
       }
-      const headlineProgress = scrollCopyProgress(active ? current : 0, headlineClearance, 'headline');
+      const headlineProgress = scrollCopyProgress(firstProgress, headlineClearance, 'headline');
       revealHeading(headlineProgress);
-      revealDescription(scrollCopyProgress(active ? current : 0, subtitleClearance, 'subtitle'));
+      revealDescription(scrollCopyProgress(firstProgress, subtitleClearance, 'subtitle'));
       style(navigation, 'opacity', String(pose.navigation));
       syncNavigationLayer();
       style(navigation, 'transform', `translateY(${(1 - pose.navigation) * -18}px) scale(${.97 + .03 * pose.navigation})`);
@@ -159,8 +185,9 @@ function DesktopHero() {
         setHeroScreenProjection({ quad: projectQuad(projection.screen, width, openingHeight), width: width - 32, height: openingHeight - 32, interactive: false });
       }
       if (import.meta.env.DEV) {
-        stage.dataset.progress = current.toFixed(5);
-        stage.dataset.fold = pose.fold.toFixed(3);
+        stage.dataset.progress = firstProgress.toFixed(5);
+        stage.dataset.transitionProgress = transitionProgress.toFixed(5);
+        stage.dataset.fold = (continuation?.fold ?? pose.fold).toFixed(3);
       }
     };
     const tick = (time: number) => {
@@ -175,7 +202,7 @@ function DesktopHero() {
       else previousTime = 0;
     };
     const syncScroll = () => {
-      target = isStatic() ? 0 : (scroll?.progress ?? Math.max(0, Math.min(1, (window.scrollY - top) / travel)));
+      target = isStatic() ? 0 : Math.max(0, Math.min(travel, window.scrollY - top)) / firstTravel;
       if (target > 0 && !renderer) void initialize();
       if (!frame && !document.hidden && (current !== target || isStatic())) frame = requestSceneFrame(tick);
     };
@@ -190,12 +217,21 @@ function DesktopHero() {
         Math.max(96, height - modelTop - 48) / (endingBounds.bottom - endingBounds.top),
       );
       endingTranslationY = modelTop - endingBounds.top * endingScale;
+      const transition = createMacFeatureTransition(width, height, openingHeight, endingScale, endingTranslationY);
+      projectTransition = transition.project;
       const headlineTop = heading.getBoundingClientRect().top - stage.getBoundingClientRect().top;
       const subtitleTop = description.getBoundingClientRect().top - stage.getBoundingClientRect().top;
       headlineClearance = lidClearProgress(width, height, openingHeight, endingScale, endingTranslationY, headlineTop);
       subtitleClearance = lidClearProgress(width, height, openingHeight, endingScale, endingTranslationY, subtitleTop);
       top = track.getBoundingClientRect().top + window.scrollY;
-      travel = Math.max(1, track.offsetHeight - window.innerHeight);
+      transitionTravel = transition.distance;
+      firstTravel = 2000;
+      const holdTravel = macFeatureHoldDistance(height);
+      transitionStart = firstTravel + holdTravel;
+      travel = transitionStart + transitionTravel;
+      style(track, '--mac-reveal-distance', `${firstTravel}px`);
+      style(track, '--mac-hold-distance', `${holdTravel}px`);
+      style(track, '--mac-transition-distance', `${transitionTravel}px`);
       style(surface, 'width', `${width}px`); style(surface, 'height', `${openingHeight}px`);
       if (!isStatic()) renderer?.resize(width, height, window.devicePixelRatio);
       syncScroll(); current = renderer ? target : 0; draw();
@@ -265,6 +301,7 @@ function DesktopHero() {
     void document.fonts.ready.then(() => { if (!disposed) measure(); });
     return () => {
       disposed = true; controller.abort(); renderer?.dispose();
+      setFeatureEntry({ linked: false, ready: false, coverage: 0 });
       stopNavigationScroll();
       if (idle) window.cancelIdleCallback(idle); clearTimeout(timer);
       cancelHeroFrame(frame); setHeroScreenProjection(null); observer.disconnect();
@@ -328,6 +365,7 @@ function DesktopHero() {
           <TextLine text="Choose the starting angle and blur strength in Glissform for macOS." />
         </p>
       </div>
+      <div className="hero-animation__white" aria-hidden="true" />
     </div>
     {templateNeeded && <div className="hero-animation__template seamless-macbook--animated" ref={templateRef} style={{
       '--hardware-width': `${macBookDimensions.width}px`, '--hardware-depth': `${macBookDimensions.depth}px`,

@@ -52,10 +52,50 @@
     }
   }
 
+  &__icon-slot {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    flex: none;
+  }
+
+  &__icon {
+    display: block;
+    transform-origin: right center;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
   &__panel {
     height: calc(100svh - 128px);
     border-radius: 24px;
-    background: #f1f3f6;
+    --feature-panel-surface: #f1f3f6;
+    --feature-window-shadow: 0 0 calc(min(0.143678cqw, 0.18cqh) * 48) rgb(0 0 0 / 5.44%);
+    background-color: var(--feature-panel-surface);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -128px;
+      // Cancel the shell's scaling so the pattern stays circular and square.
+      // Overscan covers the independent vertical parallax travel.
+      transform: scale(var(--pattern-scale-x, 1), var(--pattern-scale-y, 1))
+        translateY(var(--pattern-y, 0px));
+      background-image:
+        radial-gradient(circle, transparent 17px, #aeb8c6 17px 19px, transparent 19px),
+        linear-gradient(to right, #d3dae3 1px, transparent 1px),
+        linear-gradient(to bottom, #d3dae3 1px, transparent 1px);
+      background-size: 64px 64px;
+      background-position: center;
+    }
   }
 
   &[data-motion='triggered'] {
@@ -80,6 +120,20 @@
 
     .settings-features__panel {
       height: 100%;
+    }
+
+    // Share the hero's last viewport. The entrance appears in place once the
+    // close-up has become white, with no intervening native page movement.
+    &[data-scene-linked='true'] {
+      position: relative;
+      z-index: 3;
+      margin-top: -100svh;
+      background: transparent;
+      .settings-features__stage {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+      }
     }
   }
 }

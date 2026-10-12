@@ -1,14 +1,7 @@
 import { ease, timedCopyRevealTiming, subtitleRevealCue } from './choreography';
 import { createTextReveal } from './textRevealMotion';
 import { cancelHeroFrame, requestSceneFrame } from '../hero-test-animation/frameSync';
-
-/** Damped spring displacement, starting at rest. Feather its tiny remaining
- * energy to zero so removing the entrance transform never produces a snap. */
-function springDisplacement(progress: number, damping: number, frequency: number) {
-  return Math.exp(-damping * progress)
-    * (Math.cos(frequency * progress) + damping / frequency * Math.sin(frequency * progress))
-    * (1 - ease((progress - .72) / .28));
-}
+import { springDisplacement } from './objectMotion';
 
 /** A single opening sequence; scrolling takes over with fully settled content. */
 export function playHeroEntrance(content: HTMLElement) {

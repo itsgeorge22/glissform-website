@@ -50,7 +50,7 @@ export function trackNavigationScroll(container: HTMLElement, releasePosition: (
       inputTimer = 0;
       const samples = pendingInput.splice(0);
       if (!disposed) for (const sample of samples) if (sample.event.defaultPrevented) {
-        move(nextNavigationScrollState(state, sample.delta, position() <= releasePosition()));
+        move(nextNavigationScrollState(state, sample.delta, position() < releasePosition() - 1));
       }
     }, 0);
   };

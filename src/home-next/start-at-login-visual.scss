@@ -1,0 +1,130 @@
+.settings-features__panel.settings-features__panel--start-at-login {
+  container-type: size;
+  &::before { content: none; }
+}
+
+.start-at-login-visual {
+  position: absolute;
+  inset: 0;
+  font-size: 0.143678cqw;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  color: rgb(164 166 204 / 74%);
+  pointer-events: none;
+  transform: scale(var(--pattern-scale-x, 1), var(--pattern-scale-y, 1));
+
+  &__screen {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2364em;
+    height: 1530em;
+    border-radius: var(--login-corner, 24em);
+    background: #111320;
+    box-shadow: 0 0 0 var(--login-bezel, 15em) #000;
+    transform-origin: top left;
+    transform: translate3d(calc(50cqw - 2096em), calc(50cqh - 228em), 0);
+    will-change: transform;
+  }
+  .feature-menu-bar {
+    opacity: var(--login-desktop, 1);
+    top: var(--login-bar-inset, 20em);
+    right: var(--login-bar-inset, 20em);
+    transform: scale(var(--login-bar-scale, 1));
+    transform-origin: top right;
+  }
+  &__notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 128em;
+    height: 25em;
+    transform: translateX(-50%) scale(var(--login-base-magnification, 1.767171));
+    transform-origin: top center;
+    img { display: block; width: 128em; height: 25em; }
+  }
+  &__login {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 1337.732em;
+    height: 865.345em;
+    opacity: var(--login-opacity, 0);
+    transform: scale(var(--login-base-magnification, 1.767171));
+    transform-origin: top left;
+  }
+  &__date, &__time {
+    position: absolute;
+    font-weight: 590;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+  }
+  &__date { left: 50.0594%; top: 10.6466%; font-size: 23.689em; }
+  &__time { left: 49.9487%; top: 18.7347%; font-size: 118.445em; letter-spacing: -.04706em; }
+  &__credentials {
+    position: absolute;
+    left: calc(50% - 87.71em);
+    bottom: 60px;
+    width: 177em;
+    font-size: var(--login-credentials-unit, 1em);
+    opacity: var(--login-opacity, 0);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  &__password {
+    box-sizing: border-box;
+    position: relative;
+    width: 160em;
+    height: 32em;
+    padding: 0 2.667em 0 13.333em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 1332em;
+    background: rgb(164 166 204 / 40%);
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -1em;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 1em rgb(255 255 255 / 55%);
+      opacity: var(--login-focus, 0);
+    }
+  }
+  &__dots {
+    width: 53.3333em;
+    height: 6.66667em;
+    background: #fff;
+    mask: url('/assets/start-at-login/password-dots.svg') center / 53.3333em 6.66667em no-repeat;
+    clip-path: inset(0 var(--login-dot-clip, 53.3333em) 0 0);
+  }
+  &__caret {
+    position: absolute;
+    left: 13.333em;
+    top: 10em;
+    width: 1em;
+    height: 12em;
+    background: white;
+    opacity: var(--login-caret, 0);
+  }
+  &__submit {
+    width: 26.6667em;
+    height: 26.6667em;
+    transform: scale(var(--login-submit-scale, 1));
+    img { display: block; width: 26.6667em; height: 26.6667em; }
+  }
+  &__hint {
+    position: absolute;
+    top: calc(100% + 8px);
+    font-size: min(13em, 16px);
+    line-height: 1.23077;
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__login, &__credentials { opacity: 0; }
+    .feature-menu-bar, .feature-menu-bar__app { opacity: 1; }
+    .feature-menu-bar__app, .feature-menu-bar__app span { transform: none; }
+  }
+}

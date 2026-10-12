@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { animateSettingsFeatures } from '../src/home-next/settingsFeaturesMotion.ts';
+import { setFeatureEntry } from '../src/home-next/featureEntry.ts';
 
 class Events {
   listeners = new Map();
@@ -72,6 +73,8 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     assert.deepEqual(visible(), [0]); semanticContentAvailable();
     assert.equal(key('ArrowUp').defaultPrevented, false, 'first boundary releases native scroll');
     key('ArrowDown'); step(342);
+    assert.equal(items[0].panel.getAttribute('data-feature-departing'), 'true');
+    assert.equal(items[1].panel.getAttribute('data-feature-active'), 'false', 'incoming demo waits for settlement');
     assert.equal(items[0].copy.style.opacity, '');
     assert.equal(items[0].copy.style.transform, '', 'the parent adds no separate fade or translation');
     assert.ok(items[0].lines.every(line => /rotateX\([\d.]+deg\)/.test(line.style.transform)),
@@ -87,6 +90,8 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     assert.ok(scale(items[1].lines[0]) > scale(items[1].lines[1])
       && scale(items[1].lines[1]) > scale(items[1].lines[2]), 'upward arrival unfolds top to bottom');
     step(1100);
+    assert.equal(items[0].panel.getAttribute('data-feature-departing'), 'false');
+    assert.equal(items[1].panel.getAttribute('data-feature-active'), 'true');
     semanticContentAvailable();
     assert.deepEqual(visible(), [1], 'input during playback does not queue another advance');
     assert.equal(frames.size, 0);
@@ -129,11 +134,14 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     wheel(1); step(400);
     let before = snapshot(), previousY = y(items[1].lines[0]);
     wheel(-1); assert.deepEqual(snapshot(), before);
+    assert.equal(items[1].panel.getAttribute('data-feature-departing'), 'true', 'reversal retains the original demo');
     step(120); assert.ok(y(items[1].lines[0]) > previousY, 'all departing text turns downward immediately');
     before = snapshot(); previousY = y(items[1].lines[0]);
     wheel(1); assert.deepEqual(snapshot(), before);
     step(200); assert.ok(y(items[1].lines[0]) < previousY, 'a second reversal resumes upward motion');
     wheel(-1); step(2400); assert.deepEqual(visible(), [1]); assert.equal(frames.size, 0);
+    assert.equal(items[1].panel.getAttribute('data-feature-active'), 'true');
+    assert.equal(items[1].panel.getAttribute('data-feature-departing'), 'false');
 
     // Reverse after the destination copy has appeared. It retreats continuously
     // and the original feature returns; no extra feature is queued.
@@ -192,36 +200,57 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     }
     assert.deepEqual(visible(), [1]); assert.equal(frames.size, 0);
 
-    // A deliberate request during the quiet ending is retained without
-    // shortening the animation or accumulating a multi-feature queue.
-    restart(); wheel(1); step(1600); wheel(1);
-    step(199); assert.deepEqual(visible(), [1]);
-    step(1); step(1);
-    assert.equal(frames.size, 1, 'the next handoff begins after the full 1800ms');
+    restart(); wheel(1);
+    for (let i = 0; i < 100; i++) { step(40); wheel(1); }
+    assert.deepEqual(visible(), [1], 'continuous strong scrolling cannot advance twice');
+    assert.equal(frames.size, 0);
+
+    restart(); wheel(1); step(1880);
+    window.emit('wheel', { deltaY: 2, deltaX: 0 });
+    now += 20; wheel(1); // Complete the timeline from the event, before RAF.
+    step(16); assert.notEqual(items[1].panel.style.transform, 'none',
+      'fresh input at the exact endpoint starts the next departure immediately');
     step(2000); assert.deepEqual(visible(), [2]);
+    assert.equal(frames.size, 0);
+
+    // Extra requests during playback are discarded, including the quiet ending.
+    restart(); wheel(1); step(1600); wheel(1);
+    step(299); assert.deepEqual(visible(), [1]);
+    step(1); step(1);
+    assert.equal(frames.size, 0, 'settling never starts an automatic handoff');
+    step(2000); assert.deepEqual(visible(), [1]);
     step(2000); assert.equal(frames.size, 0, 'no automatic third advance');
 
     restart(); wheel(1); step(500); wheel(1); step(500); wheel(1);
     step(800); step(1800);
-    assert.deepEqual(visible(), [2], 'multiple early requests coalesce to one adjacent step');
+    assert.deepEqual(visible(), [1], 'multiple early requests never queue another step');
+    assert.equal(frames.size, 0);
+
+    restart(); key('ArrowDown'); step(500); key('ArrowDown');
+    step(500); key('PageDown'); step(3000);
+    assert.deepEqual(visible(), [1], 'separate key presses during playback also cannot queue');
     assert.equal(frames.size, 0);
 
     // A wheel event can complete the old timeline before its scheduled frame.
     restart(); wheel(1); step(1600); wheel(1);
     now += 160; window.emit('wheel', { deltaY: 100, deltaX: 0 });
-    now += 41; window.emit('wheel', { deltaY: 90, deltaX: 0 });
-    step(16); assert.equal(frames.size, 1, 'pending request survives completion outside RAF');
-    step(2000); assert.deepEqual(visible(), [2]); assert.equal(frames.size, 0);
+    now += 81; window.emit('wheel', { deltaY: 90, deltaX: 0 });
+    now += 60; window.emit('wheel', { deltaY: 80, deltaX: 0 });
+    step(16); assert.equal(frames.size, 0, 'completion outside RAF cannot start another step');
+    step(2000); assert.deepEqual(visible(), [1]); assert.equal(frames.size, 0);
 
-    // Reversing clears a pending request and retraces the same rendered poses.
+    // Reversing retraces the same rendered poses.
     restart(); wheel(1); step(500); wheel(1);
     before = snapshot(); wheel(-1); assert.deepEqual(snapshot(), before);
     step(2000); assert.deepEqual(visible(), [0]); assert.equal(frames.size, 0);
 
-    // Short separate strokes and renewed input during a momentum tail both work.
-    restart(); wheel(1); step(2000);
-    window.emit('wheel', { deltaY: 1, deltaX: 0 }); step(150); wheel(1);
-    step(2000); assert.deepEqual(visible(), [2], '150ms pause is enough for a new strong stroke');
+    // Scrolling resumes only after a pause; renewed pressure remains one burst.
+    restart(); wheel(1);
+    for (let i = 0; i < 20; i++) {
+      step(100); window.emit('wheel', { deltaY: i % 2 ? 2400 : 1, deltaX: 0 });
+    }
+    step(150); wheel(1);
+    step(2000); assert.deepEqual(visible(), [2], 'a deliberate stroke after settling and a short pause advances');
 
     restart(); wheel(1);
     for (let i = 0; i < 50; i++) {
@@ -229,9 +258,9 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     }
     step(20); window.emit('wheel', { deltaY: 12, deltaX: 0 });
     step(20); window.emit('wheel', { deltaY: 24, deltaX: 0 });
-    step(2000); assert.deepEqual(visible(), [2], 'renewed swipe is not merged with the old tail');
+    step(2000); assert.deepEqual(visible(), [2], 'new strong input after a quiet tail is recognized once settled');
 
-    // Pending input never survives backgrounding or a preference reset.
+    // Discarded input never returns after backgrounding or leaving the section.
     restart(); wheel(1); step(500); wheel(1);
     document.hidden = true; document.emit('visibilitychange');
     document.hidden = false; document.emit('visibilitychange');
@@ -239,6 +268,82 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     restart(); wheel(1); step(500); wheel(1);
     pinned = false; window.emit('scroll'); pinned = true; step(2000);
     assert.deepEqual(visible(), [1]); assert.equal(frames.size, 0, 'leaving the section clears pending input');
+
+    // The Mac reveal introduces the first feature in place, and an inherited
+    // wheel tail cannot immediately skip that introduction.
+    stop(); pinned = false;
+    setFeatureEntry({ linked: true, ready: false, coverage: 0 });
+    stop = animateSettingsFeatures(section, true);
+    assert.deepEqual(visible(), []);
+    assert.ok(items.every(item => item.panel.style.opacity === '0'));
+    setFeatureEntry({ linked: true, ready: false, coverage: .9 });
+    wheel(1); window.emit('scroll'); step(40);
+    pinned = true;
+    setFeatureEntry({ linked: true, ready: true, coverage: 1 });
+    for (let i = 0; i < 8; i++) {
+      step(40); window.emit('wheel', { deltaY: 100 * Math.pow(.9, i), deltaX: 0 });
+    }
+    assert.deepEqual(visible(), [0]);
+    assert.ok(items[0].lines.every(line => line.style.transform !== 'none'), 'the shared text reveal is running');
+    assert.match(items[0].panel.style.transform, /scale\(/, 'the placeholder has its own composed entrance');
+    for (let i = 8; i < 43; i++) {
+      step(40); window.emit('wheel', { deltaY: 100 * Math.pow(.9, i), deltaX: 0 });
+    }
+    assert.deepEqual(visible(), [0], 'entry momentum never requests feature two');
+    assert.equal(items[0].panel.style.transform, 'none');
+    assert.equal(frames.size, 0);
+    pinned = false;
+    setFeatureEntry({ linked: true, ready: false, coverage: .3, returning: true });
+    assert.notEqual(items[0].lines[0].style.transform, 'none', 'the scroll return drives the shared exit poses');
+    const returningPose = snapshot();
+    setFeatureEntry({ linked: true, ready: false, coverage: .001, returning: true });
+    assert.ok(items.every(item => item.panel.style.opacity === '0' && item.panel.style.visibility === 'hidden'),
+      'the negligible fade tail is fully removed from painting before the Mac returns');
+    setFeatureEntry({ linked: true, ready: false, coverage: 0, returning: true });
+    assert.deepEqual(visible(), []); assert.equal(frames.size, 0);
+    assert.ok(items.every(item => item.panel.style.opacity === '0'), 'all placeholders disappear before the white background');
+    setFeatureEntry({ linked: true, ready: false, coverage: .3, returning: true });
+    assert.deepEqual(snapshot(), returningPose, 'reversing the return restores the same content poses without replaying the entrance');
+    assert.ok(items.every(item => item.panel.style.visibility === 'visible'), 'reversing restores panel painting');
+    setFeatureEntry({ linked: true, ready: false, coverage: 0, returning: true });
+    setFeatureEntry({ linked: true, ready: false, coverage: 0, returning: false });
+    pinned = true;
+    setFeatureEntry({ linked: true, ready: true, coverage: 1 }); step(300);
+    const partialEntrance = snapshot();
+    setFeatureEntry({ linked: true, ready: false, coverage: 1, returning: true });
+    assert.deepEqual(snapshot(), partialEntrance, 'returning during entrance must not jump to the fully visible feature');
+    step(200); assert.deepEqual(snapshot(), partialEntrance);
+    setFeatureEntry({ linked: true, ready: false, coverage: .1, returning: true });
+    setFeatureEntry({ linked: true, ready: false, coverage: 1, returning: true });
+    assert.deepEqual(snapshot(), partialEntrance, 'partial entrance reversals retain their original pose');
+    setFeatureEntry({ linked: true, ready: true, coverage: 1 });
+    document.hidden = true; document.emit('visibilitychange');
+    assert.equal(frames.size, 0);
+    document.hidden = false; document.emit('visibilitychange');
+    assert.equal(items[0].panel.style.transform, 'none', 'backgrounding settles without a later replay');
+    // Returning to the native feature boundary must release the copy from the
+    // camera's almost-complete smoothed return pose, even with rounding residue.
+    for (const coverage of [.999, 1 - Number.EPSILON]) {
+      pinned = false;
+      setFeatureEntry({ linked: true, ready: false, coverage: .4, returning: true });
+      pinned = true;
+      setFeatureEntry({ linked: true, ready: true, coverage, returning: true });
+      step(2000);
+      key('ArrowDown'); step(2000);
+      assert.deepEqual(visible(), [1], 'copy advances after returning from Logo Dive');
+      assert.equal(items[1].panel.style.transform, 'none', 'copy and placeholder select the same feature');
+      key('ArrowDown'); step(2000);
+      assert.deepEqual(visible(), [2], 'later copy remains navigable');
+      key('ArrowUp'); step(2000);
+      key('ArrowUp'); step(2000);
+    }
+    key('ArrowDown'); step(400);
+    setFeatureEntry({ linked: false, ready: false, coverage: 0 });
+    assert.deepEqual(visible(), [1], 'graphics fallback settles a handoff before restoring normal section layout');
+    assert.equal(frames.size, 0);
+    reduced.matches = true; reduced.emit('change');
+    assert.ok(items.every(item => item.panel.style.opacity === '' && item.panel.style.transform === '' && item.panel.style.visibility === ''));
+    setFeatureEntry({ linked: false, ready: false, coverage: 0 });
     stop(); stop = undefined;
     assert.equal(window.size() + document.size() + reduced.size() + desktop.size(), 0);
     assert.equal(frames.size, 0); semanticContentAvailable();

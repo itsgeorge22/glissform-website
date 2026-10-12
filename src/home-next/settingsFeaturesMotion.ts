@@ -1,15 +1,18 @@
-import { createTextReveal } from './textRevealMotion.ts';
-import { settingsFeaturesPose, nextSettingsFeature, settingsFeaturesTiming } from './settingsFeaturesChoreography.ts';
+import { createTextReveal, textLinePose } from './textRevealMotion.ts';
+import { settingsFeaturesPose, nextSettingsFeature, settingsFeaturesTiming,
+  settingsFeatureEntrancePose, settingsFeatureEntranceTiming, settingsFeaturePanelPoses } from './settingsFeaturesChoreography.ts';
 import { createSettingsWheelGesture } from './settingsFeaturesInput.ts';
 import { cancelHeroFrame, requestSceneFrame } from '../hero-test-animation/frameSync.ts';
+import { subscribeFeatureEntry, type FeatureEntry } from './featureEntry.ts';
 
 /** One gesture starts a handoff; opposite input retraces it without a jump. */
-export function animateSettingsFeatures(section: HTMLElement) {
+export function animateSettingsFeatures(section: HTMLElement, followMacScene = false) {
   const stage = section.querySelector<HTMLElement>('.settings-features__stage')!;
   const items = Array.from(stage.querySelectorAll<HTMLElement>('.settings-features__item')).map(element => {
     const copy = element.querySelector<HTMLElement>('.settings-features__copy')!;
     return {
       copy,
+      icon: copy.querySelector<HTMLElement>('.settings-features__icon'),
       panel: element.querySelector<HTMLElement>('.settings-features__panel')!,
       // Headline and subtitle are one ordered set of lines, with one clock and direction.
       reveal: createTextReveal(copy, { travelPx: settingsFeaturesTiming.copyTravelPx, directionalStagger: true }),
@@ -19,7 +22,9 @@ export function animateSettingsFeatures(section: HTMLElement) {
   const desktop = window.matchMedia('(min-width: 1056px)');
   let frame = 0, height = 1, animated = false, disposed = false, current = 0;
   const gesture = createSettingsWheelGesture();
-  let pendingDirection = 0;
+  let entry: FeatureEntry = { linked: false, ready: false, coverage: 0 };
+  let entranceStarted = false, entranceElapsed = 0, entranceUpdatedAt = 0;
+  const entering = () => entry.linked && entranceStarted && entry.ready && entranceElapsed < settingsFeatureEntranceTiming.duration;
   let transition: { from: number; to: number; elapsed: number; updatedAt: number; playback: 1 | -1 } | undefined;
   const styles = new WeakMap<HTMLElement, Map<string, string>>();
   const setStyle = (element: HTMLElement, property: string, value: string) => {
@@ -31,9 +36,20 @@ export function animateSettingsFeatures(section: HTMLElement) {
   };
   const reset = () => {
     section.removeAttribute('data-motion');
-    for (const { copy, panel } of items) {
+    section.removeAttribute('data-scene-linked');
+    for (const { copy, panel, icon } of items) {
+      panel.removeAttribute('data-feature-active');
+      panel.removeAttribute('data-feature-departing');
       copy.style.removeProperty('visibility');
+      icon?.style.removeProperty('opacity');
+      icon?.style.removeProperty('transform');
+      if (icon) styles.delete(icon);
       panel.style.removeProperty('transform');
+      panel.style.removeProperty('opacity');
+      panel.style.removeProperty('visibility');
+      panel.style.removeProperty('--pattern-scale-x');
+      panel.style.removeProperty('--pattern-scale-y');
+      panel.style.removeProperty('--pattern-y');
       for (const line of copy.querySelectorAll<HTMLElement>('.text-reveal__content')) {
         line.style.removeProperty('opacity');
         line.style.removeProperty('transform');
@@ -44,35 +60,89 @@ export function animateSettingsFeatures(section: HTMLElement) {
   const draw = (elapsed = 0) => {
     const pose = settingsFeaturesPose(elapsed);
     const direction = transition ? Math.sign(transition.to - transition.from) : 1;
-    const distance = height - 128 + 24; // Panel height plus the inter-panel gap.
+    const copyPose = transition && direction > 0
+      ? settingsFeaturesPose(elapsed - settingsFeaturesTiming.upwardIconLeadMs) : pose;
+    const entrance = entry.linked && (!entranceStarted || entranceElapsed < settingsFeatureEntranceTiming.duration || entry.coverage < 1)
+      ? settingsFeatureEntrancePose(entranceStarted ? entranceElapsed * (entry.returning ? entry.coverage : 1) : 0,
+        entry.returning ? 1 : entry.coverage) : undefined;
+    const position = transition ? transition.from + direction * pose.panel : current;
+    const panels = settingsFeaturePanelPoses(position, items.length, height - 128, entrance?.scale ?? 1);
     items.forEach((item, index) => {
       const outgoing = !!transition && index === transition.from;
       const incoming = !!transition && index === transition.to;
       const settled = !transition && index === current;
-      const visibleCopy = settled || (outgoing && pose.exitCopy > 0)
-        || (incoming && pose.enterCopy > 0);
+      // Nested demonstrations start only after the panel and copy have settled.
+      const visualActive = String(settled && !entrance);
+      if (item.panel.getAttribute('data-feature-active') !== visualActive) {
+        item.panel.setAttribute('data-feature-active', visualActive);
+      }
+      // Keep the original demo running through the entire handoff, including
+      // reversals. Incoming demos still wait for both panel and copy to settle.
+      const visualDeparting = String(outgoing && !entrance);
+      if (item.panel.getAttribute('data-feature-departing') !== visualDeparting) {
+        item.panel.setAttribute('data-feature-departing', visualDeparting);
+      }
+      const visibleCopy = entrance ? index === 0 && entrance.copy > 0
+        : settled || (outgoing && copyPose.exitCopy > 0) || (incoming && copyPose.enterCopy > 0);
       setStyle(item.copy, 'visibility', visibleCopy ? 'visible' : 'hidden');
-      if (outgoing) {
+      if (entrance) {
+        if (index === 0) item.reveal(entrance.copy);
+      } else if (outgoing) {
         // Reverse the line reveal toward the current scroll direction's exit.
         // Both departing and arriving lines travel up on down-scroll, and vice versa.
-        item.reveal(pose.exitCopy, -direction);
+        item.reveal(copyPose.exitCopy, -direction);
       } else if (incoming) {
-        item.reveal(pose.enterCopy, direction);
+        item.reveal(copyPose.enterCopy, direction);
       } else if (settled) {
         item.reveal(1);
       }
+      if (item.icon && visibleCopy) {
+        const progress = entrance ? entrance.copy : outgoing ? copyPose.exitCopy : incoming ? copyPose.enterCopy : 1;
+        // Upward icon exits lead the copy by 100ms at the same speed.
+        // Derive both from elapsed time so reversals retrace without a jump.
+        const iconProgress = !entrance && outgoing && direction > 0
+          ? pose.exitCopy : progress;
+        const iconPose = textLinePose(iconProgress, 0, 1, outgoing ? -direction : direction);
+        // Keep the shared copy easing, with a stronger 60% starting scale.
+        const iconScale = 1 - 2 * (1 - iconPose.scale);
+        const iconTravel = transition && direction < 0
+          ? 80 : iconPose.y < 0 ? 40 : settingsFeaturesTiming.copyTravelPx;
+        setStyle(item.icon, 'opacity', String(iconPose.opacity));
+        setStyle(item.icon, 'transform', iconPose.y === 0 && iconScale === 1 ? 'none'
+          : `translate3d(0, ${iconPose.y * iconTravel / 100}px, 0) scale(${iconScale})`);
+      }
       // Keep the whole panel column connected, including neighboring previews.
-      const position = transition ? transition.from + direction * pose.panel : current;
-      const y = (index - position) * distance;
-      setStyle(item.panel, 'transform', y === 0 ? 'none' : `translate3d(0, ${y}px, 0)`);
+      const { scaleY } = panels[index];
+      const y = panels[index].y + (entrance?.y ?? 0);
+      // Remove fully faded panels from painting, including the tiny numerical
+      // tail of the fade. They must not leave a composited ghost over the Mac.
+      const panelOpacity = entrance?.opacity ?? 1;
+      const panelHidden = panelOpacity <= .001;
+      setStyle(item.panel, 'opacity', String(panelHidden ? 0 : panelOpacity));
+      setStyle(item.panel, 'visibility', panelHidden ? 'hidden' : 'visible');
+      const entranceScale = entrance?.scale ?? 1;
+      setStyle(item.panel, '--pattern-scale-x', String(1 / entranceScale));
+      setStyle(item.panel, '--pattern-scale-y', String(1 / (entranceScale * scaleY)));
+      // Texture drifts against the shell's travel and returns to center at rest.
+      const patternY = -96 * Math.max(-1, Math.min(1, index - position));
+      setStyle(item.panel, '--pattern-y', `${patternY}px`);
+      setStyle(item.panel, 'transform', entrance
+        ? `translate3d(0, ${y}px, 0) scale(${entrance.scale}) scaleY(${scaleY})`
+        : y === 0 && scaleY === 1 ? 'none' : `translate3d(0, ${y}px, 0) scaleY(${scaleY})`);
     });
   };
   const advance = (time: number) => {
+    if (entering()) {
+      entranceElapsed = Math.min(settingsFeatureEntranceTiming.duration, entranceElapsed + time - entranceUpdatedAt);
+      entranceUpdatedAt = time;
+    }
     if (!transition) return;
-    transition.elapsed = Math.max(0, Math.min(settingsFeaturesTiming.duration,
+    const duration = settingsFeaturesTiming.duration
+      + (transition.to > transition.from ? settingsFeaturesTiming.upwardIconLeadMs : 0);
+    transition.elapsed = Math.max(0, Math.min(duration,
       transition.elapsed + (time - transition.updatedAt) * transition.playback));
     transition.updatedAt = time;
-    if ((transition.playback === 1 && transition.elapsed === settingsFeaturesTiming.duration)
+    if ((transition.playback === 1 && transition.elapsed === duration)
       || (transition.playback === -1 && transition.elapsed === 0)) {
       current = transition.playback === 1 ? transition.to : transition.from;
       transition = undefined;
@@ -80,40 +150,33 @@ export function animateSettingsFeatures(section: HTMLElement) {
   };
   const tick = (time: number) => {
     frame = 0;
-    if (!animated || disposed || (!transition && !pendingDirection) || document.hidden) return;
+    if (!animated || disposed || (!transition && !entering()) || document.hidden) return;
     advance(time);
     draw(transition?.elapsed);
-    if (!transition && pendingDirection) {
-      const direction = pendingDirection;
-      pendingDirection = 0;
-      if (pinned()) start(direction);
-    }
-    if (transition && !frame) frame = requestSceneFrame(tick);
+    if ((transition || entering()) && !frame) frame = requestSceneFrame(tick);
   };
   const pinned = () => {
     const bounds = section.getBoundingClientRect();
-    return animated && bounds.top <= 1 && bounds.bottom >= height - 1;
+    return animated && (!entry.linked || entry.ready) && bounds.top <= 1 && bounds.bottom >= height - 1;
   };
   const pageScroll = () => {
-    if (!pinned()) { gesture.reset(); pendingDirection = 0; }
+    if (!pinned()) {
+      if (!entry.linked || entry.coverage === 0) gesture.reset();
+    }
   };
   const start = (direction: number) => {
     if (disposed) return;
     advance(performance.now());
+    if (entering()) { draw(); return; }
     if (transition) {
       const playback = direction === Math.sign(transition.to - transition.from) ? 1 : -1;
-      if (playback === transition.playback) {
-        // Keep at most one deliberate next request; momentum never calls start.
-        pendingDirection = direction;
-        return;
-      }
-      pendingDirection = 0;
+      // Discard repeated input; never queue a second handoff.
+      if (playback === transition.playback) return;
       // Keep the original pair/poses and turn time around at this exact point.
       transition.playback = playback;
       draw(transition.elapsed);
       return;
     }
-    pendingDirection = 0;
     const next = nextSettingsFeature(current, direction, items.length);
     if (next === current) return;
     transition = { from: current, to: next, elapsed: 0, updatedAt: performance.now(), playback: 1 };
@@ -123,17 +186,25 @@ export function animateSettingsFeatures(section: HTMLElement) {
   const wheel = (event: WheelEvent) => {
     if (!event.deltaY || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
     if (!pinned()) {
-      gesture.reset(); pendingDirection = 0;
+      // Remember the tail that reaches the white reveal so it cannot skip the
+      // first feature. Ordinary standalone section entry retains its behavior.
+      if (entry.linked && entry.coverage > 0) {
+        const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? height : 1;
+        gesture.read(performance.now(), event.deltaY * unit);
+      } else gesture.reset();
       return;
     }
     const time = performance.now(), direction = Math.sign(event.deltaY);
     const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? height : 1;
-    const fresh = gesture.read(time, event.deltaY * unit);
+    // Settle the timeline before judging this event: the first fresh scroll at
+    // completion belongs to the next handoff, even before the next frame runs.
     advance(time);
+    const busy = !!transition || entering();
+    const fresh = gesture.read(time, event.deltaY * unit, !busy);
     // Direction changes retrace the active handoff immediately. Only a fresh
     // gesture can request the next adjacent feature or release a boundary.
     const boundary = nextSettingsFeature(current, direction, items.length) === current;
-    if (!transition && fresh && boundary) return;
+    if (!busy && fresh && boundary) return;
     event.preventDefault();
     if (fresh) start(direction);
   };
@@ -156,10 +227,11 @@ export function animateSettingsFeatures(section: HTMLElement) {
     draw(transition?.elapsed);
   };
   const settle = () => {
-    pendingDirection = 0; gesture.reset();
+    gesture.reset();
     cancelHeroFrame(frame); frame = 0;
     if (transition) current = transition.playback === 1 ? transition.to : transition.from;
     transition = undefined;
+    if (entranceStarted) entranceElapsed = settingsFeatureEntranceTiming.duration;
     if (animated) draw();
   };
   const preference = () => {
@@ -168,6 +240,7 @@ export function animateSettingsFeatures(section: HTMLElement) {
     reset();
     if (animated) {
       section.dataset.motion = 'triggered';
+      if (entry.linked) section.dataset.sceneLinked = 'true';
       measure();
     }
   };
@@ -185,9 +258,35 @@ export function animateSettingsFeatures(section: HTMLElement) {
   reducedMotion.addEventListener('change', preference);
   desktop.addEventListener('change', preference);
   preference();
+  const stopEntry = followMacScene ? subscribeFeatureEntry(next => {
+    const wasLinked = entry.linked;
+    entry = next;
+    if (!animated) return;
+    if (wasLinked && !next.linked) settle();
+    if (next.linked) section.dataset.sceneLinked = 'true';
+    else section.removeAttribute('data-scene-linked');
+    if (next.linked && (!wasLinked || !next.ready)) {
+      current = 0; transition = undefined;
+    }
+    // Preserve the entered pose while returning so changing scroll direction
+    // can retrace the content exit instead of replaying the timed entrance.
+    if (!next.linked || (next.coverage === 0 && !next.returning)) {
+      entranceStarted = false; entranceElapsed = 0;
+      cancelHeroFrame(frame); frame = 0;
+    }
+    if (next.ready && !entranceStarted) {
+      entranceStarted = true; entranceElapsed = 0; entranceUpdatedAt = performance.now();
+    } else if (!next.ready) {
+      entranceUpdatedAt = performance.now();
+      cancelHeroFrame(frame); frame = 0;
+    }
+    measure();
+    if (entering() && !frame && !document.hidden) frame = requestSceneFrame(tick);
+  }) : () => {};
 
   return () => {
     disposed = true;
+    stopEntry();
     cancelHeroFrame(frame);
     observer.disconnect();
     window.removeEventListener('wheel', wheel, true);

@@ -1,41 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useLocalClock } from './localClock';
 import menuBar from '../hero-test/assets/menu-bar.svg?url';
 
 function LocalClock() {
-  const [now, setNow] = useState<Date | null>(null);
-
-  useEffect(() => {
-    let timer = 0;
-    const refresh = () => {
-      window.clearTimeout(timer);
-      if (document.hidden) return;
-      const current = new Date();
-      setNow(current);
-      // Align updates with the device's minute boundary, including after wake.
-      timer = window.setTimeout(refresh, 60_000 - (current.getTime() % 60_000));
-    };
-    refresh();
-    document.addEventListener('visibilitychange', refresh);
-    window.addEventListener('focus', refresh);
-    return () => {
-      window.clearTimeout(timer);
-      document.removeEventListener('visibilitychange', refresh);
-      window.removeEventListener('focus', refresh);
-    };
-  }, []);
-
+  const clock = useLocalClock();
   // Keep the same time element as the first local clock value arrives.
-  if (!now) return <time className="hero-test__menu-clock" />;
+  if (!clock) return <time className="hero-test__menu-clock" />;
 
-  const date = new Intl.DateTimeFormat(navigator.language, {
-    weekday: 'short', month: 'short', day: 'numeric',
-  }).formatToParts(now).map(part => part.type === 'day' ? `${part.value}.` : part.value).join('');
-  const time = new Intl.DateTimeFormat('en-US', {
-    hour: 'numeric', minute: '2-digit', hour12: true,
-  }).format(now);
-
-  return <time className="hero-test__menu-clock" dateTime={now.toISOString()}>
-    <span>{date}</span><span>{time}</span>
+  return <time className="hero-test__menu-clock" dateTime={clock.dateTime}>
+    <span>{clock.date}</span><span>{clock.time}</span>
   </time>;
 }
 

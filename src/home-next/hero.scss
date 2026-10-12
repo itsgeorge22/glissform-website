@@ -11,13 +11,15 @@
   background: #fff;
   color: #171c24;
 
-  // Match choreography's completion point; retain the original motion distance.
+  // Match the measured reveal, hold and dive scroll distances.
   .hero-animation {
     background: #fff;
-    height: calc(100svh + (max(340svh, 2300px) - 100svh) * .94);
+    height: calc(100svh + var(--mac-reveal-distance, 2000px) + var(--mac-hold-distance, 0px) + var(--mac-transition-distance, 4000px));
     min-height: 0;
   }
   .hero-animation__stage { overflow: visible; z-index: 2; pointer-events: none; }
+  .hero-animation__stage[data-transitioning='true'] { overflow: clip; }
+  .hero-animation__white { position: absolute; inset: 0; z-index: 4; background: #fff; opacity: 0; pointer-events: none; }
   .hero-animation__hardware { z-index: 2; transform-origin: 0 0; }
   .hero-animation__surface { z-index: 3; color: #fff; color-scheme: dark; pointer-events: auto; }
   .hero-animation__screen-content {

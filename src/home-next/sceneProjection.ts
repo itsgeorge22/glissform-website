@@ -82,14 +82,20 @@ export function sceneProjection(pose: ReturnType<typeof scenePose>, width: numbe
     top: height / 2 + Math.min(...points.map(p => p.y / p.ray)),
     bottom: height / 2 + Math.max(...points.map(p => p.y / p.ray)),
   };
-  const camera = identity(); camera[11] = -1 / perspective;
-  const projection = compose(translate(width / 2, height / 2), camera, translate(-width / 2, -height / 2));
-  const physical = compose(model, translate(450, body.depth + body.hingeDrop), rotate('x', -pose.fold),
-    translate(mapping.x - body.width / 2, mapping.y - body.depth, -body.lidRecess),
-    scale(mapping.scaleX, mapping.scaleY));
-  const screen = multiply(projection, physical);
+  const screen = projectHardwareScreen(model, pose.fold, width, height, openingHeight, perspective);
   const lidTop = height / 2 + Math.min(...points.slice(baseCorners.length).map(p => p.y / p.ray));
   return { model, perspective, screen, bounds, lidTop, visible: facesCamera(projectQuad(screen, width, openingHeight)) };
+}
+
+export function projectHardwareScreen(model: number[], fold: number, width: number, height: number,
+  openingHeight: number, perspective: number) {
+  const mapping = displayMapping(width, openingHeight);
+  const camera = identity(); camera[11] = -1 / perspective;
+  const projection = compose(translate(width / 2, height / 2), camera, translate(-width / 2, -height / 2));
+  const physical = compose(model, translate(450, body.depth + body.hingeDrop), rotate('x', -fold),
+    translate(mapping.x - body.width / 2, mapping.y - body.depth, -body.lidRecess),
+    scale(mapping.scaleX, mapping.scaleY));
+  return multiply(projection, physical);
 }
 
 /** Find when the moving lid first clears a copy block's layout position.

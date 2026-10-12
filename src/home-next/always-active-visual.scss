@@ -1,0 +1,128 @@
+.settings-features__panel.settings-features__panel--always-active {
+  container-type: size;
+
+  &::before { content: none; }
+}
+
+.always-active-visual {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  // Scale the Figma composition uniformly to fit the existing desktop panel.
+  font-size: min(0.143678cqw, 0.18cqh);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  color: rgb(0 0 0 / 85%);
+  pointer-events: none;
+  transform: scale(var(--pattern-scale-x, 1), var(--pattern-scale-y, 1));
+
+  &__window {
+    position: relative;
+    box-sizing: border-box;
+    width: 568em;
+    padding: 25.059em;
+    border: 0.5em solid rgb(0 0 0 / 5%);
+    border-radius: 20em;
+    background: linear-gradient(142deg, #fbfcfe, #f4f5f9);
+    box-shadow: var(--feature-window-shadow);
+  }
+
+  &__header, &__copy, &__rows { display: flex; flex-direction: column; }
+  &__header { gap: 8.353em; margin-bottom: 16.706em; }
+  &__heading {
+    font-family: ui-rounded, 'SF Pro Rounded', -apple-system, sans-serif;
+    font-size: 25.059em;
+    font-weight: 600;
+    line-height: 1.20833;
+    letter-spacing: -0.00958em;
+  }
+  &__subtitle { font-size: 13.574em; line-height: 1.23077; color: rgb(0 0 0 / 50%); }
+  &__rows { position: relative; gap: 12.529em; }
+  &__row {
+    position: relative;
+    box-sizing: border-box;
+    height: 71em;
+    display: flex;
+    align-items: center;
+    gap: 12.529em;
+    padding: 12.529em 25.059em 12.529em 12.529em;
+    border: 1.044em solid rgb(0 0 0 / 6.67%);
+    border-radius: 16.706em;
+    background: #fff;
+    &--blurred { filter: blur(2em); }
+    &--background {
+      z-index: 1;
+      transform: scale(calc(1 + var(--card-lift, 0) * 0.026));
+      will-change: transform;
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: 0 10em 28em rgb(28 40 66 / 13%), 0 2em 6em rgb(28 40 66 / 5%);
+        opacity: var(--card-lift, 0);
+        pointer-events: none;
+      }
+      .always-active-visual__switch {
+        &::before { opacity: var(--switch-on, 0); }
+        span {
+          transform: translateX(calc(14.618em * var(--switch-thumb, 0)))
+            scale(calc(1 + var(--switch-stretch, 0)), calc(1 - var(--switch-stretch, 0) * 0.4));
+        }
+      }
+      .always-active-visual__icon {
+        img { opacity: calc(1 - var(--switch-on, 0)); }
+        &::before, &::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          opacity: var(--switch-on, 0);
+        }
+        &::before { border-radius: inherit; background: #e5f1ff; }
+        &::after {
+          width: 25.059em;
+          height: 25.059em;
+          margin: auto;
+          background: #0073ff;
+          mask: url('/assets/settings-preview/background-mask.svg') center / contain no-repeat;
+        }
+      }
+    }
+  }
+  &__icon {
+    position: relative;
+    flex: 0 0 45.941em;
+    height: 45.941em;
+    display: grid;
+    place-items: center;
+    border-radius: 12.529em;
+    background: rgb(128 128 128 / 12%);
+    img { width: 25.059em; height: 25.059em; }
+  }
+  &__copy { gap: 4.176em; flex: 1; white-space: nowrap; }
+  &__label { font-size: 13.574em; line-height: 1.23077; font-weight: 600; }
+  &__description { font-size: 11.485em; line-height: 1.27273; color: rgb(0 0 0 / 50%); }
+  &__switch {
+    position: relative;
+    box-sizing: border-box;
+    flex: 0 0 45.941em;
+    height: 22.971em;
+    padding: 2.088em;
+    border-radius: 11.485em;
+    background: rgb(0 0 0 / 25%);
+    &::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: #007aff; opacity: 0; }
+    span { position: relative; display: block; width: 27.147em; height: 18.795em; border-radius: 9.397em; background: #fff; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &__row--background {
+      transform: none;
+      &::after { opacity: 0; }
+      .always-active-visual__switch::before { opacity: 1; }
+      .always-active-visual__switch span { transform: translateX(14.618em); }
+      .always-active-visual__icon {
+        img { opacity: 0; }
+        &::before, &::after { opacity: 1; }
+      }
+    }
+  }
+}
