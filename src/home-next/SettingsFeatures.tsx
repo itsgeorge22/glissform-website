@@ -12,25 +12,25 @@ const features = [
     id: 'start-at-login',
     icon: 'login',
     title: 'Start at login',
-    lines: ['Let Glissform open when you sign in, ready', 'with your saved preferences.'],
+    lines: ['Launch Glissform when you sign in to your Mac,', 'with your saved animation settings.'],
   },
   {
     id: 'easy-to-reach',
     icon: 'menubar',
-    title: 'Easy to reach',
-    lines: ['Open Settings from the menu bar', 'whenever you want to adjust an effect.'],
+    title: 'Menu bar access',
+    lines: ['Open Settings from the macOS menu bar', 'whenever you want to adjust an effect.'],
   },
   {
     id: 'always-active',
     icon: 'background',
-    title: 'Always active',
-    lines: ['Keep effects active when Settings closes', 'with Run in background turned on.'],
+    title: 'Stay active',
+    lines: ['Keep animations running after closing the app', 'with Run in background enabled.'],
   },
   {
     id: 'stay-updated',
     icon: 'updates',
     title: 'Stay updated',
-    lines: ['Enable automatic updates or install new', 'versions right from inside the app.'],
+    lines: ['Enable automatic updates or install new', 'Glissform versions right inside the app.'],
   },
 ];
 
