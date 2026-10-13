@@ -55,6 +55,7 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
       for (const line of copy.querySelectorAll<HTMLElement>('.text-reveal__content')) {
         line.style.removeProperty('opacity');
         line.style.removeProperty('transform');
+        line.style.removeProperty('--text-reveal-filter');
       }
       styles.delete(copy); styles.delete(panel);
     }

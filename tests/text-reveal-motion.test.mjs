@@ -69,7 +69,7 @@ test('line entrances retain their poses, reverse with scroll and mirror panel di
 });
 
 test('changing direction invalidates a cached reveal and settling clears its transform', () => {
-  const line = { style: { opacity: '', transform: '' } };
+  const line = { style: { opacity: '', transform: '', setProperty(name, value) { this[name] = value; } } };
   const reveal = createTextReveal({ querySelectorAll: () => [line] });
   reveal(.25);
   const forward = line.style.transform;
@@ -85,7 +85,7 @@ test('changing direction invalidates a cached reveal and settling clears its tra
 });
 
 test('a mixed-size message keeps equal pixel travel and staggered line unfolding', () => {
-  const lines = Array.from({ length: 3 }, () => ({ style: { opacity: '', transform: '' } }));
+  const lines = Array.from({ length: 3 }, () => ({ style: { opacity: '', transform: '', setProperty(name, value) { this[name] = value; } } }));
   const reveal = createTextReveal({ querySelectorAll: () => lines }, { travelPx: 64 });
   for (const direction of [1, -1]) for (let step = 0; step < 100; step++) {
     reveal(step / 100, direction);

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a subtle blur-to-sharp reveal to shared hero and feature reading text. Reverse the same blur with exits, preserve motion timing, and keep settled and reduced-motion text sharp. Local only; not deployed.
+
 - Shorten Start at login’s password-field pause to match the arrow’s 180ms pause before clicking, advancing the sign-in sequence without changing typing, camera or return speeds. Local only; not deployed.
 
 - Add a screen-formation hero opening: build the lower glow, draw the navy surface inward to reveal the bezel and round its corners. Grow the notch down from the top without overshoot, keeping it attached to the bezel. Stars sharpen while drifting slightly outward, then a clear motion, size and brightness pulse spreads steadily from the center over 1.4 seconds, starting at 350ms during the final star arrivals. Begin the existing copy, menu, brand, download and navbar animations at 600ms, preserving their motion and relative timing; release their entrance styles at the original endpoint. Settle immediately on interaction and retain static fallbacks. Local only; not deployed.

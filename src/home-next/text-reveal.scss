@@ -10,3 +10,11 @@
   transform-origin: 50% 50%;
   backface-visibility: hidden;
 }
+
+// Keep filtering on a flat child, separate from the line's 3D transform.
+.text-reveal__ink {
+  display: block;
+  filter: var(--text-reveal-filter, none);
+
+  @media (prefers-reduced-motion: reduce) { filter: none; }
+}
