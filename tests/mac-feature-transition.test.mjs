@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createMacFeatureTransition, macFeaturePose, macFeatureReturnPose } from '../src/home-next/macFeatureTransition.ts';
+import { createMacFeatureTransition, macFeaturePose } from '../src/home-next/macFeatureTransition.ts';
+import { settingsFeatureEntrancePose, settingsFeatureEntranceTiming } from '../src/home-next/settingsFeaturesChoreography.ts';
 import { scenePose } from '../src/home-next/choreography.ts';
 import { sceneProjection } from '../src/home-next/sceneProjection.ts';
 import { macBookDimensions as body } from '../src/home-next/displayGeometry.ts';
@@ -28,7 +29,7 @@ test('the second shot begins at the exact final rendered screen pose on every vi
     const old = projectQuad(compose(layout, original.screen), width, openingHeight);
     const next = projectQuad(project(0).screen, width, openingHeight);
     old.forEach((p, i) => { near(next[i].x, p.x); near(next[i].y, p.y); });
-    assert.equal(scene(width, height).distance, 4000);
+    assert.equal(scene(width, height).distance, 3000);
     assert.equal(project(0).fold, 62);
     assert.equal(project(0).white, 0);
     assert.deepEqual(project(-1), project(0));
@@ -138,21 +139,21 @@ test('the entire approach remains finite, reversible and in front of the camera 
 });
 
 
-test('the longer scroll exit holds white and hardware until content is gone', () => {
+test('returning features overlap the same reversing camera and never leave an opaque white stopping point', () => {
   for (const [width, height] of [[1280, 720], [1118, 1016], [1920, 1017]]) {
-    const view = scene(width, height), final = view.project(1);
-    const exitDistance = Math.max(192, Math.min(480, height * .4));
-    const halfway = 1 - exitDistance / 2 / view.distance;
-    near(macFeatureReturnPose(halfway, height, view.distance).content, .5);
+    const view = scene(width, height);
+    const oldBlankPosition = 1 - Math.max(192, Math.min(480, height * .4)) / view.distance;
+    const oldBlank = view.project(oldBlankPosition);
+    assert.ok(oldBlank.white < 1);
+    assert.ok(settingsFeatureEntrancePose(settingsFeatureEntranceTiming.duration * oldBlank.white ** 2).opacity > .9 || oldBlank.white < .5,
+      'the old blank stop retains a readable feature or has already uncovered the Mac');
     for (let i = 1000; i >= 0; i--) {
-      const state = macFeatureReturnPose(i / 1000, height, view.distance);
-      if (state.content > 0) {
-        assert.equal(view.project(state.scene).white, 1);
-        assert.deepEqual(view.project(state.scene).model, final.model);
-      } else assert.ok(state.scene <= 1);
-      assert.deepEqual(macFeatureReturnPose(i / 1000, height, view.distance), state,
-        'stopping or retracing scroll preserves the exact pose');
+      const pose = view.project(i / 1000);
+      const content = settingsFeatureEntrancePose(settingsFeatureEntranceTiming.duration * pose.white ** 2);
+      assert.ok(Math.max(content.opacity, 1 - pose.white) >= .5,
+        'content or the uncovered Mac remains present throughout the handoff');
+      if (content.opacity <= .001) assert.ok(pose.white < .15, 'hidden panels cannot leave the Mac covered');
+      assert.deepEqual(view.project(i / 1000), pose, 'stopping and reversing retrace exactly the same camera');
     }
-    assert.equal(macFeatureReturnPose(0, height, view.distance).content, 0);
   }
 });

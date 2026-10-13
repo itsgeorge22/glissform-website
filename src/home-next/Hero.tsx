@@ -15,7 +15,8 @@ import { TextLine } from './TextReveal';
 import { createTextReveal } from './textRevealMotion';
 import { playHeroEntrance } from './heroEntrance';
 import { trackNavigationScroll } from './navigationScroll';
-import { createMacFeatureTransition, macFeatureHoldDistance, macFeatureReturnPose } from './macFeatureTransition';
+import { createMacFeatureTransition, macFeatureHoldDistance, macFeatureWhiteStart } from './macFeatureTransition';
+import { controlMacScroll } from './macScroll';
 import { setFeatureEntry } from './featureEntry';
 import { compose, identity, projectQuad, translate } from '../hero-test-animation/sceneProjection';
 import { sceneProjection, lidClearProgress } from './sceneProjection';
@@ -83,7 +84,8 @@ function DesktopHero() {
     let projectTransition: ReturnType<typeof createMacFeatureTransition>['project'] | undefined;
     let endingScale = 1, endingTranslationY = 0;
     let headlineClearance = 1, subtitleClearance = 1;
-    let current = 0, target = 0, frame = 0, previousTime = 0;
+    let current = 0, frame = 0;
+    let scrollInput: ReturnType<typeof controlMacScroll> | undefined;
     let featureReached = false, featureReturning = false;
     let disposed = false, failed = false, initializing = false, lastVisible = true, lastActive = false;
     // Cache individual properties. No inherited custom properties invalidate the
@@ -97,7 +99,6 @@ function DesktopHero() {
     };
     const inert = (element: HTMLElement, value: boolean) => { if (element.inert !== value) element.inert = value; };
     const syncNavigationLayer = () => {
-      // The copy moves with native sticky release, not the smoothed Mac pose.
       // Keep the same subpixel tolerance as feature entry so the fixed dock
       // remains above the section when its scroll-up gesture reveals it.
       const released = !isStatic() && window.scrollY >= top + travel - 1;
@@ -114,8 +115,7 @@ function DesktopHero() {
         featureReturning = false;
       } else if (transitionProgress === 0) featureReached = featureReturning = false;
       else if (featureReached) featureReturning = true;
-      const returning = featureReturning ? macFeatureReturnPose(transitionProgress, height, transitionTravel) : undefined;
-      const continuation = transitionProgress > 0 ? projectTransition?.(returning?.scene ?? transitionProgress) : undefined;
+      const continuation = transitionProgress > 0 ? projectTransition?.(transitionProgress) : undefined;
       const pose = scenePose(firstProgress, width, height, openingHeight);
       const projection = continuation ?? sceneProjection(pose, width, height, openingHeight);
       // Enlarge the finished model and anchor its actual silhouette below the
@@ -135,13 +135,13 @@ function DesktopHero() {
       if (active && renderer) renderer.render({ fold: continuation?.fold ?? pose.fold, modelMatrix: projection.model,
         perspective: projection.perspective, elevation: 208 * (1 - pose.reveal), opacity: 1,
         shadowOpacity: continuation?.shadow ?? 1 });
-      // Start the feature at the native endpoint instead of waiting for the
-      // smoothed camera to settle. The last invisible camera frames stay behind white.
+      // The camera, white overlay and returning feature share the same scroll
+      // position. Uncover the Mac while content leaves, without an empty hold.
       const coverage = atFeatureEntry ? 1 : continuation?.white ?? 0;
       style(white, 'opacity', String(coverage));
       const transitioning = String(transitionProgress > 0);
       if (stage.dataset.transitioning !== transitioning) stage.dataset.transitioning = transitioning;
-      setFeatureEntry({ linked: !isStatic(), coverage: returning?.content ?? coverage,
+      setFeatureEntry({ linked: !isStatic(), coverage,
         ready: atFeatureEntry, returning: featureReturning });
       for (const property of ['border-bottom-left-radius', 'border-bottom-right-radius']) {
         for (const edge of screenEdges) style(edge, property, `${17 * pose.cornerRoundness}px`);
@@ -190,23 +190,17 @@ function DesktopHero() {
         stage.dataset.fold = (continuation?.fold ?? pose.fold).toFixed(3);
       }
     };
-    const tick = (time: number) => {
+    const tick = () => {
       frame = 0;
-      if (!renderer && !isStatic()) { previousTime = 0; return; }
-      const dt = Math.min(64, previousTime ? time - previousTime : 16.67);
-      previousTime = time;
-      current += (target - current) * (1 - Math.exp(-dt / 65));
-      if (Math.abs(target - current) < .00003) current = target;
       draw();
-      if (current !== target) frame = requestSceneFrame(tick);
-      else previousTime = 0;
     };
     const syncScroll = () => {
-      target = isStatic() ? 0 : Math.max(0, Math.min(travel, window.scrollY - top)) / firstTravel;
-      if (target > 0 && !renderer) void initialize();
-      if (!frame && !document.hidden && (current !== target || isStatic())) frame = requestSceneFrame(tick);
+      current = isStatic() ? 0 : Math.max(0, Math.min(travel, window.scrollY - top)) / firstTravel;
+      if (current > 0 && !renderer) void initialize();
+      if (!frame && !document.hidden) frame = requestSceneFrame(tick);
     };
     const measure = () => {
+      scrollInput?.reset();
       width = stage.clientWidth; height = stage.clientHeight;
       openingHeight = compact.matches ? height : Math.max(720, height);
       const endingBounds = sceneProjection(scenePose(1, width, height, openingHeight), width, height, openingHeight).bounds;
@@ -234,13 +228,13 @@ function DesktopHero() {
       style(track, '--mac-transition-distance', `${transitionTravel}px`);
       style(surface, 'width', `${width}px`); style(surface, 'height', `${openingHeight}px`);
       if (!isStatic()) renderer?.resize(width, height, window.devicePixelRatio);
-      syncScroll(); current = renderer ? target : 0; draw();
+      syncScroll(); draw();
     };
     const fallback = () => {
       if (disposed) return;
       failed = true; renderer?.dispose(); renderer = null;
       track.classList.add('hero-animation--static');
-      current = target = 0; cancelHeroFrame(frame); frame = 0;
+      current = 0; cancelHeroFrame(frame); frame = 0;
       measure();
     };
     const initialize = async () => {
@@ -256,7 +250,6 @@ function DesktopHero() {
         if (!renderer) { fallback(); return; }
         renderer.resize(width, height, window.devicePixelRatio);
         draw();
-        if (current !== target && !frame && !document.hidden) frame = requestSceneFrame(tick);
       } catch (error) {
         if (import.meta.env.DEV) console.error('MacBook initialization failed', error);
         if (!disposed) setTemplateNeeded(false);
@@ -264,7 +257,7 @@ function DesktopHero() {
       } finally { initializing = false; }
     };
     const visibility = () => {
-      cancelHeroFrame(frame); frame = 0; previousTime = 0;
+      cancelHeroFrame(frame); frame = 0;
       if (!document.hidden) { syncScroll(); draw(); }
     };
     const preference = () => {
@@ -293,6 +286,11 @@ function DesktopHero() {
     canvas.addEventListener('webglcontextlost', fallback);
     track.classList.toggle('hero-animation--static', isStatic());
     measure(); scroll.refresh();
+    scrollInput = controlMacScroll(() => ({ start: top, end: top + travel, enabled: !isStatic(), returnDistance: transitionTravel * .28, forwardStart: top + transitionStart + transitionTravel * macFeatureWhiteStart }), () => {
+      syncScroll();
+      cancelHeroFrame(frame); frame = 0;
+      draw();
+    });
     const stopNavigationScroll = trackNavigationScroll(navigation, () => top + travel);
     // Warm static artwork during idle time, without a render loop or visible
     // canvas on the opening hero. Reduced Motion never initializes WebGL.
@@ -301,6 +299,7 @@ function DesktopHero() {
     void document.fonts.ready.then(() => { if (!disposed) measure(); });
     return () => {
       disposed = true; controller.abort(); renderer?.dispose();
+      scrollInput?.dispose();
       setFeatureEntry({ linked: false, ready: false, coverage: 0 });
       stopNavigationScroll();
       if (idle) window.cancelIdleCallback(idle); clearTimeout(timer);

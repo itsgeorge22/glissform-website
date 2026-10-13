@@ -23,8 +23,10 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
   let frame = 0, height = 1, animated = false, disposed = false, current = 0;
   const gesture = createSettingsWheelGesture();
   let entry: FeatureEntry = { linked: false, ready: false, coverage: 0 };
-  let entranceStarted = false, entranceElapsed = 0, entranceUpdatedAt = 0;
-  const entering = () => entry.linked && entranceStarted && entry.ready && entranceElapsed < settingsFeatureEntranceTiming.duration;
+  let entranceStarted = false, entranceElapsed = 0, entranceUpdatedAt = 0, exitCoverage = 1;
+  let earlyEntrance = false;
+  const entranceAllowed = () => entry.ready || earlyEntrance;
+  const entering = () => entry.linked && entranceStarted && entranceAllowed() && entranceElapsed < settingsFeatureEntranceTiming.duration;
   let transition: { from: number; to: number; elapsed: number; updatedAt: number; playback: 1 | -1 } | undefined;
   const styles = new WeakMap<HTMLElement, Map<string, string>>();
   const setStyle = (element: HTMLElement, property: string, value: string) => {
@@ -62,15 +64,21 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
     const direction = transition ? Math.sign(transition.to - transition.from) : 1;
     const copyPose = transition && direction > 0
       ? settingsFeaturesPose(elapsed - settingsFeaturesTiming.upwardIconLeadMs) : pose;
+    // Scroll can dismiss the feature immediately; only the entrance clock restores it.
+    const exiting = !entranceAllowed() && (entry.returning || entranceStarted);
     const entrance = entry.linked && (!entranceStarted || entranceElapsed < settingsFeatureEntranceTiming.duration || entry.coverage < 1)
-      ? settingsFeatureEntrancePose(entranceStarted ? entranceElapsed * (entry.returning ? entry.coverage : 1) : 0,
-        entry.returning ? 1 : entry.coverage) : undefined;
+      ? settingsFeatureEntrancePose(entranceStarted ? entranceElapsed * (exiting ? exitCoverage ** 2 : 1) : 0,
+        exiting || earlyEntrance ? 1 : entry.coverage) : undefined;
     const position = transition ? transition.from + direction * pose.panel : current;
     const panels = settingsFeaturePanelPoses(position, items.length, height - 128, entrance?.scale ?? 1);
     items.forEach((item, index) => {
       const outgoing = !!transition && index === transition.from;
       const incoming = !!transition && index === transition.to;
       const settled = !transition && index === current;
+      // An already-running demo stays continuous while its panel fades over the
+      // returning Mac. Once hidden, it waits for settlement before starting again.
+      const returningDemo = !!entry.returning && index === 0 && (entrance?.opacity ?? 0) > .001
+        && (item.panel.getAttribute('data-feature-active') === 'true' || item.panel.getAttribute('data-feature-departing') === 'true');
       // Nested demonstrations start only after the panel and copy have settled.
       const visualActive = String(settled && !entrance);
       if (item.panel.getAttribute('data-feature-active') !== visualActive) {
@@ -78,7 +86,7 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
       }
       // Keep the original demo running through the entire handoff, including
       // reversals. Incoming demos still wait for both panel and copy to settle.
-      const visualDeparting = String(outgoing && !entrance);
+      const visualDeparting = String((outgoing && !entrance) || returningDemo);
       if (item.panel.getAttribute('data-feature-departing') !== visualDeparting) {
         item.panel.setAttribute('data-feature-departing', visualDeparting);
       }
@@ -204,7 +212,7 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
     // Direction changes retrace the active handoff immediately. Only a fresh
     // gesture can request the next adjacent feature or release a boundary.
     const boundary = nextSettingsFeature(current, direction, items.length) === current;
-    if (!busy && fresh && boundary) return;
+    if (fresh && boundary && (!busy || (direction < 0 && entering()))) return;
     event.preventDefault();
     if (fresh) start(direction);
   };
@@ -250,7 +258,7 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
   // Capture wheel input before it reaches any rendered child/layer.
   window.addEventListener('wheel', wheel, { passive: false, capture: true });
   window.addEventListener('scroll', pageScroll, { passive: true });
-  window.addEventListener('keydown', key);
+  window.addEventListener('keydown', key, true);
   window.addEventListener('resize', measure);
   window.addEventListener('pageshow', measure);
   window.addEventListener('pagehide', settle);
@@ -259,7 +267,22 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
   desktop.addEventListener('change', preference);
   preference();
   const stopEntry = followMacScene ? subscribeFeatureEntry(next => {
-    const wasLinked = entry.linked;
+    const wasLinked = entry.linked, wasAllowed = entranceAllowed();
+    advance(performance.now());
+    // Start the time-driven entrance once the forward dissolve is 80% white.
+    // Keep it running while the camera settles; a backward move releases it
+    // to the existing exit poses immediately.
+    if (!next.linked || next.ready || next.coverage < entry.coverage) earlyEntrance = false;
+    else if (next.coverage > entry.coverage && next.coverage >= .8) earlyEntrance = true;
+    const allowed = next.ready || earlyEntrance;
+    if (next.linked && !allowed) exitCoverage = Math.min(exitCoverage, next.coverage);
+    if (allowed && !wasAllowed) {
+      // Resume from the visible exit pose, then finish automatically with no
+      // more scrolling. A fully dismissed feature replays its whole entrance.
+      entranceElapsed *= exitCoverage ** 2;
+      exitCoverage = 1;
+      entranceUpdatedAt = performance.now();
+    }
     entry = next;
     if (!animated) return;
     if (wasLinked && !next.linked) settle();
@@ -268,15 +291,14 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
     if (next.linked && (!wasLinked || !next.ready)) {
       current = 0; transition = undefined;
     }
-    // Preserve the entered pose while returning so changing scroll direction
-    // can retrace the content exit instead of replaying the timed entrance.
+    // Leaving the dive resets the entrance; revisiting its endpoint runs it again.
     if (!next.linked || (next.coverage === 0 && !next.returning)) {
-      entranceStarted = false; entranceElapsed = 0;
+      entranceStarted = false; entranceElapsed = 0; exitCoverage = 1;
       cancelHeroFrame(frame); frame = 0;
     }
-    if (next.ready && !entranceStarted) {
+    if (allowed && !entranceStarted) {
       entranceStarted = true; entranceElapsed = 0; entranceUpdatedAt = performance.now();
-    } else if (!next.ready) {
+    } else if (!allowed) {
       entranceUpdatedAt = performance.now();
       cancelHeroFrame(frame); frame = 0;
     }
@@ -291,7 +313,7 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
     observer.disconnect();
     window.removeEventListener('wheel', wheel, true);
     window.removeEventListener('scroll', pageScroll);
-    window.removeEventListener('keydown', key);
+    window.removeEventListener('keydown', key, true);
     window.removeEventListener('resize', measure);
     window.removeEventListener('pageshow', measure);
     window.removeEventListener('pagehide', settle);

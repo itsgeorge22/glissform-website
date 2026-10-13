@@ -276,10 +276,16 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     stop = animateSettingsFeatures(section, true);
     assert.deepEqual(visible(), []);
     assert.ok(items.every(item => item.panel.style.opacity === '0'));
-    setFeatureEntry({ linked: true, ready: false, coverage: .9 });
+    setFeatureEntry({ linked: true, ready: false, coverage: .8 });
     wheel(1); window.emit('scroll'); step(40);
+    assert.ok(Number(items[0].panel.style.opacity) > 0, 'the feature begins before the dive endpoint');
+    const earlyOpacity = Number(items[0].panel.style.opacity);
+    step(160);
+    assert.ok(Number(items[0].panel.style.opacity) > earlyOpacity, 'early entrance advances on time without further scroll');
+    const beforeEndpoint = snapshot();
     pinned = true;
     setFeatureEntry({ linked: true, ready: true, coverage: 1 });
+    assert.deepEqual(snapshot(), beforeEndpoint, 'reaching the endpoint does not restart the entrance');
     for (let i = 0; i < 8; i++) {
       step(40); window.emit('wheel', { deltaY: 100 * Math.pow(.9, i), deltaX: 0 });
     }
@@ -294,35 +300,46 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     assert.equal(frames.size, 0);
     pinned = false;
     setFeatureEntry({ linked: true, ready: false, coverage: .3, returning: true });
+    assert.equal(items[0].panel.getAttribute('data-feature-departing'), 'true',
+      'the visible feature demo keeps playing while the Mac is uncovered');
     assert.notEqual(items[0].lines[0].style.transform, 'none', 'the scroll return drives the shared exit poses');
-    const returningPose = snapshot();
     setFeatureEntry({ linked: true, ready: false, coverage: .001, returning: true });
+    assert.equal(items[0].panel.getAttribute('data-feature-departing'), 'false');
     assert.ok(items.every(item => item.panel.style.opacity === '0' && item.panel.style.visibility === 'hidden'),
-      'the negligible fade tail is fully removed from painting before the Mac returns');
+      'the negligible fade tail is fully removed from painting over the returning Mac');
     setFeatureEntry({ linked: true, ready: false, coverage: 0, returning: true });
     assert.deepEqual(visible(), []); assert.equal(frames.size, 0);
-    assert.ok(items.every(item => item.panel.style.opacity === '0'), 'all placeholders disappear before the white background');
+    assert.ok(items.every(item => item.panel.style.opacity === '0'), 'the feature disappears with the last white coverage');
     setFeatureEntry({ linked: true, ready: false, coverage: .3, returning: true });
-    assert.deepEqual(snapshot(), returningPose, 'reversing the return restores the same content poses without replaying the entrance');
-    assert.ok(items.every(item => item.panel.style.visibility === 'visible'), 'reversing restores panel painting');
+    assert.deepEqual(visible(), [], 'forward scrolling does not scrub the feature back in');
+    assert.ok(items.every(item => item.panel.style.visibility === 'hidden'), 'the dismissed feature waits for the dive endpoint');
+    setFeatureEntry({ linked: true, ready: true, coverage: 1 });
+    step(300); assert.ok(Number(items[0].panel.style.opacity) > 0, 'entrance plays without further scroll');
+    step(1000); assert.equal(items[0].panel.style.transform, 'none');
     setFeatureEntry({ linked: true, ready: false, coverage: 0, returning: true });
     setFeatureEntry({ linked: true, ready: false, coverage: 0, returning: false });
     pinned = true;
     setFeatureEntry({ linked: true, ready: true, coverage: 1 }); step(300);
+    assert.equal(window.emit('wheel', { deltaY: -4, deltaX: 0 }).defaultPrevented, false,
+      'upward input can return to the Mac immediately, even during the timed feature entrance');
     const partialEntrance = snapshot();
     setFeatureEntry({ linked: true, ready: false, coverage: 1, returning: true });
     assert.deepEqual(snapshot(), partialEntrance, 'returning during entrance must not jump to the fully visible feature');
     step(200); assert.deepEqual(snapshot(), partialEntrance);
     setFeatureEntry({ linked: true, ready: false, coverage: .1, returning: true });
+    const dismissedPose = snapshot();
     setFeatureEntry({ linked: true, ready: false, coverage: 1, returning: true });
-    assert.deepEqual(snapshot(), partialEntrance, 'partial entrance reversals retain their original pose');
+    assert.equal(items[0].panel.style.transform, dismissedPose[0].panel, 'crossing the early entrance cue resumes the dismissed pose without a jump');
     setFeatureEntry({ linked: true, ready: true, coverage: 1 });
+    assert.equal(items[0].panel.style.transform, dismissedPose[0].panel, 'automatic entrance resumes without a panel jump');
+    assert.ok(Math.abs(Number(items[0].lines[0].style.opacity) - Number(dismissedPose[0].lines[0][1])) < 1e-12, 'copy resumes continuously');
+    step(400); assert.notDeepEqual(snapshot(), dismissedPose, 'the entrance advances on time alone');
     document.hidden = true; document.emit('visibilitychange');
     assert.equal(frames.size, 0);
     document.hidden = false; document.emit('visibilitychange');
     assert.equal(items[0].panel.style.transform, 'none', 'backgrounding settles without a later replay');
-    // Returning to the native feature boundary must release the copy from the
-    // camera's almost-complete smoothed return pose, even with rounding residue.
+    // Returning to the shared feature boundary must finish the copy handoff,
+    // even when coverage has subpixel rounding residue.
     for (const coverage of [.999, 1 - Number.EPSILON]) {
       pinned = false;
       setFeatureEntry({ linked: true, ready: false, coverage: .4, returning: true });

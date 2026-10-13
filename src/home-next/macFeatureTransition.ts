@@ -5,21 +5,10 @@ import { compose, facesCamera, identity, projectQuad, translate } from '../hero-
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 
-const whiteStart = .75;
+export const macFeatureWhiteStart = .75;
 const handoffScrollNudge = 24;
 
-export const macFeatureHoldDistance = (height: number) => height * .5;
-
-/** Hide the features over a longer scroll interval before reversing the hardware. */
-export function macFeatureReturnPose(progress: number, height: number, distance: number) {
-  const p = clamp(progress);
-  const exitSpan = Math.min(.4, Math.max(192, Math.min(480, height * .4)) / distance);
-  const boundary = 1 - exitSpan;
-  return {
-    scene: clamp(p / boundary),
-    content: clamp((p - boundary) / exitSpan),
-  };
-}
+export const macFeatureHoldDistance = (height: number) => height * .3;
 
 /** Close while the whole silhouette is still readable; tilt and zoom keep building. */
 export function macFeaturePose(progress: number) {
@@ -118,7 +107,7 @@ export function createMacFeatureTransition(width: number, height: number, openin
     else beforeFill = middle;
   }
   // Fixed scroll travel; geometry still determines the final camera pose.
-  const distance = 4000;
+  const distance = 3000;
   // Account for the slower finish so screen fill still happens 24 scroll pixels
   // before the handoff, rather than creating a longer white interval.
   const endProgress = clamp(fillProgress / ease(1 - handoffScrollNudge / distance));
@@ -128,7 +117,7 @@ export function createMacFeatureTransition(width: number, height: number, openin
     project: (progress: number) => ({
       ...projectApproach(ease(clamp(progress)) * endProgress),
       // Finish just after screen fill, with no subsequent white scroll interval.
-      white: ease((clamp(progress) - whiteStart) / (1 - whiteStart)),
+      white: ease((clamp(progress) - macFeatureWhiteStart) / (1 - macFeatureWhiteStart)),
     }),
   };
 }
