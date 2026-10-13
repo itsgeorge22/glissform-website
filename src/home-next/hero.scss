@@ -18,6 +18,14 @@
     min-height: 0;
   }
   .hero-animation__stage { overflow: visible; z-index: 2; pointer-events: none; }
+  .hero-animation__ambience {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 65% 46% at 50% 77%,
+      rgb(100 161 237 / 11%), rgb(154 192 239 / 4%) 52%, rgb(255 255 255 / 0) 100%);
+  }
   .hero-animation__stage[data-transitioning='true'] { overflow: clip; }
   .hero-animation__white { position: absolute; inset: 0; z-index: 4; background: #fff; opacity: 0; pointer-events: none; }
   .hero-animation__hardware { z-index: 2; transform-origin: 0 0; }
@@ -32,6 +40,8 @@
     position: absolute;
     z-index: 1;
     top: calc(clamp(112px, 15svh, 190px) + 32px);
+    translate: 0 16px;
+    min-height: 224px; // Preserve the Mac framing when copy gaps change.
     left: 32px;
     right: 32px;
     text-align: center;
@@ -40,6 +50,46 @@
     h2 { margin: 0 auto; max-width: 1300px; color: #090b0e;  }
   }
   .hero-animation__ending .text-reveal__content { opacity: 0; }
+  .hero-animation__feature-label {
+    // Stay outside the measured copy footprint to preserve the Mac's framing.
+    position: absolute;
+    top: -44px;
+    left: 0;
+    right: 0;
+    margin: 0;
+    color: #0068df;
+    font: 600 15px/24px 'Hero Manrope', sans-serif;
+    letter-spacing: -.01em;
+
+    .text-reveal__ink {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 24px;
+      vertical-align: top;
+
+      &::before {
+        content: '';
+        width: 32px;
+        height: 32px;
+        flex: none;
+        border-radius: 9px;
+        background: rgb(0 115 255 / 12%);
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 50%;
+        translate: 0 -50%;
+        width: 20px;
+        height: 20px;
+        background: #0073ff;
+        mask: url('/assets/seamless-close.svg') center / contain no-repeat;
+      }
+    }
+  }
   .hero-animation__action { display: flex; }
   // Hide only the entry targets before hydration; Reduced Motion and no-JS
   // visits retain the complete stationary hero from their first paint.
@@ -50,7 +100,7 @@
     }
   }
   .hero-animation__description {
-    margin: 24px auto 0; color: #555b63;
+    margin: 20px auto 0; color: #555b63;
   }
   .hero-animation__navigation {
     position: fixed; z-index: 1; top: 24px; left: 0; right: 0; height: 64px;
@@ -72,6 +122,7 @@
   }
   .hero-animation--static { height: 100svh; min-height: 720px; }
   .hero-animation--static .hero-animation__ending,
+  .hero-animation--static .hero-animation__ambience,
   .hero-animation--static ~ .hero-animation__navigation { display: none; }
 
   // The screen geometry is stable before the React island hydrates.

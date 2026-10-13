@@ -3,7 +3,11 @@ const expoOut = (value: number) => value === 0 || value === 1 ? value : 1 - 2 **
 
 /** All entering lines finish fading here, while movement continues to settle. */
 export const textFadeEnd = .5;
-const textBlurPx = 8;
+const revealBlurPx = 8;
+
+/** Shared sharpening curve for reading text and its accompanying feature icon. */
+export const revealBlurFilter = (opacity: number) => opacity === 1 ? 'none'
+  : `blur(${(revealBlurPx * (1 - opacity) ** 2).toFixed(3)}px)`;
 
 export function textLineDelay(index: number, count: number) {
   return count > 1 ? Math.min(.04, .2 / (count - 1)) * index : 0;
@@ -47,8 +51,7 @@ export function createTextReveal(element: HTMLElement, options: { travelPx?: num
       line.style.opacity = String(pose.opacity);
       // Sharpen during the fade, then remove filtering while the line settles.
       // Using the same pose keeps blur continuous on scroll/gesture reversal.
-      line.style.setProperty('--text-reveal-filter', pose.opacity === 1 ? 'none'
-        : `blur(${(textBlurPx * (1 - pose.opacity) ** 2).toFixed(3)}px)`);
+      line.style.setProperty('--text-reveal-filter', revealBlurFilter(pose.opacity));
       const y = sharedY ?? pose.y;
       const settled = y === 0 && pose.tilt === 0 && pose.skew === 0 && pose.scale === 1;
       line.style.transform = settled ? 'none'

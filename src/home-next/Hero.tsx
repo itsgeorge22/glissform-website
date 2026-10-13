@@ -64,6 +64,8 @@ function DesktopHero() {
     const track = trackRef.current!, stage = stageRef.current!, canvas = canvasRef.current!;
     const surface = surfaceRef.current!, desktop = desktopRef.current!, screenContent = screenContentRef.current!;
     const ending = stage.querySelector<HTMLElement>('.hero-animation__ending')!;
+    const featureLabel = ending.querySelector<HTMLElement>('.hero-animation__feature-label')!;
+    const revealFeatureLabel = createTextReveal(featureLabel);
     const heading = ending.querySelector<HTMLElement>('h2')!;
     const revealHeading = createTextReveal(heading);
     const description = ending.querySelector<HTMLElement>('.hero-animation__description')!;
@@ -84,7 +86,7 @@ function DesktopHero() {
     let width = 0, height = 0, openingHeight = 0, travel = 1, firstTravel = 1, transitionTravel = 1, transitionStart = 1, top = 0;
     let projectTransition: ReturnType<typeof createMacFeatureTransition>['project'] | undefined;
     let endingScale = 1, endingTranslationY = 0;
-    let headlineClearance = 1, subtitleClearance = 1;
+    let featureLabelClearance = 1, headlineClearance = 1, subtitleClearance = 1;
     let current = 0, frame = 0;
     let scrollInput: ReturnType<typeof controlMacScroll> | undefined;
     let featureReached = false, featureReturning = false;
@@ -154,6 +156,7 @@ function DesktopHero() {
         inert(surface, !visible); lastVisible = visible;
       }
       const headlineProgress = scrollCopyProgress(firstProgress, headlineClearance, 'headline');
+      revealFeatureLabel(scrollCopyProgress(firstProgress, featureLabelClearance, 'headline'));
       revealHeading(headlineProgress);
       revealDescription(scrollCopyProgress(firstProgress, subtitleClearance, 'subtitle'));
       style(navigation, 'opacity', String(pose.navigation));
@@ -205,7 +208,8 @@ function DesktopHero() {
       width = stage.clientWidth; height = stage.clientHeight;
       openingHeight = compact.matches ? height : Math.max(720, height);
       const endingBounds = sceneProjection(scenePose(1, width, height, openingHeight), width, height, openingHeight).bounds;
-      const copyBottom = ending.getBoundingClientRect().bottom - stage.getBoundingClientRect().top;
+      // Use layout geometry so the copy's visual offset cannot move the Mac.
+      const copyBottom = parseFloat(getComputedStyle(ending).top) + ending.getBoundingClientRect().height;
       const modelTop = copyBottom + 128;
       endingScale = Math.min(
         Math.min(1280, width - 128) / (endingBounds.right - endingBounds.left),
@@ -216,6 +220,8 @@ function DesktopHero() {
       projectTransition = transition.project;
       const headlineTop = heading.getBoundingClientRect().top - stage.getBoundingClientRect().top;
       const subtitleTop = description.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+      const featureLabelTop = featureLabel.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+      featureLabelClearance = lidClearProgress(width, height, openingHeight, endingScale, endingTranslationY, featureLabelTop);
       headlineClearance = lidClearProgress(width, height, openingHeight, endingScale, endingTranslationY, headlineTop);
       subtitleClearance = lidClearProgress(width, height, openingHeight, endingScale, endingTranslationY, subtitleTop);
       top = track.getBoundingClientRect().top + window.scrollY;
@@ -318,6 +324,7 @@ function DesktopHero() {
 
   return <><section className="hero-animation hero-animation--static" ref={trackRef} aria-label="Glissform Seamless Close scroll experience">
     <div className="hero-animation__stage" ref={stageRef}>
+      <div className="hero-animation__ambience" aria-hidden="true" />
       <canvas className="hero-animation__hardware" ref={canvasRef} aria-hidden="true" />
       <div className="hero-test hero-animation__surface" ref={surfaceRef} aria-labelledby="hero-test-title" data-prelude="pending">
         <div className="hero-test__screen">
@@ -358,13 +365,16 @@ function DesktopHero() {
         <img className="hero-test__notch" src={notch} width="214" height="42" alt="" aria-hidden="true" />
       </div>
       <div className="hero-animation__ending" aria-hidden="true">
-        <h2 aria-label="Satisfying even when it’s time to close">
-          <TextLine text="Satisfying even when" />{' '}
-          <TextLine text="it’s time to close" />
+        <p className="hero-animation__feature-label" aria-label="Seamless Close">
+          <TextLine text="Seamless Close" />
+        </p>
+        <h2 aria-label="Even closing feels satisfying">
+          <TextLine text="Even closing" />{' '}
+          <TextLine text="feels satisfying" />
         </h2>
-        <p className="hero-animation__description" aria-label="Customize your MacBook lid animation with Seamless Close. Choose the starting angle and blur strength in Glissform for macOS.">
-          <TextLine text="Customize your MacBook lid animation with Seamless Close." />{' '}
-          <TextLine text="Choose the starting angle and blur strength in Glissform for macOS." />
+        <p className="hero-animation__description" aria-label="A smooth MacBook lid animation that responds as you close it. Adjust the starting angle and blur strength in Glissform for macOS.">
+          <TextLine text="A smooth MacBook lid animation that responds as you close it." />{' '}
+          <TextLine text="Adjust the starting angle and blur strength in Glissform for macOS." />
         </p>
       </div>
       <div className="hero-animation__white" aria-hidden="true" />

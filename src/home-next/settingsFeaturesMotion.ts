@@ -1,4 +1,4 @@
-import { createTextReveal, textLinePose } from './textRevealMotion.ts';
+import { createTextReveal, revealBlurFilter, textLinePose } from './textRevealMotion.ts';
 import { settingsFeaturesPose, nextSettingsFeature, settingsFeaturesTiming,
   settingsFeatureEntrancePose, settingsFeatureEntranceTiming, settingsFeaturePanelPoses } from './settingsFeaturesChoreography.ts';
 import { createSettingsWheelGesture } from './settingsFeaturesInput.ts';
@@ -45,6 +45,7 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
       copy.style.removeProperty('visibility');
       icon?.style.removeProperty('opacity');
       icon?.style.removeProperty('transform');
+      icon?.style.removeProperty('filter');
       if (icon) styles.delete(icon);
       panel.style.removeProperty('transform');
       panel.style.removeProperty('opacity');
@@ -117,6 +118,7 @@ export function animateSettingsFeatures(section: HTMLElement, followMacScene = f
         const iconTravel = transition && direction < 0
           ? 80 : iconPose.y < 0 ? 40 : settingsFeaturesTiming.copyTravelPx;
         setStyle(item.icon, 'opacity', String(iconPose.opacity));
+        setStyle(item.icon, 'filter', revealBlurFilter(iconPose.opacity));
         setStyle(item.icon, 'transform', iconPose.y === 0 && iconScale === 1 ? 'none'
           : `translate3d(0, ${iconPose.y * iconTravel / 100}px, 0) scale(${iconScale})`);
       }

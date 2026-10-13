@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-- Add a subtle blur-to-sharp reveal to shared hero and feature reading text. Reverse the same blur with exits, preserve motion timing, and keep settled and reduced-motion text sharp. Local only; not deployed.
+- Refine the Seamless Close chapter with a blue feature label, a soft-blue container for the app symbol and a faint blue background glow. Pair “Even closing feels satisfying” with a subtitle describing the MacBook lid animation and its customization, remove the additional detail line, and move the full reading composition 16px down. Preserve the unshifted model layout reference and all MacBook framing, projection, lighting and animation timing. Saved on the isolated v2 branch; not deployed to production.
+
+- Add a subtle blur-to-sharp reveal to shared hero and feature reading text and the four accompanying feature icons. Share the same blur curve, reverse it with exits, preserve motion timing, and keep settled and reduced-motion text and icons sharp. Saved on the isolated v2 branch; not deployed to production.
 
 - Shorten Start at login’s password-field pause to match the arrow’s 180ms pause before clicking, advancing the sign-in sequence without changing typing, camera or return speeds. Local only; not deployed.
 
