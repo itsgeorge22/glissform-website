@@ -94,7 +94,8 @@
   &__title { height: 1.272731em; overflow: hidden; }
   &__description { height: 1.2em; overflow: hidden; font-size: 24.096em; line-height: 1.2; color: rgb(0 0 0 / 50%); }
   &__copy-track {
-    transform: translateY(calc(var(--update-change, 0) * -50%));
+    // Share the button's available, updating and completed text sequence.
+    transform: translateY(calc(var(--update-label, 0) * -100% / 3));
     span { display: block; }
   }
   &__button {

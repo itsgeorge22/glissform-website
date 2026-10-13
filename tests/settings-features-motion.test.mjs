@@ -13,7 +13,7 @@ test('one gesture advances only one feature, regardless of its scroll distance',
 });
 
 test('headline and supporting lines share one entrance and exit clock', () => {
-  assert.equal(settingsFeaturesTiming.enterCopy.duration, 900);
+  assert.equal(settingsFeaturesTiming.enterCopy.duration, 700);
   assert.equal(settingsFeaturesTiming.exitCopy.duration, settingsFeaturesTiming.enterCopy.duration);
 });
 
@@ -21,7 +21,7 @@ test('copy exits with the panel and hands off immediately without overlap', () =
   assert.equal(settingsFeaturesTiming.exitCopy.start, settingsFeaturesTiming.panel.start);
   assert.equal(settingsFeaturesTiming.enterCopy.start,
     settingsFeaturesTiming.exitCopy.start + settingsFeaturesTiming.exitCopy.duration);
-  assert.equal(settingsFeaturesTiming.panel.duration, 1450);
+  assert.equal(settingsFeaturesTiming.panel.duration, 1150);
   for (let elapsed = 0; elapsed <= settingsFeaturesTiming.duration; elapsed++) {
     const pose = settingsFeaturesPose(elapsed);
     const outgoing = [0, 1, 2].some(line => textLinePose(pose.exitCopy, line, 3).opacity > 0);

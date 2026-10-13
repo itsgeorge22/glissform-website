@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { animateSettingsFeatures } from '../src/home-next/settingsFeaturesMotion.ts';
 import { setFeatureEntry } from '../src/home-next/featureEntry.ts';
+import { settingsFeaturesTiming } from '../src/home-next/settingsFeaturesChoreography.ts';
+
+const forwardDuration = settingsFeaturesTiming.duration + settingsFeaturesTiming.upwardIconLeadMs;
 
 class Events {
   listeners = new Map();
@@ -145,7 +148,7 @@ test('feature playback preserves semantic content, reversed line exits and lifec
 
     // Reverse after the destination copy has appeared. It retreats continuously
     // and the original feature returns; no extra feature is queued.
-    wheel(1); step(1500);
+    wheel(1); step(forwardDuration - 400);
     assert.deepEqual(visible(), [2]);
     before = snapshot(); previousY = y(items[2].lines[0]);
     wheel(-1); assert.deepEqual(snapshot(), before);
@@ -205,7 +208,7 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     assert.deepEqual(visible(), [1], 'continuous strong scrolling cannot advance twice');
     assert.equal(frames.size, 0);
 
-    restart(); wheel(1); step(1880);
+    restart(); wheel(1); step(forwardDuration - 20);
     window.emit('wheel', { deltaY: 2, deltaX: 0 });
     now += 20; wheel(1); // Complete the timeline from the event, before RAF.
     step(16); assert.notEqual(items[1].panel.style.transform, 'none',
@@ -214,7 +217,7 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     assert.equal(frames.size, 0);
 
     // Extra requests during playback are discarded, including the quiet ending.
-    restart(); wheel(1); step(1600); wheel(1);
+    restart(); wheel(1); step(forwardDuration - 300); wheel(1);
     step(299); assert.deepEqual(visible(), [1]);
     step(1); step(1);
     assert.equal(frames.size, 0, 'settling never starts an automatic handoff');
@@ -232,7 +235,7 @@ test('feature playback preserves semantic content, reversed line exits and lifec
     assert.equal(frames.size, 0);
 
     // A wheel event can complete the old timeline before its scheduled frame.
-    restart(); wheel(1); step(1600); wheel(1);
+    restart(); wheel(1); step(forwardDuration - 300); wheel(1);
     now += 160; window.emit('wheel', { deltaY: 100, deltaX: 0 });
     now += 81; window.emit('wheel', { deltaY: 90, deltaX: 0 });
     now += 60; window.emit('wheel', { deltaY: 80, deltaX: 0 });

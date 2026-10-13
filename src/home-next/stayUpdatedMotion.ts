@@ -6,7 +6,7 @@ import { updateConfetti, updateConfettiDuration, updateConfettiPose } from './st
 
 export const stayUpdatedTiming = {
   enter: featureDemoEntrance, approach: featureCursorTravel, press: 1.76, release: 1.88,
-  change: .26, depart: 2.08, exit: featureCursorTravel, progress: 5,
+  change: .26, depart: 2.08, exit: featureCursorTravel, progress: 3,
   arrowPull: .15, arrowDive: .18, loaderCurl: .3, loaderRecoil: .16,
   checkDraw: .42,
   takeoff: .18, landing: .48, fold: .4, reopen: .4,
@@ -62,7 +62,7 @@ export function stayUpdatedPose(seconds: number, reducedMotion = false) {
     arrowY: -3.3 * pull + 27.3 * dive ** 2.5,
     arrowScaleY: 1 - .38 * ease(dive),
     spinnerAngle: updating ? -24 * recoil + turns * 360 + launchTurn : 0,
-    secondsLeft: updating ? Math.max(0, Math.ceil(timing.progress - Math.max(0, time - progressAt))) : 5,
+    secondsLeft: updating ? Math.max(0, Math.ceil(timing.progress - Math.max(0, time - progressAt))) : timing.progress,
     stage: folding ? 'folding' : reopening ? 'reopening' : completed ? 'done' : updating ? 'updating' : time >= resetAt ? 'waiting' : 'ready',
     cursorVisible: !reducedMotion && time >= timing.enter && time < timing.depart + timing.exit,
     updating,
@@ -165,7 +165,7 @@ export function animateStayUpdated(root: HTMLElement) {
   return runFeatureDemo(root, { measure, draw, cleanup: () => {
     for (const property of Array.from(root.style)) if (property.startsWith('--update-')) root.style.removeProperty(property);
     delete root.dataset.updateStage;
-    countdown.textContent = '5 seconds left...';
+    countdown.textContent = `${timing.progress} seconds left...`;
     arrow.removeAttribute('transform'); shelf.style.removeProperty('opacity');
     spinner.style.removeProperty('opacity'); spinner.removeAttribute('transform');
     loader.setAttribute('d', updateLoaderPath(0));

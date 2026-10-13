@@ -15,7 +15,7 @@ export function playHeroEntrance(content: HTMLElement) {
   const groups = [
     { selector: '.hero-test__menu', start: 0, duration: 880, y: -18, scale: 1, tilt: 0, damping: 8, frequency: 10 },
     { selector: '.hero-test__brand', start: 180, duration: 920, y: 16, scale: .94, tilt: 0, damping: 8, frequency: 11 },
-    { selector: '.hero-animation__action', start: 550, duration: 1100, y: 36, scale: .86, tilt: -10, damping: 7.8, frequency: 12.5 },
+    { selector: '.hero-animation__action', start: 200, duration: 1100, y: 36, scale: .86, tilt: -10, damping: 7.8, frequency: 12.5 },
     { selector: '.hero-test__nav-dock', start: 0, duration: 1000, y: 24, scale: .98, tilt: 0, damping: 9, frequency: 10 },
   ].map(group => ({ ...group, element: content.querySelector<HTMLElement>(group.selector)!, previous: -1 }));
   const duration = Math.max(subtitleDelay + subtitleDuration, ...groups.map(group => group.start + group.duration));

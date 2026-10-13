@@ -1,6 +1,6 @@
 import { useId, useLayoutEffect, useRef } from 'react';
 import { FeatureCursor } from './FeatureCursor';
-import { animateStayUpdated } from './stayUpdatedMotion';
+import { animateStayUpdated, stayUpdatedTiming } from './stayUpdatedMotion';
 import { updateArrowPath, updateShelfPath, updateLoaderPath } from './stayUpdatedIcon';
 import { updateConfetti } from './stayUpdatedConfetti';
 import './stay-updated-visual.scss';
@@ -31,10 +31,10 @@ export function StayUpdatedVisual() {
             </div>
             <div className="stay-updated-visual__copy">
               <div className="stay-updated-visual__title">
-                <div className="stay-updated-visual__copy-track"><span>Update available!</span><span>Update in progress</span></div>
+                <div className="stay-updated-visual__copy-track"><span>Update available!</span><span>Update in progress</span><span>You’re up to date</span></div>
               </div>
               <div className="stay-updated-visual__description">
-                <div className="stay-updated-visual__copy-track"><span>Get the new version.</span><span data-update-countdown>5 seconds left...</span></div>
+                <div className="stay-updated-visual__copy-track"><span>Get the new version.</span><span data-update-countdown>{stayUpdatedTiming.progress} seconds left...</span><span>Ready to go.</span></div>
               </div>
             </div>
           </div>

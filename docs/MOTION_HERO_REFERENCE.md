@@ -12,14 +12,14 @@ Source: [heroEntrance.ts](../src/home-next/heroEntrance.ts).
 | Subtitle | Last headline line + 80ms; currently 122ms | 900ms | One line below | 80% | -60°, per line |
 | Menu bar | 0ms | 880ms | 18px above | 100% | 0° |
 | Brand | 180ms | 920ms | 16px below | 94% | 0° |
-| Download button | 550ms | 1100ms | 36px below | 86% | -10° |
+| Download button | 200ms | 1100ms | 36px below | 86% | -10° |
 | Navbar | 0ms | 1000ms | 24px below | 98% | 0° |
 
 The headline begins immediately. Calculate the subtitle cue from the final headline line's start, then add 80ms. Whole lines rise, unfold and scale to their normal appearance with 1000px perspective, a 2° initial skew and exponential easing. Line starts are staggered by 4% of the block duration; the final line finishes at the block endpoint. Opacity fades from zero to one during the first 50% of the text block's entrance. All lines finish fading at that halfway point, while their movement continues to the original endpoint. The treatment is adapted from [Potion's hero](https://sendpotion.com/); timed text uses the original v2 playback speeds.
 
 The menu bar, brand, button and navbar are all composed units using the same object spring. Their damping/frequency settings are menu 8/10, brand 8/11, button 7.8/12.5 and navbar 9/10. Object opacity reaches full visibility during the first 24% of its duration. The menu bar never changes scale; the menu bar and navbar animate as complete objects without item staggers.
 
-All elements settle at their normal position, scale and orientation. The spring can briefly pass the final permitted values. Start times are relative to the entrance's first animation frame after fonts are ready; the sequence settles by 1650ms.
+All elements settle at their normal position, scale and orientation. The spring can briefly pass the final permitted values. Start times are relative to the entrance's first animation frame after fonts are ready; the sequence settles by 1300ms.
 
 ## Scroll-controlled copy
 

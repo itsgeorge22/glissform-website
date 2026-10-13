@@ -35,9 +35,9 @@ test('the check stroke travels clockwise around the loader and exits without rev
   }
 });
 
-test('the five-second fill accelerates continuously while the remaining time counts down', () => {
-  const amounts = Array.from({ length: 6 }, (_, second) => stayUpdatedPose(start + second));
-  assert.deepEqual(amounts.map(p => p.secondsLeft), [5, 4, 3, 2, 1, 0]);
+test('the three-second fill accelerates continuously while the remaining time counts down', () => {
+  const amounts = Array.from({ length: 4 }, (_, second) => stayUpdatedPose(start + second));
+  assert.deepEqual(amounts.map(p => p.secondsLeft), [3, 2, 1, 0]);
   assert.equal(amounts[0].progress, 0);
   assert.equal(amounts.at(-1).progress, 1);
   const steps = amounts.slice(1).map((p, i) => p.progress - amounts[i].progress);
@@ -46,7 +46,7 @@ test('the five-second fill accelerates continuously while the remaining time cou
     const pose = stayUpdatedPose(t);
     assert.ok(pose.progress >= 0 && pose.progress < 1);
     assert.equal(pose.stage, 'updating');
-    assert.ok(pose.label <= 1, 'Done cannot arrive before completion');
+    assert.ok(pose.label <= 1 + 1e-10, 'Done cannot arrive before completion, allowing easing roundoff');
   }
 });
 

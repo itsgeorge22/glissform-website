@@ -3,9 +3,9 @@ import { springDisplacement } from './objectMotion.ts';
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 const phase = (elapsed: number, start: number, duration: number) => clamp((elapsed - start) / duration);
-const panel = { start: 0, duration: 1450 };
+const panel = { start: 0, duration: 1150 };
 // All headline/subtitle lines share one reveal timeline and its reverse.
-const copyDuration = 900;
+const copyDuration = 700;
 const exitCopy = { start: 0, duration: copyDuration };
 // Begin the next reveal at the exact end of the outgoing visible fade.
 const enterCopy = { start: exitCopy.start + exitCopy.duration, duration: copyDuration };
@@ -25,7 +25,8 @@ export const settingsFeaturesTiming = {
   ),
 } as const;
 
-export const settingsFeatureEntranceTiming = { copy: copyDuration, panel: 1200, duration: 1200 } as const;
+// Keep the first entrance from the Mac scene independent of faster handoffs.
+export const settingsFeatureEntranceTiming = { copy: 900, panel: 1200, duration: 1200 } as const;
 
 /** A large panel needs only a small rise and scale change, with a quiet spring. */
 export function settingsFeatureEntrancePose(elapsed: number, coverage = 1) {
