@@ -1,22 +1,28 @@
 import { ease } from './choreography.ts';
 import { springDisplacement } from './objectMotion.ts';
-import { clickPressure, featureCursorArrival, featureCursorTravel, featureDemoEntrance, featureDemoPause, phase, pointOn, relativeOffset, runFeatureDemo, type Curve, type Point } from './featureDemoMotion.ts';
+import { clickPressure, featureCursorArrival, featureCursorTravel, featureDemoEntrance, phase, pointOn, relativeOffset, runFeatureDemo, type Curve, type Point } from './featureDemoMotion.ts';
 
-const timing = { enter: featureDemoEntrance, approach: featureCursorTravel, press: 1.76, release: 1.88, depart: 2.52, exit: featureCursorTravel, activatedHold: 1 };
+const timing = { enter: featureDemoEntrance, approach: featureCursorTravel, press: 1.76, release: 1.88, depart: 2.2, exit: featureCursorTravel, activatedHold: .35, repeatPause: 1.1 };
 
 const exitEnd = timing.depart + timing.exit;
 const resetAt = exitEnd + timing.activatedHold;
-const cycle = exitEnd + featureDemoPause - timing.enter;
+const cycle = exitEnd + timing.repeatPause - timing.enter;
 
 /** A timed demonstration within a settled panel. It never handles real input. */
 export function animateAlwaysActive(root: HTMLElement) {
   const card = root.querySelector<HTMLElement>('.always-active-visual__row--background')!;
+  const passingCards = Array.from(root.querySelectorAll<HTMLElement>('.always-active-visual__row:not(.always-active-visual__row--background)'))
+    .map(element => ({ element, x: 0, y: 0, width: 0, height: 0, lift: 0 }));
   const cursor = root.querySelector<HTMLElement>('.always-active-visual__cursor')!;
   let arrival: Curve, departure: Curve, hoverAt = 0, leaveAt = 0;
+  let previousTime = featureDemoEntrance;
 
   const draw = (time: number, reducedMotion: boolean) => {
     if (!arrival) return;
     const t = time % cycle;
+    const restarting = time < previousTime || t < previousTime % cycle || reducedMotion;
+    const elapsed = Math.max(0, time - previousTime);
+    previousTime = time;
     const point = t < timing.depart
       ? pointOn(arrival, phase(t, timing.enter, timing.approach))
       : pointOn(departure, phase(t, timing.depart, timing.exit));
@@ -29,7 +35,18 @@ export function animateAlwaysActive(root: HTMLElement) {
     const enabled = ease(phase(t, timing.release, .18)) * reset;
     const thumb = (1 - springDisplacement(phase(t, timing.release, .32), 9, 10)) * reset;
     const stretch = Math.sin(Math.PI * phase(t, timing.release, .22)) ** 2 * .09;
-    root.style.setProperty('--card-lift', String(reducedMotion ? 0 : lift));
+    card.style.setProperty('--card-lift', String(reducedMotion ? 0 : lift));
+    // Follow the cursor hotspot using unscaled bounds. A quick rise catches
+    // brief passes; a softer release lets each card settle behind the cursor.
+    for (const row of passingCards) {
+      const hovered = !reducedMotion && t >= timing.enter && t < exitEnd
+        && point.x >= row.x && point.x <= row.x + row.width
+        && point.y >= row.y && point.y <= row.y + row.height;
+      if (restarting) row.lift = 0;
+      else row.lift += (Number(hovered) - row.lift) * (1 - Math.exp(-elapsed / (hovered ? .045 : .1)));
+      if (!hovered && row.lift < .001) row.lift = 0;
+      row.element.style.setProperty('--card-lift', String(row.lift));
+    }
     root.style.setProperty('--switch-on', String(reducedMotion ? 1 : enabled));
     root.style.setProperty('--switch-thumb', String(reducedMotion ? 1 : thumb));
     root.style.setProperty('--switch-stretch', String(reducedMotion ? 0 : stretch));
@@ -40,6 +57,9 @@ export function animateAlwaysActive(root: HTMLElement) {
   const measure = () => {
     // Offset geometry ignores the shell's handoff transforms and hover scale.
     const { x, y } = relativeOffset(card, root);
+    for (const row of passingCards) {
+      Object.assign(row, relativeOffset(row.element, root), { width: row.element.offsetWidth, height: row.element.offsetHeight });
+    }
     const unit = parseFloat(getComputedStyle(root).fontSize) || 1;
     const width = root.clientWidth, height = root.clientHeight;
     const target = { x: x + card.offsetWidth * .68, y: y + card.offsetHeight * .58 };
@@ -66,7 +86,9 @@ export function animateAlwaysActive(root: HTMLElement) {
   };
 
   return runFeatureDemo(root, { measure, draw, cleanup: () => {
-    root.style.removeProperty('--card-lift'); root.style.removeProperty('--switch-on');
+    card.style.removeProperty('--card-lift');
+    for (const { element } of passingCards) element.style.removeProperty('--card-lift');
+    root.style.removeProperty('--switch-on');
     root.style.removeProperty('--switch-thumb'); root.style.removeProperty('--switch-stretch');
     cursor.style.removeProperty('transform'); cursor.style.removeProperty('opacity');
   } });

@@ -2,10 +2,18 @@ import { ease } from './choreography.ts';
 import { springDisplacement } from './objectMotion.ts';
 import { clickPressure, featureCursorArrival, featureCursorTravel, featureDemoEntrance, featureDemoPause, phase, pointOn, relativeOffset, runFeatureDemo, type Curve } from './featureDemoMotion.ts';
 
+// Both targets share the same brief settle before clicking. Derive later cues
+// from the first press so a shorter field pause brings the whole sign-in forward.
+const targetPause = .18;
+const focusPress = featureDemoEntrance + featureCursorTravel + targetPause;
+const focusRelease = focusPress + .12;
+const typing = focusRelease + .08, typeDuration = .4;
+const transfer = typing + typeDuration + .08, transferDuration = .22;
+const submitPress = transfer + transferDuration + targetPause;
 const timing = {
-  enter: featureDemoEntrance, approach: featureCursorTravel, focusPress: 1.76, focusRelease: 1.88,
-  typing: 1.96, typeDuration: .4, transfer: 2.44, transferDuration: .22,
-  submitPress: 2.84, submitRelease: 2.96, unlock: .2, zoom: .65, launchPause: .12, launch: .42,
+  enter: featureDemoEntrance, approach: featureCursorTravel, focusPress, focusRelease,
+  typing, typeDuration, transfer, transferDuration,
+  submitPress, submitRelease: submitPress + .12, unlock: .2, zoom: .65, launchPause: .12, launch: .42,
   exit: featureCursorTravel, resetHold: 1.6,
 };
 const zoomAt = timing.submitRelease + timing.unlock;
