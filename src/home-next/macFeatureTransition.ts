@@ -1,7 +1,7 @@
 import { ease, scenePose } from './choreography.ts';
 import { macBookDimensions as body } from './displayGeometry.ts';
-import { projectHardwareScreen, sceneProjection } from './sceneProjection.ts';
-import { compose, facesCamera, identity, projectQuad, translate } from '../hero-test-animation/sceneProjection.ts';
+import { cameraLayout, projectHardwareScreen, sceneProjection } from './sceneProjection.ts';
+import { compose, facesCamera, projectQuad, translate } from '../hero-test-animation/sceneProjection.ts';
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 
@@ -32,17 +32,6 @@ function lidPoint(fold: number, x = 0, y = 0) {
   const angle = fold * Math.PI / 180, ly = -body.depth / 2 + y, lz = -body.lidRecess - 6.07;
   return [450 + x, body.depth + body.hingeDrop + ly * Math.cos(angle) + lz * Math.sin(angle),
     -ly * Math.sin(angle) + lz * Math.cos(angle)];
-}
-
-/** Convert the existing canvas layout into the equivalent camera-space matrix.
- * This keeps the handoff exact while rendering the close-up at viewport resolution. */
-function cameraLayout(width: number, height: number, perspective: number, scale: number, y: number) {
-  const layout = identity();
-  layout[0] = layout[5] = scale;
-  layout[12] = (1 - scale) * width / 2;
-  layout[13] = y;
-  layout[9] = -((scale - 1) * height / 2 + y) / perspective;
-  return layout;
 }
 
 export function createMacFeatureTransition(width: number, height: number, openingHeight: number,

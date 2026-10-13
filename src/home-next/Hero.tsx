@@ -18,8 +18,8 @@ import { trackNavigationScroll } from './navigationScroll';
 import { createMacFeatureTransition, macFeatureHoldDistance, macFeatureWhiteStart } from './macFeatureTransition';
 import { controlMacScroll } from './macScroll';
 import { setFeatureEntry } from './featureEntry';
-import { compose, identity, projectQuad, translate } from '../hero-test-animation/sceneProjection';
-import { sceneProjection, lidClearProgress } from './sceneProjection';
+import { compose, projectQuad, translate } from '../hero-test-animation/sceneProjection';
+import { sceneProjection, lidClearProgress, cameraLayout, projectHardwareScreen } from './sceneProjection';
 import { connectProjectedGlass } from '../hero-test-animation/projectedGlass';
 import { cancelHeroFrame, requestSceneFrame, setHeroScreenProjection } from '../hero-test-animation/frameSync';
 import type { ThreeHardwareRenderer } from './threeHardware';
@@ -118,15 +118,15 @@ function DesktopHero() {
       const continuation = transitionProgress > 0 ? projectTransition?.(transitionProgress) : undefined;
       const pose = scenePose(firstProgress, width, height, openingHeight);
       const projection = continuation ?? sceneProjection(pose, width, height, openingHeight);
-      // Enlarge the finished model and anchor its actual silhouette below the
-      // copy. Hardware and the live screen share the same reversible layout.
-      const deviceScale = 1 + (endingScale - 1) * pose.reveal;
-      const deviceLayout = identity();
-      deviceLayout[0] = deviceLayout[5] = deviceScale;
-      deviceLayout[12] = (1 - deviceScale) * width / 2;
-      deviceLayout[13] = endingTranslationY * pose.reveal;
-      if (!continuation) projection.screen = compose(deviceLayout, projection.screen);
-      style(canvas, 'transform', pose.reveal && !continuation ? `matrix3d(${deviceLayout.join(',')})` : 'none');
+      // Fit every Mac scene inside the renderer, using the dive's lighting space.
+      // The live screen uses the same projection and retains its existing framing.
+      if (!continuation) {
+        const layout = cameraLayout(width, height, projection.perspective,
+          1 + (endingScale - 1) * pose.reveal, endingTranslationY * pose.reveal);
+        projection.model = compose(layout, projection.model);
+        projection.screen = projectHardwareScreen(projection.model, pose.fold, width, height, openingHeight, projection.perspective);
+      }
+      style(canvas, 'transform', 'none');
       if (active !== lastActive) {
         surface.classList.toggle('hero-animation__surface--moving', active);
         lastActive = active;

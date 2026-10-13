@@ -1,5 +1,5 @@
 import {
-  ACESFilmicToneMapping, BufferGeometry, CanvasTexture, DirectionalLight, DoubleSide,
+  ACESFilmicToneMapping, Box3, BufferGeometry, CanvasTexture, DirectionalLight, DoubleSide,
   Float32BufferAttribute, Group, Matrix4, Mesh, MeshBasicMaterial, MeshPhysicalMaterial,
   MeshStandardMaterial, PerspectiveCamera, PMREMGenerator, Scene, ShapeUtils, SRGBColorSpace, Vector2,
   WebGLRenderer, type Material, type Texture, type WebGLRenderTarget,
@@ -361,6 +361,11 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
     lid.position.z = -macBookDimensions.lidRecess;
     const baseDetails = asset.scene.getObjectByName('Base_Details'), lidDetails = asset.scene.getObjectByName('Lid_Details');
     if (!baseDetails || !lidDetails) throw Error('MacBook details are incomplete');
+    // Seat both hinge halves one model unit inside the rear silhouette. The
+    // lid-side local +y points behind the body when the lid closes at 90°.
+    const hingeInset = 1;
+    baseDetails.position.z += Math.max(0, hingeInset - new Box3().setFromObject(baseDetails).min.z);
+    lidDetails.position.y -= Math.max(0, new Box3().setFromObject(lidDetails).max.y + hingeInset);
     lidPivot.add(lid, lidDetails); root.add(lidPivot, baseDetails); scene.add(root);
     renderer.setClearColor(0x000000, 0); renderer.outputColorSpace = SRGBColorSpace;
     renderer.toneMapping = ACESFilmicToneMapping; renderer.toneMappingExposure = 1.08;
@@ -511,12 +516,10 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
     const logoTexture = new CanvasTexture(mask); logoTexture.flipY = false; textures.add(logoTexture);
     const logoMetal = material(new MeshStandardMaterial({ color: 0x808a94, metalness: 1, roughness: .20,
       envMapIntensity: 1.1, alphaMap: logoTexture, alphaTest: .15 }));
-    const lidMark = face(78, 90, .01, -6.07, (x, y, z) => lidPoint(W / 2 - 39 + x, D / 2 - 45 + y, z), true);
-    // The modeled back already has its own outward normal. Flip only vertical
-    // UVs so the closed lid reads upright from the front, with the bite at right.
-    const markUV = lidMark.getAttribute('uv');
-    for (let index = 0; index < markUV.count; index++) markUV.setY(index, 1 - markUV.getY(index));
-    markUV.needsUpdate = true;
+    // Orient the mark for the outside of the lid: its crown points toward the
+    // front edge when closed, so it reads upright to someone facing an open Mac.
+    const lidMark = face(78, 90, .01, -6.07,
+      (x, y, z) => lidPoint(W / 2 - 39 + x, D / 2 - 45 + y, z), true, 0, true);
     add(lid, lidMark, logoMetal);
 
     const cssToThree = new Matrix4().makeScale(1, -1, 1);

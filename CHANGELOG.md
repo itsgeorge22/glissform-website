@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Use the dive’s in-scene model framing throughout Mac Reveal and Mac Hold, preserving screen alignment while removing the lighting change at the start of Logo Dive. Saved on the isolated v2 branch; not deployed to production.
+
+- Correct the outer-lid Apple mark orientation and its cropped bottom contour, and inset both hinge halves beneath the rear edge so the closed Mac has a clean top-view silhouette. Saved on the isolated v2 branch; not deployed to production.
+
 - Cap local v2 trackpad and wheel movement through Mac Reveal, Mac Hold and Logo Dive at 1,600 scroll pixels per second. Preserve exact small deltas, discard excess flick input beyond an 80ms buffer and clear pending movement immediately on reversal. Drive the page, camera and feature entry from one position. Overlap the returning feature's shared line/panel exit with the white fade and reverse camera to remove the blank stopping point, and allow returning during the first feature's entrance. Preserve native keyboard navigation, feature stepping, reduced motion and lifecycle cleanup. Saved on the isolated v2 branch; not deployed to production. The forward dive automatically completes from the white dissolve so it cannot stop on a blank screen. The first feature automatically enters at 80% white on every forward visit, overlapping the final dive settle without changing exit timing; scrolling back triggers a coordinated automatic feature exit and short Mac pullback, inheriting accepted scroll speed in both directions and settling without overshoot, with immediate interruption on opposite input.
 
 - Start all four feature demos at the cursor entrance immediately after their panel settles, removing the initial 350ms wait and starting the cursor just outside the lower-left edge with immediate edge crossing. Match entrances to exits using the same easing and 1.05-second travel. Use mirrored control handles, with a wider mirrored-C entrance for Easy to reach that clears the left edge; preserve target dwell, click intervals and repeat pauses. Local only.

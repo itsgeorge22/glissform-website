@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createMacFeatureTransition, macFeaturePose } from '../src/home-next/macFeatureTransition.ts';
 import { settingsFeatureEntrancePose, settingsFeatureEntranceTiming } from '../src/home-next/settingsFeaturesChoreography.ts';
 import { scenePose } from '../src/home-next/choreography.ts';
-import { sceneProjection } from '../src/home-next/sceneProjection.ts';
+import { cameraLayout, projectHardwareScreen, sceneProjection } from '../src/home-next/sceneProjection.ts';
 import { macBookDimensions as body } from '../src/home-next/displayGeometry.ts';
 import { compose, identity, projectQuad } from '../src/hero-test-animation/sceneProjection.ts';
 
@@ -34,6 +34,29 @@ test('the second shot begins at the exact final rendered screen pose on every vi
     assert.equal(project(0).white, 0);
     assert.deepEqual(project(-1), project(0));
     assert.deepEqual(project(2), project(1));
+  }
+});
+
+test('reveal and hold use the dive lighting space without changing projected framing', () => {
+  for (const [width, height] of [[1056, 600], [1280, 720], [1440, 900], [1920, 1080], [3440, 1440]]) {
+    const view = scene(width, height);
+    for (const progress of [0, .1, .4, .8, 1]) {
+      const pose = scenePose(progress, width, height, view.openingHeight);
+      const original = sceneProjection(pose, width, height, view.openingHeight);
+      const scale = 1 + (view.scale - 1) * pose.reveal, y = view.y * pose.reveal;
+      const model = compose(cameraLayout(width, height, original.perspective, scale, y), original.model);
+      const screen = projectHardwareScreen(model, pose.fold, width, height, view.openingHeight, original.perspective);
+      const old = projectQuad(original.screen, width, view.openingHeight);
+      projectQuad(screen, width, view.openingHeight).forEach((p, i) => {
+        near(p.x, width / 2 + (old[i].x - width / 2) * scale);
+        near(p.y, old[i].y * scale + y);
+      });
+      if (progress === 1) {
+        const dive = view.project(0);
+        model.forEach((value, i) => near(value, dive.model[i]));
+        near(pose.fold, dive.fold);
+      }
+    }
   }
 });
 

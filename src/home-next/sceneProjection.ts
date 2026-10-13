@@ -57,6 +57,17 @@ function frameHardware(model: number[], opening: number[], pose: ReturnType<type
   }
 }
 
+/** Convert the existing canvas layout into the equivalent camera-space matrix.
+ * Use throughout reveal, hold and dive so layout never changes lighting at a boundary. */
+export function cameraLayout(width: number, height: number, perspective: number, scale: number, y: number) {
+  const layout = identity();
+  layout[0] = layout[5] = scale;
+  layout[12] = (1 - scale) * width / 2;
+  layout[13] = y;
+  layout[9] = -((scale - 1) * height / 2 + y) / perspective;
+  return layout;
+}
+
 /** Project the original live hero onto the original shell, around the Pro hinge. */
 export function sceneProjection(pose: ReturnType<typeof scenePose>, width: number, height: number, openingHeight: number) {
   const perspective = Math.max(2400, width * 2.5);
