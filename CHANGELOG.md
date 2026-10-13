@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a screen-formation hero opening: build the lower glow, draw the navy surface inward to reveal the bezel and round its corners. Grow the notch down from the top without overshoot, keeping it attached to the bezel. Stars sharpen while drifting slightly outward, then a clear motion, size and brightness pulse spreads steadily from the center over 1.4 seconds, starting at 350ms during the final star arrivals. Begin the existing copy, menu, brand, download and navbar animations at 600ms, preserving their motion and relative timing; release their entrance styles at the original endpoint. Settle immediately on interaction and retain static fallbacks. Local only; not deployed.
+
 - Use the dive’s in-scene model framing throughout Mac Reveal and Mac Hold, preserving screen alignment while removing the lighting change at the start of Logo Dive. Saved on the isolated v2 branch; not deployed to production.
 
 - Correct the outer-lid Apple mark orientation and its cropped bottom contour, and inset both hinge halves beneath the rear edge so the closed Mac has a clean top-view silhouette. Saved on the isolated v2 branch; not deployed to production.

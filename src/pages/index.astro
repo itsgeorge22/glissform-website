@@ -12,9 +12,6 @@ import { siteUrl, siteTitle, siteDescription, socialImage, softwareApplication }
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="robots" content="noindex, nofollow" />
-    <noscript><style is:global>
-      .home-next .hero-animation__screen-content[data-entrance='pending'] :is(.hero-test__menu, .hero-test__brand, .hero-animation__action, .hero-test__nav-dock, .text-reveal__content) { opacity: 1; }
-    </style></noscript>
     <title>{siteTitle}</title>
     <meta name="description" content={siteDescription} />
     <link rel="canonical" href={siteUrl} />
@@ -29,6 +26,13 @@ import { siteUrl, siteTitle, siteDescription, socialImage, softwareApplication }
     <script type="application/ld+json" set:html={JSON.stringify(softwareApplication)} />
   </head>
   <body class="home-next">
+    <!-- Keep static fallback rules after Astro's generated stylesheets. -->
+    <noscript><style is:global>
+      .home-next .hero-animation__screen-content[data-entrance='pending'] :is(.hero-test__menu, .hero-test__brand, .hero-animation__action, .hero-test__nav-dock, .text-reveal__content) { opacity: 1; }
+      .home-next .hero-animation__surface[data-prelude='pending'] { background: #000; }
+      .home-next .hero-animation__surface[data-prelude='pending'] :is(.hero-test__frame, .hero-test__notch, .hero-prelude__glow, .hero-test__stars) { opacity: 1; }
+      .home-next .hero-animation__surface[data-prelude='pending'] .hero-test__notch { translate: none; scale: none; }
+    </style></noscript>
     <main>
       <div class="hero-test-placeholder home-next-placeholder">
         <img src={logo} width="48" height="48" alt="Glissform" />

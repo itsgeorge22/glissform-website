@@ -27,6 +27,7 @@ import '../styles.scss';
 import '../hero-test/hero-test.scss';
 import '../hero-test-animation/scene.scss';
 import './hero.scss';
+import './hero-prelude.scss';
 
 const previewDownloadUrl = new URL(downloadUrl, siteUrl).href;
 
@@ -318,14 +319,16 @@ function DesktopHero() {
   return <><section className="hero-animation hero-animation--static" ref={trackRef} aria-label="Glissform Seamless Close scroll experience">
     <div className="hero-animation__stage" ref={stageRef}>
       <canvas className="hero-animation__hardware" ref={canvasRef} aria-hidden="true" />
-      <div className="hero-test hero-animation__surface" ref={surfaceRef} aria-labelledby="hero-test-title">
+      <div className="hero-test hero-animation__surface" ref={surfaceRef} aria-labelledby="hero-test-title" data-prelude="pending">
         <div className="hero-test__screen">
           <div className="hero-animation__desktop" ref={desktopRef}>
             <div className="hero-animation__screen-content" ref={screenContentRef} data-entrance="pending">
             <div className="hero-test__atmosphere" aria-hidden="true">
-              <div className="hero-test__glow hero-test__glow--blue" />
-              <div className="hero-test__glow hero-test__glow--violet" />
-              <div className="hero-test__glow hero-test__glow--teal" />
+              <div className="hero-prelude__glow">
+                <div className="hero-test__glow hero-test__glow--blue" />
+                <div className="hero-test__glow hero-test__glow--violet" />
+                <div className="hero-test__glow hero-test__glow--teal" />
+              </div>
               <AnimationHeroStarField surfaceRef={surfaceRef} />
             </div>
             <MenuBar />

@@ -2,7 +2,17 @@
 
 This records the implemented Glissform v2 hero settings. Use [Motion guidelines](MOTION.md) to design reusable treatments for other content. The values below preserve this particular composition.
 
-## Timed entrance
+## Screen formation opening
+
+Source: [heroScreenFormation.ts](../src/home-next/heroScreenFormation.ts). This timed, expressive opening treats the screen as one composed unit, with stars resolving as a collection at different apparent depths.
+
+Start with uninterrupted navy. The existing bottom glow expands and rises over 760ms. From 150–650ms, draw the screen inward from the browser edges to its original 16px inset, revealing the black bezel while the corners round to 17px. At 220ms, grow the notch vertically from zero to its full height over 460ms, while bringing it down from 26px above its resting position. Use monotonic easing without a spring, and keep its top behind the moving screen edge so no gap opens.
+
+Stars fade and sharpen at different depths while moving outward from positions 12–20px closer to the center, with less travel near the center. Start one broad outward pulse at 350ms, overlapping the final star arrivals. Run the pulse for 1400ms at a steady outward speed, ending at 1750ms. Use a 130px Gaussian band, up to 16px of radial displacement, 30% enlargement and 2.2× brightness at its crest, with a smooth rise and fade. This wave affects only the stars; it has no separate drawn overlay. Preserve their final positions, twinkle and pointer interactions.
+
+Begin the original content sequence at 600ms, overlapping the final atmospheric settle. The opening and content share one frame clock, starting after fonts are ready. Release the content's entrance styles at its unchanged 1900ms endpoint. [heroPrelude.ts](../src/home-next/heroPrelude.ts) releases all temporary geometry, star styles and the star observer when the pulse ends at 1750ms. The MacBook scroll choreography stays unchanged.
+
+## Timed content entrance
 
 Source: [heroEntrance.ts](../src/home-next/heroEntrance.ts).
 
@@ -15,11 +25,11 @@ Source: [heroEntrance.ts](../src/home-next/heroEntrance.ts).
 | Download button | 200ms | 1100ms | 36px below | 86% | -10° |
 | Navbar | 0ms | 1000ms | 24px below | 98% | 0° |
 
-The headline begins immediately. Calculate the subtitle cue from the final headline line's start, then add 80ms. Whole lines rise, unfold and scale to their normal appearance with 1000px perspective, a 2° initial skew and exponential easing. Line starts are staggered by 4% of the block duration; the final line finishes at the block endpoint. Opacity fades from zero to one during the first 50% of the text block's entrance. All lines finish fading at that halfway point, while their movement continues to the original endpoint. The treatment is adapted from [Potion's hero](https://sendpotion.com/); timed text uses the original v2 playback speeds.
+The headline begins immediately within the content sequence. Calculate the subtitle cue from the final headline line's start, then add 80ms. Whole lines rise, unfold and scale to their normal appearance with 1000px perspective, a 2° initial skew and exponential easing. Line starts are staggered by 4% of the block duration; the final line finishes at the block endpoint. Opacity fades from zero to one during the first 50% of the text block's entrance. All lines finish fading at that halfway point, while their movement continues to the original endpoint. The treatment is adapted from [Potion's hero](https://sendpotion.com/); timed text uses the original v2 playback speeds.
 
 The menu bar, brand, button and navbar are all composed units using the same object spring. Their damping/frequency settings are menu 8/10, brand 8/11, button 7.8/12.5 and navbar 9/10. Object opacity reaches full visibility during the first 24% of its duration. The menu bar never changes scale; the menu bar and navbar animate as complete objects without item staggers.
 
-All elements settle at their normal position, scale and orientation. The spring can briefly pass the final permitted values. Start times are relative to the entrance's first animation frame after fonts are ready; the sequence settles by 1300ms.
+All elements settle at their normal position, scale and orientation. The content's spring can briefly pass the final permitted values. Table start times are relative to the content sequence, 600ms into screen formation. Its original 1300ms duration is unchanged; the star pulse finishes at 1750ms and content settles by 1900ms.
 
 ## Scroll-controlled copy
 
@@ -33,6 +43,6 @@ The navbar inside the MacBook stays visible. Only the fixed top navbar uses [nav
 
 ## Lifecycle
 
-The timed entrance plays once per hero mount. It skips playback for reduced motion, an already-scrolled page or a hidden document. During playback it settles immediately on scrolling, keyboard focus within the hero, page hiding or activation of reduced motion. Temporary styles and listeners are cleared on completion or unmount.
+The timed entrance plays once per hero mount. It skips playback for reduced motion, an already-scrolled page or a hidden document. During playback it settles immediately on scrolling, resizing, pointer interaction or keyboard focus within the hero, page hiding or activation of reduced motion. Temporary styles, drawing resources and listeners are cleared on completion or unmount. Reduced motion and no-JavaScript visits retain the complete stationary hero.
 
 Update this reference alongside changes to the corresponding source settings. Documentation-only edits leave the preview unchanged; follow [AGENTS.md](../AGENTS.md) for verification.

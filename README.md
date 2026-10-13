@@ -25,6 +25,7 @@ Follow [AGENTS.md](AGENTS.md) for design consistency, code structure, preview up
 | --- | --- |
 | `src/pages/index.astro` | Page HTML, metadata and narrow-window placeholder. |
 | `src/home-next/` | V2 hero, Settings feature scroll sequence, shared line-based text motion, navigation, styles, choreography, display geometry and Three.js hardware. |
+| `src/home-next/heroScreenFormation.ts` | Initial screen, notch and star formation, with the opening's timing. |
 | `src/hero-test/`, `src/hero-test-animation/` | Existing star interactions, assets and projection helpers reused by v2; also contain earlier studies. |
 | `public/models/` | Prepared local model assets and provenance. |
 | `scripts/`, `tests/` | Build/asset utilities and focused checks. |
