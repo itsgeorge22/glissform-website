@@ -21,7 +21,17 @@ cleanup() {
 }
 trap cleanup EXIT
 
-tar -czf "$stage/build.tar.gz" -C dist-v2 index.html assets models
+COPYFILE_DISABLE=1 tar -czf "$stage/build.tar.gz" -C dist-v2 index.html assets models
+# Validate the actual archive too, including platform-specific tar behavior.
+python3 - "$stage/build.tar.gz" <<'PY'
+from pathlib import Path
+import runpy
+import sys
+import tempfile
+receiver = runpy.run_path('scripts/receive-v2-deploy.py')
+with tempfile.TemporaryDirectory() as directory, open(sys.argv[1], 'rb') as archive:
+    receiver['extract_build'](archive, Path(directory))
+PY
 remote_stage=$(ssh "${ssh_options[@]}" "$host" 'mktemp -d /tmp/glissform-v2.XXXXXXXX')
 [[ "$remote_stage" =~ ^/tmp/glissform-v2\.[A-Za-z0-9]+$ ]] || { echo 'Unexpected staging directory.' >&2; exit 1; }
 scp "${ssh_options[@]}" scripts/receive-v2-deploy.py "$host:$remote_stage/receive.py"
