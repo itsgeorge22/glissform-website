@@ -66,7 +66,7 @@
     position: absolute;
     z-index: 1;
     top: calc(clamp(112px, 15svh, 190px) + 32px);
-    translate: 0 32px;
+    translate: 0 16px;
     min-height: 224px; // Preserve the Mac framing when copy gaps change.
     left: 32px;
     right: 32px;
@@ -129,7 +129,7 @@
     margin: 20px auto 0; color: #555b63;
   }
   .hero-animation__navigation {
-    position: fixed; z-index: 1; top: 24px; left: 0; right: 0; height: 64px;
+    position: fixed; z-index: 1; top: 8px; left: 0; right: 0; height: 64px;
     opacity: 0; color-scheme: dark; pointer-events: none; transform-origin: 50% 0;
     font-family: 'Hero Manrope', sans-serif;
     .hero-test__nav { bottom: 0; pointer-events: auto; }
