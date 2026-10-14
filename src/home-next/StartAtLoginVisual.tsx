@@ -14,7 +14,7 @@ export function StartAtLoginVisual() {
     <div className="start-at-login-visual__screen">
       <FeatureWallpaper />
       <div className="start-at-login-visual__notch">
-        <img src="/assets/start-at-login/notch.svg" width="128" height="25" alt="" />
+        <img src={`${import.meta.env.BASE_URL}assets/start-at-login/notch.svg`} width="128" height="25" alt="" />
       </div>
       <FeatureMenuBar />
       <div className="start-at-login-visual__login">
@@ -27,7 +27,7 @@ export function StartAtLoginVisual() {
         <div className="start-at-login-visual__dots" />
         <div className="start-at-login-visual__caret" />
         <div className="start-at-login-visual__submit">
-          <img src="/assets/start-at-login/sign-in-arrow.svg" width="26.6667" height="26.6667" alt="" />
+          <img src={`${import.meta.env.BASE_URL}assets/start-at-login/sign-in-arrow.svg`} width="26.6667" height="26.6667" alt="" />
         </div>
       </div>
       <div className="start-at-login-visual__hint">Touch ID or Enter Password</div>

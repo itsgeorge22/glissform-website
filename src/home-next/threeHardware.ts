@@ -305,7 +305,7 @@ function loadLogo(signal: AbortSignal): Promise<HTMLImageElement | null> {
     const abort = () => { finish(null); image.src = ''; };
     image.onload = () => finish(image); image.onerror = () => finish(null);
     signal.addEventListener('abort', abort, { once: true });
-    image.decoding = 'async'; image.src = '/assets/macbook-lid-mark.svg';
+    image.decoding = 'async'; image.src = `${import.meta.env.BASE_URL}assets/macbook-lid-mark.svg`;
   });
 }
 
@@ -341,7 +341,7 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
   canvas.addEventListener('webglcontextlost', contextLost);
 
   try {
-    const response = await fetch('/models/macbook-details.glb', { signal });
+    const response = await fetch(`${import.meta.env.BASE_URL}models/macbook-details.glb`, { signal });
     if (!response.ok) throw Error(`MacBook details returned ${response.status}`);
     const asset = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(await response.arrayBuffer(), '');
     asset.scene.traverse(object => {

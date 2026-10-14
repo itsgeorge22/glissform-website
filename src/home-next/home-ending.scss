@@ -1,0 +1,45 @@
+.home-ending {
+  --faq-section-gap: 200px;
+  --faq-corner-radius: 40px;
+  --cover-distance: 0px;
+  isolation: isolate;
+
+  &__customization {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: #090b0e;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      height: var(--cover-distance);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &[data-scroll-cover='ready'] {
+      --cover-distance: 100svh;
+
+      .home-ending__customization {
+        // Stop painting covered demos, retaining the area behind the rounded edge.
+        clip-path: inset(0 0 max(0px, calc(var(--cover-distance) - var(--faq-section-gap) - var(--faq-corner-radius))) 0);
+
+        &::before { opacity: calc(var(--cover-progress, 0) * .28); }
+      }
+
+      .seamless-close-features {
+        position: sticky;
+        // Read through tall grids before holding as the gray sheet enters.
+        top: min(0px, calc(100svh - var(--customization-height) - var(--faq-section-gap)));
+      }
+    }
+  }
+}

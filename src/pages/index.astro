@@ -1,15 +1,30 @@
 ---
 import Hero from '../home-next/Hero';
+import FaqSection from '../home-next/FaqSection';
+import PrivacySection from '../home-next/PrivacySection';
+import SeamlessCloseFeatures from '../home-next/SeamlessCloseFeatures';
 import SettingsFeatures from '../home-next/SettingsFeatures';
+import '../home-next/home-ending.scss';
 import logo from '../hero-test/assets/glissform.webp?url';
 import favicon from '../generated/assets/favicon.png?url';
-import { siteUrl, siteTitle, siteDescription, socialImage, softwareApplication } from '../siteMetadata';
+import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, socialImage, softwareApplication } from '../siteMetadata';
 ---
 <!doctype html>
 <html lang="en" class="home-next-page">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Restore native behavior, including history entries made by older previews.
+      if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
+      // Older navbar links left fragments behind. On reload/history traversal,
+      // remove them before anchor scrolling can override the saved position.
+      const navigationType = performance.getEntriesByType('navigation')[0]?.type;
+      if ((navigationType === 'reload' || navigationType === 'back_forward') &&
+          ['#how-it-works', '#seamless-close-features', '#good-to-know', '#privacy'].includes(location.hash)) {
+        history.replaceState(history.state, '', location.pathname + location.search);
+      }
+    </script>
     <meta name="theme-color" content="#ffffff" />
     <meta name="robots" content="noindex, nofollow" />
     <title>{siteTitle}</title>
@@ -18,8 +33,8 @@ import { siteUrl, siteTitle, siteDescription, socialImage, softwareApplication }
     <link rel="icon" type="image/png" sizes="64x64" href={favicon} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Glissform" />
-    <meta property="og:title" content={siteTitle} />
-    <meta property="og:description" content={siteDescription} />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={socialDescription} />
     <meta property="og:url" content={siteUrl} />
     <meta property="og:image" content={socialImage} />
     <meta name="twitter:card" content="summary_large_image" />
@@ -28,6 +43,8 @@ import { siteUrl, siteTitle, siteDescription, socialImage, softwareApplication }
   <body class="home-next">
     <!-- Keep static fallback rules after Astro's generated stylesheets. -->
     <noscript><style is:global>
+      .home-next .hero-animation { height: 100svh; min-height: 720px; }
+      .home-next :is(.hero-animation__ending, .hero-animation__ambience, .hero-animation__navigation) { display: none; }
       .home-next .hero-animation__screen-content[data-entrance='pending'] :is(.hero-test__menu, .hero-test__brand, .hero-animation__action, .hero-test__nav-dock, .text-reveal__content) { opacity: 1; }
       .home-next .hero-animation__surface[data-prelude='pending'] { background: #000; }
       .home-next .hero-animation__surface[data-prelude='pending'] :is(.hero-test__frame, .hero-test__notch, .hero-prelude__glow, .hero-test__stars) { opacity: 1; }
@@ -41,6 +58,13 @@ import { siteUrl, siteTitle, siteDescription, socialImage, softwareApplication }
       </div>
       <Hero client:load />
       <SettingsFeatures client:load />
+      <PrivacySection />
+      <div class="home-ending home-next-desktop">
+        <div class="home-ending__customization" id="seamless-close-features">
+          <SeamlessCloseFeatures client:load />
+        </div>
+        <FaqSection client:load />
+      </div>
     </main>
     <script>
       if (import.meta.env.DEV && new URLSearchParams(location.search).has('profile')) {

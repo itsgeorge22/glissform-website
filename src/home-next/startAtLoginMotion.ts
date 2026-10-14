@@ -60,15 +60,17 @@ export function startAtLoginPose(seconds: number, reducedMotion = false) {
   };
 }
 
-/** Interpolate the two Figma crops inside the unchanged feature container. */
+/** Move directly between the aligned crops, without the added pullback. */
 export function startAtLoginCamera(width: number, height: number, zoom: number) {
-  const startY = (height - 854) / 2 + 120;
-  // Taller desktop previews still crop through the screen, as in the reference.
-  const fittedScale = Math.max(initialScale, (height - startY) / 1530);
+  // Both resting crops share one top edge. The opening screen retains its
+  // scale and centered framing, but sits at the menu-bar view's lower height.
+  const top = height / 2 - 228;
+  const fittedScale = Math.max(initialScale, (height - top) / 1530);
+  const progress = Math.max(0, Math.min(1, zoom));
   return {
-    x: blend((width - 2364 * fittedScale) / 2, width - 80 - 2364, zoom),
-    y: blend(startY, (height - 696) / 2 + 120, zoom),
-    scale: blend(fittedScale, 1, zoom),
+    x: blend((width - 2364 * fittedScale) / 2, width - 80 - 2364, progress),
+    y: top,
+    scale: blend(fittedScale, 1, progress),
   };
 }
 

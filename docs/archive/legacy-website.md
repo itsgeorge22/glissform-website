@@ -88,7 +88,7 @@ The discovery update keeps one indexed homepage. Its copy and metadata name MacB
 
 Search Console ownership for the URL-prefix property `https://glissform.app/` was verified on 2026-10-02 after owner confirmation. Google URL Inspection confirms the homepage is indexed, Googlebot smartphone fetched it successfully, and Google selected the declared canonical. The sitemap submission was accepted; its initial processing result requires follow-up as recorded in [the audit](live-loading-audit-2026-10-02.md). Keep the server-managed `/var/www/glissform.app/googlec3ba2f453f07c122.html` verification file available; routine deployments preserve it.
 
-Run `npm run test:seo` after building to check initial content, headings, metadata, image dimensions/paths, sitemap/robots consistency, and restricted deployment behavior. The deployment workflow runs these checks before publication. Local build/browser checks do not prove search indexing, social-platform refresh, AI citations or physical Safari performance.
+The dedicated SEO test suite and its deployment gate have since been removed. See the current repository README for verification commands. Local build/browser checks do not prove search indexing, social-platform refresh, AI citations or physical Safari performance.
 
 The updated restricted receiver was installed and its bytes verified on 2026-10-02 at `/usr/local/lib/glissform-website-receive.py`, preserving the existing account and key restrictions. It accepts the sitemap and robots file alongside the page and assets. After publication, verify the live initial HTML, canonical/JSON-LD, social image, `/robots.txt`, `/sitemap.xml`, deployment marker, downloads and update feed.
 

@@ -24,7 +24,7 @@ export function AlwaysActiveVisual() {
         {settings.map(([icon, title, description], index) => (
           <div className={`always-active-visual__row${index ? '' : ' always-active-visual__row--background'}`} key={icon}>
             <div className="always-active-visual__icon">
-              <img src={`/assets/settings-preview/${icon}.svg`} width="25.059" height="25.059" alt="" />
+              <img src={`${import.meta.env.BASE_URL}assets/settings-preview/${icon}.svg`} width="25.059" height="25.059" alt="" />
             </div>
             <div className="always-active-visual__copy">
               <span className="always-active-visual__label">{title}</span>

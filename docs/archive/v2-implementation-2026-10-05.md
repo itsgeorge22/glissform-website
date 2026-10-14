@@ -15,7 +15,6 @@ npm ci
 npm run dev       # http://127.0.0.1:5180/
 npm run build     # typecheck and generate the static hero in dist/
 npm run preview   # http://127.0.0.1:4180/
-npm run test:seo
 npm run test:hardware
 npm run test:hero-animation
 npm run test:hero-stars

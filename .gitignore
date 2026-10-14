@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-v2/
 src/generated/
 .prerender/
 public/assets/glissform-social.png

@@ -9,4 +9,6 @@ Source: [New Version, Figma node 132:326](https://www.figma.com/design/IkSrf5xF8
 - `glass-texture.png`: original Figma navigation texture retained as a design reference; the revamped dock uses CSS material styling. Buttons use the existing website textures/components.
 - `manrope-400.ttf`, `manrope-500.ttf`, `manrope-600.ttf`, `manrope-700.ttf`: self-hosted Manrope from Google Fonts. See `manrope-license.txt` for the SIL Open Font License.
 
-No temporary Figma URLs are referenced at runtime. Runtime assets are imported only by the separate hero test entry; reference-only assets are not bundled.
+The v2 footer layout follows [Figma node 155:453](https://www.figma.com/design/IkSrf5xF80j0PeRMzPytZ8/Glissform?node-id=155-453), inspected 2026-10-14. As requested, it reuses the existing logo and production download control, and replaces the reference’s static atmosphere image with the shared live hero atmosphere and interactions. No additional image assets are needed.
+
+No temporary Figma URLs are referenced at runtime. The hero and v2 footer share the existing assets; reference-only assets are not bundled.

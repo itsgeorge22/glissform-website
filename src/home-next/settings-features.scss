@@ -1,139 +1,76 @@
+@use './feature-copy' as copy;
+
 .settings-features {
   background: #fff;
   font-family: 'Hero Manrope', sans-serif;
+  padding: var(--section-gap) max(32px, calc((100% - 1416px) / 2)) 0;
 
   &__stage {
     display: grid;
     gap: 24px;
-    padding: 64px max(32px, calc((100% - 1416px) / 2));
+    scroll-margin-top: 112px;
   }
 
   &__item {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: 'copy visual';
     align-items: center;
     gap: 24px;
-  }
 
-  &__accessible-copy {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
+    &--visual-left {
+      grid-template-areas: 'visual copy';
+      grid-template-columns: calc((100% - 24px) / 2) minmax(0, 1fr);
+      column-gap: 144px;
+    }
   }
 
   &__copy {
+    grid-area: copy;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
+    gap: copy.$icon-gap;
+    min-width: 0;
 
     .settings-features__title {
-      color: #090b0e;
-      font-size: 56px;
-      font-weight: 600;
-      line-height: 64px;
-      letter-spacing: -2px;
+      @include copy.title;
     }
 
     p {
-      width: 360px;
+      @include copy.body;
+      width: 440px;
       max-width: 100%;
-      color: #555b63;
-      font-size: 18px;
-      font-weight: 400;
-      line-height: 28px;
-      letter-spacing: normal;
     }
   }
 
   &__icon-slot {
     display: grid;
     place-items: center;
-    width: 48px;
-    height: 48px;
+    width: copy.$icon-size;
+    height: copy.$icon-size;
     flex: none;
   }
 
-  &__icon {
-    display: block;
-    transform-origin: right center;
-  }
+  &__icon { display: block; }
 
   &__text {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: copy.$text-gap;
+    max-width: 100%;
   }
 
   &__panel {
-    height: calc(100svh - 128px);
+    grid-area: visual;
+    width: 100%;
+    aspect-ratio: 1;
     border-radius: 24px;
-    --feature-panel-surface: #f1f3f6;
+    container-type: size;
     --feature-window-shadow: 0 0 calc(min(0.143678cqw, 0.18cqh) * 48) rgb(0 0 0 / 5.44%);
     background-color: var(--feature-panel-surface);
     position: relative;
     overflow: hidden;
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset: -128px;
-      // Cancel the shell's scaling so the pattern stays circular and square.
-      // Overscan covers the independent vertical parallax travel.
-      transform: scale(var(--pattern-scale-x, 1), var(--pattern-scale-y, 1))
-        translateY(var(--pattern-y, 0px));
-      background-image:
-        radial-gradient(circle, transparent 17px, #aeb8c6 17px 19px, transparent 19px),
-        linear-gradient(to right, #d3dae3 1px, transparent 1px),
-        linear-gradient(to bottom, #d3dae3 1px, transparent 1px);
-      background-size: 64px 64px;
-      background-position: center;
-    }
-  }
-
-  &[data-motion='triggered'] {
-    height: 100svh;
-
-    .settings-features__stage {
-      position: sticky;
-      top: 0;
-      display: block;
-      height: 100svh;
-      padding: 0;
-      overflow: clip;
-    }
-
-    .settings-features__item {
-      position: absolute;
-      inset: 64px max(32px, calc((100% - 1416px) / 2));
-      // Presentational layers share the stage's scroll hit area, including
-      // inactive articles that still occupy this same rectangle.
-      pointer-events: none;
-    }
-
-    .settings-features__panel {
-      height: 100%;
-    }
-
-    // Share the hero's last viewport. The entrance appears in place once the
-    // close-up has become white, with no intervening native page movement.
-    &[data-scene-linked='true'] {
-      position: relative;
-      z-index: 3;
-      margin-top: -100svh;
-      background: transparent;
-      .settings-features__stage {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-      }
-    }
   }
 }

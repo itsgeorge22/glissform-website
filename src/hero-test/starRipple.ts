@@ -18,10 +18,24 @@ export function starRipple(x: number, y: number, originX: number, originY: numbe
   };
 }
 
+/** Each click adds a wave; later clicks never replace an in-flight wave. */
+export function playStarRipple(wave: HTMLElement, ripple: NonNullable<ReturnType<typeof starRipple>>, animations: Set<Animation>) {
+  const animation = wave.animate([
+    { transform: 'translate(0, 0) scale(1)', filter: 'brightness(1)', offset: 0 },
+    { transform: `translate(${ripple.x}px, ${ripple.y}px) scale(${ripple.scale})`, filter: `brightness(${ripple.brightness})`, offset: .28 },
+    { transform: `translate(${-ripple.x * .12}px, ${-ripple.y * .12}px) scale(1)`, filter: 'brightness(1)', offset: .72 },
+    { transform: 'translate(0, 0) scale(1)', filter: 'brightness(1)', offset: 1 },
+  ], { duration: 1050, delay: ripple.delay, easing: 'ease-in-out', composite: 'add' });
+  animations.add(animation);
+  const forget = () => animations.delete(animation);
+  animation.onfinish = forget;
+  animation.oncancel = forget;
+}
+
 export function connectStarRipples(surface: HTMLElement, field: HTMLElement) {
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const screen = surface.querySelector('.hero-test__screen');
-  const animations = new Map<HTMLElement, Animation>();
+  const animations = new Set<Animation>();
   const clear = () => {
     animations.forEach(animation => animation.cancel());
     animations.clear();
@@ -37,18 +51,7 @@ export function connectStarRipples(surface: HTMLElement, field: HTMLElement) {
       const wave = star.querySelector<HTMLElement>('.ambient-star__wave');
       const ripple = starRipple(star.offsetLeft, star.offsetTop, x, y);
       if (!wave || !ripple || Number(star.style.opacity) === 0) return;
-      animations.get(wave)?.cancel();
-      // A separate wrapper composes with pointer attraction and the core's twinkle.
-      const animation = wave.animate([
-        { transform: 'translate(0, 0) scale(1)', filter: 'brightness(1)', offset: 0 },
-        { transform: `translate(${ripple.x}px, ${ripple.y}px) scale(${ripple.scale})`, filter: `brightness(${ripple.brightness})`, offset: .28 },
-        { transform: `translate(${-ripple.x * .12}px, ${-ripple.y * .12}px) scale(1)`, filter: 'brightness(1)', offset: .72 },
-        { transform: 'translate(0, 0) scale(1)', filter: 'brightness(1)', offset: 1 },
-      ], { duration: 1050, delay: ripple.delay, easing: 'ease-in-out' });
-      animations.set(wave, animation);
-      animation.onfinish = () => {
-        if (animations.get(wave) === animation) animations.delete(wave);
-      };
+      playStarRipple(wave, ripple, animations);
     });
   };
   const observer = new IntersectionObserver(([entry]) => { if (!entry.isIntersecting) clear(); });

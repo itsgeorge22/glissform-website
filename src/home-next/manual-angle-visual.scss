@@ -1,0 +1,89 @@
+.manual-angle-visual {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  container-type: inline-size;
+  pointer-events: none;
+  --angle-position: 63.636364%;
+  --angle-pressure: 0;
+
+  &__control, &__cursor { font-size: clamp(.8px, .24cqw, 1px); }
+
+  &__control {
+    position: absolute;
+    top: calc(50% - var(--demo-stroke-width) / 2);
+    left: 14%;
+    width: 72%;
+    height: var(--demo-stroke-width);
+  }
+
+  &__track {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 8em;
+    background: rgb(36 86 145 / 12%);
+  }
+
+  &__fill {
+    width: var(--angle-position);
+    height: 100%;
+    border-radius: inherit;
+    background: #3d628f;
+  }
+
+  &__handle {
+    position: absolute;
+    top: 50%;
+    left: var(--angle-position);
+    // Match the proportions of Stay active's 27.147 × 18.795 switch thumb.
+    width: calc(32em * 27.147 / 18.795);
+    height: 32em;
+    box-sizing: border-box;
+    border: 1em solid rgb(24 68 117 / 8%);
+    border-radius: 16em;
+    background: #fff;
+    box-shadow: 0 2em 4em rgb(24 68 117 / 10%), 0 5em 14em rgb(24 68 117 / 7%);
+    transform: translate(-50%, -50%) scale(calc(1 - var(--angle-pressure) * .06));
+  }
+
+  &__tooltip {
+    opacity: 0;
+    position: absolute;
+    bottom: 33em;
+    left: var(--angle-position);
+    display: grid;
+    place-items: center;
+    width: 88em;
+    height: 48em;
+    border-radius: 14em;
+    background: #fff;
+    color: #1c3553;
+    box-shadow: 0 4em 18em rgb(24 68 117 / 9%);
+    transform: translateX(-50%);
+    transform-origin: center bottom;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4em;
+      left: calc(50% - 5em);
+      width: 10em;
+      height: 10em;
+      border-radius: 2em;
+      background: #fff;
+      transform: rotate(45deg);
+    }
+  }
+
+  &__limits {
+    position: absolute;
+    top: 28em;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    color: #536d8a;
+    > span { font-size: 18em; font-weight: 500; line-height: 1.333333; }
+  }
+}

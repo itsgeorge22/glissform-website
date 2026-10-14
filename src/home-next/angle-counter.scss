@@ -1,0 +1,29 @@
+.angle-counter {
+  display: flex;
+  align-items: center;
+  font-size: 26em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+
+  &__digit {
+    display: block;
+    width: .66em;
+    height: 1em;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  &__reel {
+    display: block;
+    will-change: transform;
+    > span { display: block; height: 1em; line-height: 1; }
+  }
+
+  &__degree {
+    align-self: flex-start;
+    margin-left: .08em;
+    font-size: .7em;
+    line-height: 1;
+  }
+}

@@ -39,51 +39,90 @@ export function relativeOffset(element: HTMLElement, root: HTMLElement): Point {
   return { x, y };
 }
 
-/** Feature demonstrations share the same settled-panel clock and cleanup. */
-export function runFeatureDemo(root: HTMLElement, demo: {
+export type FeatureDemo = {
   measure: () => void;
   draw: (seconds: number, reducedMotion: boolean) => void;
   cleanup: () => void;
   resizeTargets?: Element[];
-}) {
-  const panel = root.closest<HTMLElement>('.settings-features__panel')!;
+};
+
+type GroupPlayback = {
+  group: HTMLElement;
+  start: number;
+  finish: number;
+  rest: number;
+};
+
+type DemoClock = {
+  elapsed: number;
+  lastTime: number;
+  active: Set<symbol>;
+  durations: Map<symbol, number>;
+  cycle: number;
+};
+
+const groupClocks = new WeakMap<HTMLElement, DemoClock>();
+const createDemoClock = (elapsed: number): DemoClock => ({
+  elapsed, lastTime: 0, active: new Set(), durations: new Map(), cycle: 0,
+});
+
+/** Play visible demos, optionally sharing one clock across a whole group. */
+export function runFeatureDemo(root: HTMLElement, demo: FeatureDemo, playback?: GroupPlayback) {
+  const panel = root.closest<HTMLElement>('.settings-features__panel') ?? root;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const desktop = window.matchMedia('(min-width: 1056px)');
-  let frame = 0, elapsed = featureDemoEntrance, lastTime = 0, visible = false, running = false, disposed = false;
-  const draw = () => demo.draw(reduced.matches ? 0 : elapsed, reduced.matches);
+  const initialTime = playback ? 0 : featureDemoEntrance;
+  const clock = (playback && groupClocks.get(playback.group)) || createDemoClock(initialTime);
+  const member = Symbol();
+  if (playback) groupClocks.set(playback.group, clock);
+  clock.durations.set(member, playback ? playback.finish - playback.start : 0);
+  const updateCycle = () => { clock.cycle = Math.max(0, ...clock.durations.values()) + (playback?.rest ?? 0); };
+  updateCycle();
+
+  let frame = 0, visible = false, running = false, disposed = false;
+  const draw = () => {
+    const seconds = playback
+      ? playback.start + Math.min(clock.elapsed % clock.cycle, playback.finish - playback.start)
+      : clock.elapsed;
+    demo.draw(reduced.matches ? 0 : seconds, reduced.matches);
+  };
   const measure = () => { demo.measure(); draw(); };
   const tick = (now: number) => {
     frame = 0;
     if (!running || disposed) return;
-    if (lastTime) elapsed += (now - lastTime) / 1000;
-    lastTime = now;
+    // requestSceneFrame gives every member the same timestamp. Advance once,
+    // regardless of how many members are visible or which one renders first.
+    if (clock.lastTime !== now) {
+      if (clock.lastTime) clock.elapsed += (now - clock.lastTime) / 1000;
+      clock.lastTime = now;
+    }
     draw();
     frame = requestSceneFrame(tick);
   };
   const sync = () => {
     if (disposed) return;
-    const active = panel.dataset.featureActive === 'true';
-    const departing = panel.dataset.featureDeparting === 'true';
-    // A departing panel can cross the visibility threshold before the next
-    // feature settles. Preserve its clock until the controller ends the handoff.
-    const next = (active && visible || departing) && desktop.matches && !reduced.matches && !document.hidden;
-    if ((!active && !departing) || reduced.matches || !desktop.matches) elapsed = featureDemoEntrance;
+    const next = visible && desktop.matches && !reduced.matches && !document.hidden;
+    if (reduced.matches || !desktop.matches) { clock.elapsed = initialTime; clock.lastTime = 0; }
     root.dataset.playing = String(next);
     if (next === running) { if (!next) draw(); return; }
     running = next;
-    lastTime = 0;
     cancelHeroFrame(frame); frame = 0;
-    if (running) { measure(); frame = requestSceneFrame(tick); }
-    else draw();
+    if (running) {
+      if (!clock.active.size) clock.lastTime = 0;
+      clock.active.add(member);
+      measure(); frame = requestSceneFrame(tick);
+    } else {
+      clock.active.delete(member);
+      if (!clock.active.size) clock.lastTime = 0;
+      draw();
+    }
   };
   const visibility = new IntersectionObserver(entries => {
     visible = entries[0].isIntersecting && entries[0].intersectionRatio >= .5;
     sync();
   }, { threshold: [.5] });
-  const activeState = new MutationObserver(sync);
   const size = new ResizeObserver(measure);
   visibility.observe(panel);
-  activeState.observe(panel, { attributes: true, attributeFilter: ['data-feature-active', 'data-feature-departing'] });
   size.observe(root);
   for (const target of demo.resizeTargets ?? []) size.observe(target);
   reduced.addEventListener('change', sync);
@@ -91,9 +130,15 @@ export function runFeatureDemo(root: HTMLElement, demo: {
   document.addEventListener('visibilitychange', sync);
   measure(); sync();
   return () => {
+    if (disposed) return;
     disposed = true;
     cancelHeroFrame(frame);
-    visibility.disconnect(); activeState.disconnect(); size.disconnect();
+    clock.active.delete(member);
+    clock.durations.delete(member);
+    if (!clock.active.size) clock.lastTime = 0;
+    updateCycle();
+    if (playback && !clock.durations.size) groupClocks.delete(playback.group);
+    visibility.disconnect(); size.disconnect();
     reduced.removeEventListener('change', sync);
     desktop.removeEventListener('change', sync);
     document.removeEventListener('visibilitychange', sync);

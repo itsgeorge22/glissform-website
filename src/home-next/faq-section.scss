@@ -1,0 +1,102 @@
+@use './feature-copy' as copy;
+
+.faq-section {
+  position: relative;
+  z-index: 1;
+  background: var(--feature-panel-surface);
+  border-radius: var(--faq-corner-radius, 40px) var(--faq-corner-radius, 40px) 0 0;
+  font-family: 'Hero Manrope', sans-serif;
+  // Overlap the hold space; keep the original gap and total page length.
+  margin-top: calc(var(--faq-section-gap, 200px) - var(--cover-distance, 0px));
+  padding: 200px max(32px, calc((100% - 1416px) / 2)) 32px;
+
+  &__layout {
+    display: grid;
+    max-width: 1176px;
+    margin-inline: auto;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    column-gap: 24px;
+    align-items: start;
+    scroll-margin-top: 112px;
+  }
+
+  &__intro {
+    grid-column: 1 / span 3;
+    align-items: flex-start;
+    margin-bottom: 0;
+    text-align: left;
+
+    p { text-wrap: balance; }
+  }
+
+  &__list {
+    grid-column: 5 / span 6;
+    min-width: 0;
+  }
+
+  &__item {
+    box-sizing: border-box;
+
+    & + & { border-top: 1px solid #e4e8ed; }
+
+    summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding-block: 24px;
+      color: #090b0e;
+      list-style: none;
+      cursor: pointer;
+
+      &::-webkit-details-marker { display: none; }
+      &::marker { content: ''; }
+
+      &:focus-visible {
+        outline: 3px solid #1459d5;
+        outline-offset: 4px;
+        border-radius: 4px;
+      }
+
+      h3 {
+        @include copy.detail-title;
+        min-width: 0;
+        text-wrap: pretty;
+      }
+
+      @media (hover: hover) {
+        &:hover, &:hover h3 { color: #007aff; }
+      }
+    }
+
+    &:first-child summary { padding-top: 0; }
+    &[open] summary { padding-bottom: copy.$detail-gap; }
+    &[open]:not([data-expanded='false']) .faq-section__toggle-vertical {
+      opacity: 0;
+      transform: rotate(90deg);
+    }
+  }
+
+  &__toggle {
+    display: block;
+    flex: none;
+  }
+
+  &__toggle-vertical {
+    transform-origin: 12px 12px;
+    transition: opacity 240ms ease-out, transform 360ms cubic-bezier(.22, 1, .36, 1);
+
+    @media (prefers-reduced-motion: reduce) { transition: none; }
+  }
+
+  &__answer {
+    padding: 0 48px 24px 0;
+
+    p { @include copy.detail-body; text-wrap: pretty; }
+    a {
+      color: #007aff;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+  }
+}

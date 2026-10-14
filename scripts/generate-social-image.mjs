@@ -1,5 +1,9 @@
-import { copyFile, mkdir } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
+import sharp from 'sharp';
 
-// Publish the owner-approved artwork byte for byte, without re-rendering fonts.
+// Downsample the approved artwork without cropping or re-rendering its contents.
 await mkdir('public/assets', { recursive: true });
-await copyFile('artwork/glissform-social.png', 'public/assets/glissform-social.png');
+await sharp('artwork/glissform-social.png')
+  .resize(1200, 630, { fit: 'inside', withoutEnlargement: true })
+  .png({ compressionLevel: 9 })
+  .toFile('public/assets/glissform-social.png');

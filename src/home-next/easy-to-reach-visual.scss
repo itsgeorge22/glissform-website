@@ -1,8 +1,3 @@
-.settings-features__panel.settings-features__panel--easy-to-reach {
-  container-type: size;
-  &::before { content: none; }
-}
-
 .easy-to-reach-visual {
   --menu-highlight: 1;
   position: absolute;
@@ -10,7 +5,6 @@
   font-size: 0.143678cqw;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   pointer-events: none;
-  transform: scale(var(--pattern-scale-x, 1), var(--pattern-scale-y, 1));
 
   &__desktop {
     position: absolute;

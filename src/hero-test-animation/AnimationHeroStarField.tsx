@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react';
 import { createHeroStars, type HeroStar, type QuietRegion } from '../hero-test/heroStarLayout';
 import { createShootingStar } from '../hero-test/shootingStars';
-import { starRipple } from '../hero-test/starRipple';
+import { playStarRipple, starRipple } from '../hero-test/starRipple';
 import { unprojectPlanePoint } from './projectedPointer';
 import { cancelHeroFrame, getHeroScreenProjection, registerHeroInteraction, requestSceneFrame, type HeroScreenProjection } from './frameSync';
 
@@ -86,9 +86,10 @@ export default function AnimationHeroStarField({ surfaceRef }: { surfaceRef: Ref
     if (!surface || !field || !shooting) return;
     const screen = surface.querySelector('.hero-test__screen');
     const desktop = field.closest('.hero-animation__desktop');
+    const content = field.closest('.hero-animation__screen-content');
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const ripples = new Map<HTMLElement, Animation>();
+    const ripples = new Set<Animation>();
     let inView = false, playing = false, firstFlight = true, pointerInside = false, pointerPainted = false;
     let timer = 0, clientX = 0, clientY = 0;
 
@@ -131,7 +132,10 @@ export default function AnimationHeroStarField({ surfaceRef }: { surfaceRef: Ref
       interaction.request();
     };
     const click = (event: MouseEvent) => {
-      if (event.button !== 0 || !event.detail || !playing || (event.target !== screen && event.target !== desktop)) return;
+      // The flat content layer covers the desktop in v2. Accept its empty
+      // background too, without treating copy or controls as ripple targets.
+      if (event.button !== 0 || !event.detail || !playing ||
+        (event.target !== screen && event.target !== desktop && event.target !== content)) return;
       const point = pointerPoint(event.clientX, event.clientY);
       const { width, height } = layoutRef.current;
       if (!point || point.y < 48 || point.x < 0 || point.x > width || point.y > height) return;
@@ -139,15 +143,7 @@ export default function AnimationHeroStarField({ surfaceRef }: { surfaceRef: Ref
         const { wave } = star;
         const ripple = starRipple(star.x, star.y, point.x, point.y);
         if (!ripple || star.opacity === 0) continue;
-        ripples.get(wave)?.cancel();
-        const animation = wave.animate([
-          { transform: 'translate(0, 0) scale(1)', filter: 'brightness(1)', offset: 0 },
-          { transform: `translate(${ripple.x}px, ${ripple.y}px) scale(${ripple.scale})`, filter: `brightness(${ripple.brightness})`, offset: .28 },
-          { transform: `translate(${-ripple.x * .12}px, ${-ripple.y * .12}px) scale(1)`, filter: 'brightness(1)', offset: .72 },
-          { transform: 'translate(0, 0) scale(1)', filter: 'brightness(1)', offset: 1 },
-        ], { duration: 1050, delay: ripple.delay, easing: 'ease-in-out' });
-        ripples.set(wave, animation);
-        animation.onfinish = () => { if (ripples.get(wave) === animation) ripples.delete(wave); };
+        playStarRipple(wave, ripple, ripples);
       }
     };
     const stopShooting = () => { clearTimeout(timer); timer = 0; delete shooting.dataset.shooting; };
