@@ -1,10 +1,20 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { ManualAngleVisual } from './ManualAngleVisual';
 import { AutomaticAngleVisual } from './AutomaticAngleVisual';
 import { BlurVisual, DesktopReturnVisual } from './SeamlessFeatureVisuals';
 import { FeatureSectionIntro } from './FeatureSectionIntro';
 import { trackCustomizationCover } from './customizationScrollCover';
+import { tabletBreakpoint } from './responsive';
 import './seamless-close-features.scss';
+
+const phoneQuery = `(width < ${tabletBreakpoint}px)`;
+const subscribeToPhoneLayout = (onChange: () => void) => {
+  const query = window.matchMedia(phoneQuery);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+};
+const phoneSnapshot = () => window.matchMedia(phoneQuery).matches;
+const serverPhoneSnapshot = () => true;
 
 const features = [
   {
@@ -47,6 +57,7 @@ const features = [
 
 export default function SeamlessCloseFeatures() {
   const sectionRef = useRef<HTMLElement>(null);
+  const phoneLayout = useSyncExternalStore(subscribeToPhoneLayout, phoneSnapshot, serverPhoneSnapshot);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -58,7 +69,12 @@ export default function SeamlessCloseFeatures() {
       title="Make every close your own"
       description="Choose when Seamless Close starts, how it looks and how your desktop returns"
     />
-    <div className="seamless-close-features__grid">
+    <div
+      className="seamless-close-features__grid"
+      role={phoneLayout ? 'region' : undefined}
+      aria-label={phoneLayout ? 'Seamless Close options' : undefined}
+      tabIndex={phoneLayout ? 0 : undefined}
+    >
       {features.map(({ id, tone, title, description }) => (
         <article className="seamless-close-features__item" key={id} aria-labelledby={id}>
           <div className={`seamless-close-features__placeholder seamless-close-features__placeholder--${tone}`} aria-hidden="true">

@@ -59,7 +59,7 @@ export default function FaqSection() {
       <FeatureSectionIntro
         className="faq-section__intro"
         headingId="faq-title"
-        title={<>Before<br />you try it</>}
+        title={<>Before<br />{' '}you try it</>}
         description="Your questions about Glissform, from MacBook support to privacy."
       />
       <div className="faq-section__list" ref={listRef}>

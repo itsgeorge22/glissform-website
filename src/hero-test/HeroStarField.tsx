@@ -4,10 +4,14 @@ import { createHeroStars, type HeroStar } from './heroStarLayout';
 import { connectShootingStars } from './shootingStars';
 import { connectStarRipples } from './starRipple';
 import { elementDesignScale } from '../home-next/designScale';
+import { desktopBreakpoint } from '../home-next/responsive';
 
 const starDepths = [2, 5, 8];
 
-export default function HeroStarField({ surfaceRef }: { surfaceRef: RefObject<HTMLElement | null> }) {
+export default function HeroStarField({ surfaceRef, compactFullField = false }: {
+  surfaceRef: RefObject<HTMLElement | null>;
+  compactFullField?: boolean;
+}) {
   const fieldRef = useRef<HTMLDivElement>(null);
   const shootingRef = useRef<HTMLElement>(null);
   const [stars, setStars] = useState<HeroStar[]>([]);
@@ -21,7 +25,9 @@ export default function HeroStarField({ surfaceRef }: { surfaceRef: RefObject<HT
     const measure = () => {
       frame = 0;
       const bounds = field.getBoundingClientRect();
-      const quietRegions = quietElements.map(element => {
+      // Compact offers include most of the surface and its padding, so their
+      // quiet rectangle would hide the whole field. Keep desktop defaults.
+      const quietRegions = compactFullField && window.innerWidth < desktopBreakpoint ? [] : quietElements.map(element => {
         const rect = element.getBoundingClientRect();
         return { left: rect.left - bounds.left, top: rect.top - bounds.top, right: rect.right - bounds.left, bottom: rect.bottom - bounds.top };
       });
@@ -37,7 +43,7 @@ export default function HeroStarField({ surfaceRef }: { surfaceRef: RefObject<HT
       observer.disconnect();
       window.cancelAnimationFrame(frame);
     };
-  }, [surfaceRef]);
+  }, [surfaceRef, compactFullField]);
 
   useEffect(() => {
     const surface = surfaceRef.current;

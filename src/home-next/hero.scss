@@ -1,9 +1,9 @@
 @use '../design-scale' as design;
+@use './responsive' as responsive;
 .home-next-page { background: #fff; color-scheme: light; overflow-x: clip; }
 
 // All desktop design lengths share the owner's approved 1920px composition.
-// Keep the narrow-window placeholder at its original readable size.
-@media (min-width: 1056px) {
+@media (min-width: responsive.$desktop) {
   .home-next { --design-unit: calc(100vw / var(--design-reference-width)); }
 }
 
@@ -15,6 +15,7 @@
 }
 
 .home-next {
+  --page-gutter: 20px;
   --section-gap: #{design.px(200)};
   --privacy-section-gap: #{design.px(160)};
   --feature-panel-surface: #f1f3f6;
@@ -62,6 +63,15 @@
       rgb(100 161 237 / 11%), rgb(154 192 239 / 4%) 52%, rgb(255 255 255 / 0) 100%);
   }
   .hero-animation__hardware { z-index: 2; transform-origin: 0 0; }
+  .hero-animation__hardware-viewport {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    // The renderer's 256px overscan belongs to its drawing surface, not page width.
+    overflow-x: clip;
+    overflow-y: visible;
+    pointer-events: none;
+  }
   .hero-animation__surface { z-index: 3; color: #fff; color-scheme: dark; pointer-events: auto; }
   .hero-animation__screen-content {
     position: absolute;
@@ -170,18 +180,56 @@
 
 // Main section copy shares the same proportional desktop typography.
 .home-next {
-  .hero-test__copy h1, .hero-animation__ending h2, .feature-section-intro h2 {
-    font: 600 design.px(64)/design.px(72) 'Hero Manrope', sans-serif;
+  .hero-test__copy h1, .hero-animation__ending h2 {
+    font: 600 max(44px, design.px(64))/1.125 'Hero Manrope', sans-serif;
     letter-spacing: -.04em;
   }
-  .hero-test__copy p, .hero-animation__description, .feature-section-intro p {
-    font: 400 design.px(18)/design.px(28) 'Hero Manrope', sans-serif;
+  .hero-test__copy p, .hero-animation__description {
+    font: 400 max(16px, design.px(18))/1.56 'Hero Manrope', sans-serif;
     letter-spacing: normal;
   }
 }
 
-.home-next-placeholder { display: none; color: #fff; }
-@media (width < 1056px) {
-  .home-next .home-next-desktop { display: none; }
-  .home-next-placeholder { display: flex; }
+.compact-macbook { display: none; }
+.home-next__skip {
+  position: fixed;
+  z-index: 20;
+  top: 8px; left: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #fff;
+  color: #1459d5;
+  transform: translateY(-150%);
+  &:focus { transform: none; }
+}
+
+@media (width < responsive.$desktop) {
+  .home-next {
+    --design-unit: 1px;
+    --section-gap: 88px;
+    --privacy-section-gap: 88px;
+  }
+}
+@media (responsive.$tablet <= width < responsive.$desktop) {
+  .home-next {
+    --page-gutter: 32px;
+    --section-gap: 104px;
+    --privacy-section-gap: 104px;
+  }
+}
+
+// Reading text and controls stay usable in smaller desktop windows.
+.home-next {
+  .download-link {
+    min-height: max(44px, design.px(56));
+    font-size: max(16px, design.px(16));
+    line-height: 1.5;
+  }
+  .hero-test__links { font-size: max(14px, design.px(16)); }
+  .hero-test__links a, .hero-test__home { min-height: 44px; }
+  .hero-test__nav-dock { min-height: 60px; }
+  .hero-test__download-slot { min-height: 44px; }
+  .hero-test__nav .download-link--secondary { min-height: 44px; font-size: max(14px, design.px(16)); }
+  .hero-animation__navigation { height: max(60px, design.px(64)); }
+  .hero-animation__surface .hero-test__offer { width: min(max(640px, design.px(744)), calc(100% - design.px(48))); }
 }

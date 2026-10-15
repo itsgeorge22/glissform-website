@@ -6,16 +6,16 @@ import SeamlessCloseFeatures from '../home-next/SeamlessCloseFeatures';
 import SettingsFeatures from '../home-next/SettingsFeatures';
 import { designReferenceWidth } from '../home-next/designScale';
 import '../home-next/home-ending.scss';
-import logo from '../hero-test/assets/glissform.webp?url';
 import favicon from '../generated/assets/favicon.png?url';
 import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, socialImage, softwareApplication } from '../siteMetadata';
 ---
 <!doctype html>
-<html lang="en" class="home-next-page">
+<html lang="en" class="home-next-page no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline>
+      document.documentElement.classList.remove('no-js');
       // Restore native behavior, including history entries made by older previews.
       if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
       // Older navbar links left fragments behind. On reload/history traversal,
@@ -42,25 +42,12 @@ import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, so
     <script type="application/ld+json" set:html={JSON.stringify(softwareApplication)} />
   </head>
   <body class="home-next" style={`--design-reference-width: ${designReferenceWidth}`}>
-    <!-- Keep static fallback rules after Astro's generated stylesheets. -->
-    <noscript><style is:global>
-      .home-next .hero-animation { height: 100svh; min-height: calc(720 * var(--design-unit, 1px)); }
-      .home-next :is(.hero-animation__ending, .hero-animation__ambience, .hero-animation__navigation) { display: none; }
-      .home-next .hero-animation__screen-content[data-entrance='pending'] :is(.hero-test__menu, .hero-test__brand, .hero-animation__action, .hero-test__nav-dock, .text-reveal__content) { opacity: 1; }
-      .home-next .hero-animation__surface[data-prelude='pending'] { background: #000; }
-      .home-next .hero-animation__surface[data-prelude='pending'] :is(.hero-test__frame, .hero-test__notch, .hero-prelude__glow, .hero-test__stars) { opacity: 1; }
-      .home-next .hero-animation__surface[data-prelude='pending'] .hero-test__notch { translate: none; scale: none; }
-    </style></noscript>
+    <a class="home-next__skip" href="#how-it-works">Skip to features</a>
     <main>
-      <div class="hero-test-placeholder home-next-placeholder">
-        <img src={logo} width="48" height="48" alt="Glissform" />
-        <h1>A little more room, please.</h1>
-        <p>Open this preview on your MacBook or widen your browser window to at least 1056px to view the desktop design.</p>
-      </div>
       <Hero client:load />
       <SettingsFeatures client:load />
       <PrivacySection />
-      <div class="home-ending home-next-desktop">
+      <div class="home-ending">
         <div class="home-ending__customization" id="seamless-close-features">
           <SeamlessCloseFeatures client:load />
         </div>

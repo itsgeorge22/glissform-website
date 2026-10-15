@@ -26,7 +26,7 @@ export default function PrivacySection() {
         </div>
         <div className="privacy-section__text">
           <h2 id="privacy-title">Your screen<br />stays private</h2>
-          <p>Your screen images stay on your Mac.<br />No continuous recording.</p>
+          <p>Your screen images stay on your Mac.{' '}<br />No continuous recording.</p>
         </div>
       </div>
       <div className="privacy-section__notes">

@@ -1,10 +1,12 @@
+import { desktopSceneQuery } from './responsive';
+
 /** Keep the native sticky hold and its dimming layer aligned with the FAQ edge. */
 export function trackCustomizationCover(section: HTMLElement) {
   const ending = section.closest<HTMLElement>('.home-ending');
   const faq = ending?.querySelector<HTMLElement>('.faq-section');
   if (!ending || !faq) return;
 
-  const motion = window.matchMedia('(min-width: 1056px) and (prefers-reduced-motion: no-preference)');
+  const motion = window.matchMedia(desktopSceneQuery);
   let frame = 0, lastHeight = 0, lastProgress = '';
   const draw = () => {
     frame = 0;
@@ -22,8 +24,9 @@ export function trackCustomizationCover(section: HTMLElement) {
     if (height && height !== lastHeight) {
       lastHeight = height;
       ending.style.setProperty('--customization-height', `${height}px`);
-      ending.dataset.scrollCover = 'ready';
     }
+    if (motion.matches) ending.dataset.scrollCover = 'ready';
+    else delete ending.dataset.scrollCover;
     schedule();
   };
   const size = new ResizeObserver(measure);
@@ -31,7 +34,7 @@ export function trackCustomizationCover(section: HTMLElement) {
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
   window.addEventListener('pageshow', schedule);
-  motion.addEventListener('change', schedule);
+  motion.addEventListener('change', measure);
   measure();
 
   return () => {
@@ -40,7 +43,7 @@ export function trackCustomizationCover(section: HTMLElement) {
     window.removeEventListener('scroll', schedule);
     window.removeEventListener('resize', schedule);
     window.removeEventListener('pageshow', schedule);
-    motion.removeEventListener('change', schedule);
+    motion.removeEventListener('change', measure);
     ending.style.removeProperty('--customization-height');
     ending.style.removeProperty('--cover-progress');
     delete ending.dataset.scrollCover;

@@ -1,6 +1,7 @@
 @use '../design-scale' as design;
 @use 'sass:math';
 @use './feature-copy' as copy;
+@use './responsive' as responsive;
 
 .privacy-section {
   background: #fff;
@@ -12,14 +13,14 @@
     // Ten centered 96px columns with nine 24px gutters.
     max-width: design.px(1176);
     margin-inline: auto;
-    grid-template-columns: minmax(min-content, design.px(360)) max-content;
+    grid-template-columns: minmax(0, design.px(360)) minmax(0, max-content);
     align-items: center;
     justify-content: space-between;
     column-gap: design.px(24);
     padding: design.px(56) design.px(64);
     border-radius: design.px(24);
     background: #edf4fd;
-    scroll-margin-top: design.px(112);
+    scroll-margin-top: max(88px, #{design.px(112)});
   }
 
   &__intro {
@@ -57,7 +58,6 @@
 
     h2 {
       @include copy.title;
-      white-space: nowrap;
     }
     p { @include copy.body; }
   }
@@ -78,7 +78,35 @@
     h3 { @include copy.detail-title; }
     p {
       @include copy.detail-body;
-      white-space: nowrap;
     }
+  }
+
+  @media (width < responsive.$desktop) {
+    padding-inline: var(--page-gutter);
+
+    &__panel {
+      max-width: none;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      align-items: start;
+      gap: 40px;
+      padding: 40px 32px;
+    }
+
+    &__intro { gap: 20px; }
+    &__text p {
+      text-wrap: pretty;
+      br { display: none; }
+    }
+  }
+
+  @media (width < responsive.$tablet) {
+    &__panel {
+      max-width: 640px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+      padding: 32px 24px;
+    }
+
+    &__text { gap: 12px; }
   }
 }

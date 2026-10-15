@@ -1,5 +1,6 @@
 @use '../design-scale' as design;
 @use './feature-copy' as copy;
+@use './responsive' as responsive;
 
 .settings-features {
   background: #fff;
@@ -9,7 +10,7 @@
   &__stage {
     display: grid;
     gap: design.px(24);
-    scroll-margin-top: design.px(112);
+    scroll-margin-top: max(88px, #{design.px(112)});
   }
 
   &__item {
@@ -73,5 +74,33 @@
     background-color: var(--feature-panel-surface);
     position: relative;
     overflow: hidden;
+  }
+
+  @media (width < responsive.$desktop) {
+    padding-inline: var(--page-gutter);
+
+    &__stage { gap: 64px; }
+
+    &__item,
+    &__item--visual-left {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px;
+    }
+
+    &__copy { gap: 20px; }
+  }
+
+  @media (width < responsive.$tablet) {
+    &__stage { max-width: 640px; margin-inline: auto; }
+
+    &__item,
+    &__item--visual-left {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'copy' 'visual';
+      gap: 28px;
+    }
+
+    &__copy p { width: auto; max-width: 40ch; }
+    &__text { gap: 12px; }
   }
 }

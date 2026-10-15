@@ -1,0 +1,71 @@
+@use './responsive' as responsive;
+
+.compact-navigation { display: none; }
+
+@include responsive.compact-hero {
+  .compact-navigation {
+    position: absolute;
+    z-index: 10;
+    inset: 12px 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    max-width: 1040px;
+    margin-inline: auto;
+    padding-inline: max(24px, env(safe-area-inset-left));
+    font: 600 15px/24px 'Hero Manrope', sans-serif;
+    color: #fff;
+
+    &__home { display: flex; align-items: center; min-height: 44px; color: inherit; text-decoration: none; }
+    .hero-test__brand { gap: 10px; font-size: 20px; line-height: 28px; letter-spacing: -.8px; }
+    .hero-test__brand img { width: 28px; height: 28px; }
+    &__menu { position: relative; }
+    summary {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 44px;
+      padding-inline: 12px;
+      border: 1px solid #cbddff30;
+      border-radius: 14px;
+      background: #ffffff0a;
+      list-style: none;
+      cursor: pointer;
+      &::-webkit-details-marker { display: none; }
+      &:focus-visible { outline: 3px solid #a6d7ff; outline-offset: 3px; }
+    }
+    &__menu[open] svg { rotate: 180deg; }
+    nav {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      display: grid;
+      width: 208px;
+      padding: 8px;
+      border: 1px solid #cbddff30;
+      border-radius: 18px;
+      background: #142238;
+      box-shadow: 0 16px 40px #0004;
+    }
+    nav a {
+      display: flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      color: #fff;
+      text-decoration: none;
+      &:hover, &:focus-visible { background: #ffffff12; }
+    }
+  }
+}
+
+@media (width < responsive.$desktop) {
+  .compact-navigation,
+  .home-next-page.no-js .compact-navigation {
+    max-width: none;
+    padding-left: max(var(--page-gutter), env(safe-area-inset-left));
+    padding-right: max(var(--page-gutter), env(safe-area-inset-right));
+  }
+}

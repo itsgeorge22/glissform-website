@@ -1,5 +1,6 @@
 @use '../design-scale' as design;
 @use './feature-copy' as copy;
+@use './responsive' as responsive;
 
 .faq-section {
   position: relative;
@@ -18,7 +19,7 @@
     grid-template-columns: repeat(10, minmax(0, 1fr));
     column-gap: design.px(24);
     align-items: start;
-    scroll-margin-top: design.px(112);
+    scroll-margin-top: max(88px, #{design.px(112)});
   }
 
   &__intro {
@@ -44,6 +45,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      min-height: 44px;
       gap: design.px(24);
       padding-block: design.px(24);
       color: #090b0e;
@@ -81,8 +83,8 @@
   &__toggle {
     display: block;
     flex: none;
-    width: design.px(24);
-    height: design.px(24);
+    width: max(24px, #{design.px(24)});
+    height: max(24px, #{design.px(24)});
   }
 
   &__toggle-vertical {
@@ -98,8 +100,42 @@
     p { @include copy.detail-body; text-wrap: pretty; }
     a {
       color: #007aff;
+      overflow-wrap: anywhere;
       text-decoration-thickness: design.px(1);
       text-underline-offset: design.px(3);
     }
+  }
+
+  @media (width < responsive.$desktop) {
+    padding: var(--section-gap) var(--page-gutter) 32px;
+
+    &__layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 48px;
+      max-width: none;
+    }
+
+    &__intro {
+      grid-column: auto;
+      align-items: center;
+      margin-bottom: 0;
+      text-align: center;
+
+      h2 {
+        white-space: nowrap;
+        br { display: none; }
+      }
+    }
+
+    &__list { grid-column: auto; }
+    &__item summary { gap: 24px; }
+  }
+
+  @media (width < responsive.$tablet) {
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+
+    &__layout { max-width: 640px; gap: 40px; }
+    &__item summary { gap: 16px; padding-block: 20px; }
+    &__answer { padding: 0 0 20px; }
   }
 }

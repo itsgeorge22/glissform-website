@@ -14,6 +14,6 @@ export default function HeroAtmosphere({ surfaceRef, projected = false }: {
     </div>
     {projected
       ? <AnimationHeroStarField surfaceRef={surfaceRef} />
-      : <HeroStarField surfaceRef={surfaceRef} />}
+      : <HeroStarField surfaceRef={surfaceRef} compactFullField />}
   </div>;
 }

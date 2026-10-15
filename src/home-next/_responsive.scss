@@ -1,0 +1,13 @@
+// Keep in sync with responsive.ts. References: phone 414, tablet 768, desktop 1440.
+$tablet: 768px;
+$desktop: 1200px;
+
+// Touch and reduced-motion visitors use the same content in ordinary flow.
+@mixin compact-hero {
+  @media (width < $desktop), (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+    @content;
+  }
+  .home-next-page.no-js {
+    @content;
+  }
+}

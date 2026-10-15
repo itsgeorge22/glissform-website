@@ -70,7 +70,6 @@ const createDemoClock = (elapsed: number): DemoClock => ({
 export function runFeatureDemo(root: HTMLElement, demo: FeatureDemo, playback?: GroupPlayback) {
   const panel = root.closest<HTMLElement>('.settings-features__panel') ?? root;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const desktop = window.matchMedia('(min-width: 1056px)');
   const initialTime = playback ? 0 : featureDemoEntrance;
   const clock = (playback && groupClocks.get(playback.group)) || createDemoClock(initialTime);
   const member = Symbol();
@@ -101,8 +100,8 @@ export function runFeatureDemo(root: HTMLElement, demo: FeatureDemo, playback?: 
   };
   const sync = () => {
     if (disposed) return;
-    const next = visible && desktop.matches && !reduced.matches && !document.hidden;
-    if (reduced.matches || !desktop.matches) { clock.elapsed = initialTime; clock.lastTime = 0; }
+    const next = visible && !reduced.matches && !document.hidden;
+    if (reduced.matches) { clock.elapsed = initialTime; clock.lastTime = 0; }
     root.dataset.playing = String(next);
     if (next === running) { if (!next) draw(); return; }
     running = next;
@@ -126,7 +125,6 @@ export function runFeatureDemo(root: HTMLElement, demo: FeatureDemo, playback?: 
   size.observe(root);
   for (const target of demo.resizeTargets ?? []) size.observe(target);
   reduced.addEventListener('change', sync);
-  desktop.addEventListener('change', sync);
   document.addEventListener('visibilitychange', sync);
   measure(); sync();
   return () => {
@@ -140,7 +138,6 @@ export function runFeatureDemo(root: HTMLElement, demo: FeatureDemo, playback?: 
     if (playback && !clock.durations.size) groupClocks.delete(playback.group);
     visibility.disconnect(); size.disconnect();
     reduced.removeEventListener('change', sync);
-    desktop.removeEventListener('change', sync);
     document.removeEventListener('visibilitychange', sync);
     root.removeAttribute('data-playing');
     demo.cleanup();

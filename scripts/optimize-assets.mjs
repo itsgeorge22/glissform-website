@@ -10,14 +10,18 @@ for (const file of await readdir(source)) {
   if (!file.endsWith('.png')) continue;
   const input = path.join(source, file);
   const name = file.slice(0, -4);
-  const sizes = name.endsWith('glissform-icon') ? [64, 128, 256]
+  const featureWallpaper = name === 'feature-wallpaper';
+  const sizes = featureWallpaper ? [960, 1920, 2880, 3840]
+    : name.endsWith('glissform-icon') ? [64, 128, 256]
     : name === 'seamless-settings' ? [480, 800, 1200, null]
     : name.startsWith('blur-') ? [240, 480, null] : [null];
   for (const size of sizes) {
     const image = sharp(input);
     if (size) image.resize({ width: size, withoutEnlargement: true });
     const target = path.join(output, `${name}${size ? `-${size}` : ''}.webp`);
-    await image.webp({ lossless: true, effort: 6 }).toFile(target);
+    await image.webp(featureWallpaper
+      ? { quality: 85, effort: 6, smartSubsample: true }
+      : { lossless: true, effort: 6 }).toFile(target);
     console.log(`${path.basename(target)}: ${(await stat(target)).size} bytes`);
   }
 }

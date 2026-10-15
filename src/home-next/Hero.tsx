@@ -6,6 +6,9 @@ import HeroAtmosphere from './HeroAtmosphere';
 import GlissformBrand from './GlissformBrand';
 import MenuBar from './MenuBar';
 import KeyboardTemplate from './KeyboardTemplate';
+import CompactNavigation from './CompactNavigation';
+import CompactMacBook from './CompactMacBook';
+import { desktopSceneQuery } from './responsive';
 import { macBookDimensions } from './displayGeometry';
 import { designScale } from './designScale';
 import notch from '../hero-test/assets/notch.svg?url';
@@ -25,24 +28,20 @@ import '../hero-test/hero-test.scss';
 import '../hero-test-animation/scene.scss';
 import './hero.scss';
 import './hero-prelude.scss';
+import './hero-responsive.scss';
 
 const previewDownloadUrl = new URL(downloadUrl, siteUrl).href;
 
-const desktopQuery = '(min-width: 1056px)';
 const subscribeToViewport = (onChange: () => void) => {
-  const viewport = window.matchMedia(desktopQuery);
+  const viewport = window.matchMedia(desktopSceneQuery);
   viewport.addEventListener('change', onChange);
   return () => viewport.removeEventListener('change', onChange);
 };
-const desktopSnapshot = () => window.matchMedia(desktopQuery).matches;
-const serverDesktopSnapshot = () => true;
+const desktopSnapshot = () => window.matchMedia(desktopSceneQuery).matches;
+const serverDesktopSnapshot = () => false;
 
 export default function Hero() {
-  const desktop = useSyncExternalStore(subscribeToViewport, desktopSnapshot, serverDesktopSnapshot);
-  return <div className="home-next-desktop">{desktop && <DesktopHero />}</div>;
-}
-
-function DesktopHero() {
+  const sceneEnabled = useSyncExternalStore(subscribeToViewport, desktopSnapshot, serverDesktopSnapshot);
   const trackRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -51,13 +50,14 @@ function DesktopHero() {
   const desktopRef = useRef<HTMLDivElement>(null);
   const screenContentRef = useRef<HTMLDivElement>(null);
   const navigationRef = useRef<HTMLDivElement>(null);
-  const [templateNeeded, setTemplateNeeded] = useState(true);
+  const [templateNeeded, setTemplateNeeded] = useState(false);
 
-  useEffect(() => connectProjectedGlass(surfaceRef.current!), []);
+  useEffect(() => sceneEnabled ? connectProjectedGlass(surfaceRef.current!) : undefined, [sceneEnabled]);
   useEffect(trackSectionNavigation, []);
-  useLayoutEffect(() => playHeroEntrance(screenContentRef.current!), []);
+  useLayoutEffect(() => sceneEnabled ? playHeroEntrance(screenContentRef.current!) : undefined, [sceneEnabled]);
 
   useLayoutEffect(() => {
+    if (!sceneEnabled) return;
     setTemplateNeeded(true);
     const track = trackRef.current!, stage = stageRef.current!, canvas = canvasRef.current!;
     const surface = surfaceRef.current!, desktop = desktopRef.current!, screenContent = screenContentRef.current!;
@@ -74,8 +74,7 @@ function DesktopHero() {
     const shadow = stage.querySelector<HTMLElement>('.hero-animation__screen-shadow')!;
     const contact = stage.querySelector<HTMLElement>('.hero-animation__contact-shadow')!;
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const compact = window.matchMedia('(width < 1056px)');
-    const isStatic = () => motion.matches || compact.matches || failed;
+    const isStatic = () => motion.matches || failed;
     const controller = new AbortController();
     let renderer: ThreeHardwareRenderer | null = null;
     let travel = 2000, scale = 1;
@@ -88,7 +87,9 @@ function DesktopHero() {
     // Cache individual properties. No inherited custom properties invalidate the
     // whole hero, and settled phases do not repeat identical DOM mutations.
     const values = new WeakMap<HTMLElement, Map<string, string>>();
+    const styledElements = new Set<HTMLElement>();
     const style = (element: HTMLElement, property: string, value: string) => {
+      styledElements.add(element);
       let previous = values.get(element);
       if (!previous) { previous = new Map(); values.set(element, previous); }
       if (previous.get(property) === value) return;
@@ -180,7 +181,7 @@ function DesktopHero() {
       width = stage.clientWidth; height = stage.clientHeight;
       scale = designScale(width);
       travel = 2000 * scale;
-      openingHeight = compact.matches ? height : Math.max(720 * scale, height);
+      openingHeight = Math.max(720 * scale, height);
       const endingBounds = sceneProjection(scenePose(1, width, height, openingHeight), width, height, openingHeight).bounds;
       // Use layout geometry so the copy's visual offset cannot move the Mac.
       const copyBottom = parseFloat(getComputedStyle(ending).top) + ending.getBoundingClientRect().height;
@@ -249,7 +250,6 @@ function DesktopHero() {
     window.addEventListener('pageshow', measure);
     document.addEventListener('visibilitychange', visibility);
     motion.addEventListener('change', preference);
-    compact.addEventListener('change', preference);
     canvas.addEventListener('webglcontextlost', fallback);
     track.classList.toggle('hero-animation--static', isStatic());
     measure();
@@ -273,20 +273,32 @@ function DesktopHero() {
       window.removeEventListener('pageshow', measure);
       document.removeEventListener('visibilitychange', visibility);
       motion.removeEventListener('change', preference);
-      compact.removeEventListener('change', preference);
       canvas.removeEventListener('webglcontextlost', fallback);
+      for (const element of styledElements) {
+        for (const property of values.get(element)?.keys() ?? []) element.style.removeProperty(property);
+      }
+      track.classList.remove('hero-animation--static');
+      surface.classList.remove('hero-animation__surface--moving');
+      for (const element of [surface, screenNavigation, navigation, ending]) {
+        element.inert = false;
+        element.removeAttribute('aria-hidden');
+      }
+      revealFeatureLabel(1); revealHeading(1); revealDescription(1);
+      setTemplateNeeded(false);
     };
-  }, []);
+  }, [sceneEnabled]);
 
-  return <><section className="hero-animation" ref={trackRef} aria-label="Glissform Seamless Close scroll experience">
+  return <><CompactNavigation /><section className="hero-animation" ref={trackRef} aria-label="Glissform for macOS">
     <div className="hero-animation__stage" ref={stageRef}>
       <div className="hero-animation__ambience" aria-hidden="true" />
-      <canvas className="hero-animation__hardware" ref={canvasRef} aria-hidden="true" />
+      <div className="hero-animation__hardware-viewport" aria-hidden="true">
+        <canvas className="hero-animation__hardware" ref={canvasRef} />
+      </div>
       <div className="hero-test hero-animation__surface" ref={surfaceRef} aria-labelledby="hero-test-title" data-prelude="pending">
         <div className="hero-test__screen">
           <div className="hero-animation__desktop" ref={desktopRef}>
             <div className="hero-animation__screen-content" ref={screenContentRef} data-entrance="pending">
-            <HeroAtmosphere surfaceRef={surfaceRef} projected />
+            <HeroAtmosphere surfaceRef={surfaceRef} projected={sceneEnabled} />
             <MenuBar />
             <div className="hero-test__offer">
               <div className="hero-test__intro">
@@ -313,7 +325,7 @@ function DesktopHero() {
         <div className="hero-test__frame" aria-hidden="true" />
         <img className="hero-test__notch" src={notch} width="214" height="42" alt="" aria-hidden="true" />
       </div>
-      <div className="hero-animation__ending" aria-hidden="true">
+      <div className="hero-animation__ending" aria-hidden={sceneEnabled ? true : undefined}>
         <p className="hero-animation__feature-label" aria-label="Seamless Close">
           <TextLine text="Seamless Close" />
         </p>
@@ -325,6 +337,7 @@ function DesktopHero() {
           <TextLine text="A smooth MacBook lid animation that responds as you close it." />{' '}
           <TextLine text="Adjust the starting angle and blur strength in Glissform for macOS." />
         </p>
+        <CompactMacBook />
       </div>
     </div>
     {templateNeeded && <div className="hero-animation__template seamless-macbook--animated" ref={templateRef} style={{

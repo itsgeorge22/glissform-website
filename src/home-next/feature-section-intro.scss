@@ -1,4 +1,7 @@
 @use '../design-scale' as design;
+@use './feature-copy' as copy;
+@use './responsive' as responsive;
+
 .feature-section-intro {
   display: flex;
   flex-direction: column;
@@ -7,6 +10,28 @@
   margin-bottom: design.px(80);
   text-align: center;
 
-  h2 { margin: 0; color: #090b0e; }
-  p { margin: 0; color: #555b63; }
+  h2 {
+    margin: 0;
+    color: #090b0e;
+    font: 600 max(40px, #{design.px(64)}) / max(48px, #{design.px(72)}) 'Hero Manrope', sans-serif;
+    letter-spacing: -.04em;
+    text-wrap: balance;
+  }
+
+  p { @include copy.body; text-wrap: balance; }
+
+  @media (width < responsive.$desktop) {
+    gap: 16px;
+    margin-bottom: 48px;
+
+    h2 { max-width: 18ch; font-size: 48px; line-height: 56px; }
+    p { max-width: 48ch; }
+  }
+
+  @media (width < responsive.$tablet) {
+    margin-bottom: 40px;
+
+    h2 { font-size: clamp(32px, 8.7vw, 40px); line-height: 1.18; }
+    p { max-width: 36ch; }
+  }
 }

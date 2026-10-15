@@ -1,5 +1,6 @@
 @use '../design-scale' as design;
 @use './feature-copy' as copy;
+@use './responsive' as responsive;
 
 .home-footer {
   max-width: design.px(1416);
@@ -70,8 +71,50 @@
   }
 
   &__home {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: #090b0e;
     text-decoration: none;
     border-radius: design.px(4);
+
+    .hero-test__brand {
+      font-size: max(18px, #{design.px(22)});
+      line-height: max(24px, #{design.px(28)});
+
+      img { width: max(24px, #{design.px(28)}); height: max(24px, #{design.px(28)}); }
+    }
+  }
+
+  .download-link {
+    min-height: max(44px, #{design.px(56)});
+    font-size: max(16px, #{design.px(16)});
+    line-height: max(24px, #{design.px(24)});
+  }
+
+  @media (width < responsive.$desktop) {
+    margin-top: 104px;
+
+    &__card { max-width: none; border-radius: 24px; }
+    &__surface { padding: 64px 40px; }
+    &__offer { gap: 32px; }
+    &__copy { max-width: 36ch; }
+    &__bottom { margin-top: 40px; padding-top: 24px; }
+  }
+
+  @media (width < responsive.$tablet) {
+    max-width: 640px;
+    margin-top: 88px;
+
+    &__surface { padding: 64px clamp(24px, 8vw, 32px); }
+    &__copy { gap: 12px; }
+    &__copy h2 { text-wrap: balance; }
+    &__copy p { text-wrap: pretty; }
+
+    &__bottom {
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 32px;
+    }
   }
 }

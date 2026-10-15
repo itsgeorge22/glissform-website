@@ -1,4 +1,6 @@
 @use '../design-scale' as design;
+@use './responsive' as responsive;
+
 .home-ending {
   --faq-section-gap: #{design.px(200)};
   --faq-corner-radius: #{design.px(40)};
@@ -25,7 +27,7 @@
     }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
+  @media (width >= responsive.$desktop) and (prefers-reduced-motion: no-preference) {
     &[data-scroll-cover='ready'] {
       --cover-distance: 100svh;
 
@@ -42,5 +44,10 @@
         top: min(0px, calc(100svh - var(--customization-height) - var(--faq-section-gap)));
       }
     }
+  }
+
+  @media (width < responsive.$desktop) {
+    --faq-section-gap: var(--section-gap);
+    --faq-corner-radius: 32px;
   }
 }
