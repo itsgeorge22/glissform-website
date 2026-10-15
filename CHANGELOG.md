@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-16 — AI product guide and search description
+
+- Add `/llms.txt` with current product facts, suitable use cases, customization, tested compatibility, installation and privacy details, and canonical source links. Link it from both page heads and include it in deployment and discovery-file cache rules. Publication authorized on 16 October 2026.
+- Match the homepage meta description to the approved Google hero excerpt exactly, retaining the visible website and leaving feature content eligible for search snippets.
+
 ## 2026-10-15 — Loading and accessibility
 
 - Remove unused legacy homepage styles from production, deduplicate font declarations, inline page CSS and preload the existing regular and semibold fonts. Add responsive logo and compact MacBook sources, defer lower-page hydration, and avoid offscreen demo and compact FAQ scroll-over layout work. Preserve the approved colors, typography, geometry and animation timing.

@@ -33,6 +33,6 @@ jobs:
           install -m 700 -d ~/.ssh
           printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/website_key
           chmod 600 ~/.ssh/website_key
-          tar -czf /tmp/website.tar.gz -C dist index.html robots.txt sitemap.xml assets models privacy
+          tar -czf /tmp/website.tar.gz -C dist index.html robots.txt sitemap.xml llms.txt assets models privacy
           ssh -i ~/.ssh/website_key -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=config/production-known-hosts glissform-website-deploy@159.194.226.154 "deploy $GITHUB_SHA" < /tmp/website.tar.gz
           curl --fail --retry 3 https://glissform.app/deployment.json | grep -F "$GITHUB_SHA"

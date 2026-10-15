@@ -8,7 +8,9 @@ The Astro homepage publishes at `https://glissform.app/`. The reviewed v2 layout
 2. Commit the approved source. Push to `main` only with publication authorization. `.github/workflows/deploy.yml` builds and validates the same source on Node 22 before sending the archive through the restricted SSH receiver.
 3. Verify `https://glissform.app/deployment.json` matches the intended full commit SHA. Check the live HTML, assets, model, canonical/robots metadata, downloads, update feed and redirects. A successful push alone is not deployment verification.
 
-The receiver at `/usr/local/lib/glissform-website-receive.py` is installed from `scripts/receive-deploy.py` and runs as `glissform-website-deploy`. It accepts only `deploy <40-character commit SHA>`, rejects traversal/links/unrelated paths, and retains the legacy preview-page allowlist for rollback. The current workflow archives only `index.html`, `privacy/index.html`, `robots.txt`, `sitemap.xml`, `assets/` and `models/`. Downloads, updates, Google verification and old assets are never part of the uploaded archive. Dependencies publish first, then HTML and the marker are atomically replaced.
+The receiver at `/usr/local/lib/glissform-website-receive.py` is installed from `scripts/receive-deploy.py` and runs as `glissform-website-deploy`. It accepts only `deploy <40-character commit SHA>`, rejects traversal/links/unrelated paths, and retains the legacy preview-page allowlist for rollback. The current workflow archives only `index.html`, `privacy/index.html`, `robots.txt`, `sitemap.xml`, `llms.txt`, `assets/` and `models/`. Downloads, updates, Google verification and old assets are never part of the uploaded archive. Dependencies publish first, then HTML and the marker are atomically replaced.
+
+Before the first `llms.txt` deployment, install the updated receiver: the previous allowlist rejects this new root file. Install the updated performance snippet too so the AI guide uses the same cache revalidation as the other discovery files. The guide publishes before the HTML that links to it; older archives without it remain accepted.
 
 ## Analytics rollout
 

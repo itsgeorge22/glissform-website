@@ -20,7 +20,8 @@ def archive(extra=(), discovery=True, models=True):
         if models:
             items.append(('models/macbook-details.glb', b'model'))
         if discovery:
-            items += [('robots.txt', b'User-agent: *\nAllow: /'), ('sitemap.xml', b'<urlset/>')]
+            items += [('robots.txt', b'User-agent: *\nAllow: /'), ('sitemap.xml', b'<urlset/>'),
+                      ('llms.txt', b'# Glissform\n')]
         for name, value in items:
             entry = tarfile.TarInfo('./' + name)
             entry.size = len(value)
@@ -51,7 +52,8 @@ class ReceiverTests(unittest.TestCase):
                 return original(source, destination)
             with patch.object(receiver.os, 'replace', side_effect=record):
                 receiver.publish_build(stage, root, 'a' * 40)
-            self.assertEqual(order, ['robots.txt', 'sitemap.xml', 'index.html', 'deployment.json'])
+            self.assertEqual(order, ['robots.txt', 'sitemap.xml', 'llms.txt', 'index.html', 'deployment.json'])
+            self.assertEqual((root / 'llms.txt').read_text(), '# Glissform\n')
             self.assertEqual(json.loads((root / 'deployment.json').read_text())['commit'], 'a' * 40)
             self.assertEqual((root / 'google-verification.html').read_text(), 'preserve')
             for name in ('downloads', 'updates', 'assets', 'models', 'v2'):
@@ -100,7 +102,7 @@ class ReceiverTests(unittest.TestCase):
         for name in ('../index.html', '/index.html', 'assets/../escape', 'downloads/new.dmg',
                      'updates/appcast.xml', 'hero-test/other.html', 'hero-test/assets/bad.js',
                      'hero-test-animation/other.html', 'hero-test-animation/assets/bad.js',
-                     'deployment.json', 'robots.txt/nested', 'assets', 'models', 'models/../escape',
+                     'deployment.json', 'robots.txt/nested', 'llms.txt/nested', 'assets', 'models', 'models/../escape',
                      'v2/index.html', 'google-verification.html', 'privacy/other.html', 'privacy/assets/bad.js'):
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 with self.assertRaises(ValueError):

@@ -77,6 +77,7 @@ The older checkout at `/Users/george/Projects/glissform-website` may contain ind
 
 ## Reference
 
+- [AI product guide](public/llms.txt): concise public facts and canonical links, served at `/llms.txt` and linked from both page heads. Keep it aligned with published features, compatibility, price and privacy; the current release stays on the homepage.
 - [CHANGELOG](CHANGELOG.md): completed work and local/published status.
 - [Model provenance](public/models/README.md) and [hero asset provenance](src/hero-test/assets/README.md): sources, preparation and notices.
 - [Archive](docs/archive/): earlier implementation notes, browser validation, loading audit and retired roadmap. Historical context only; no ongoing maintenance required.

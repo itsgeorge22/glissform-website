@@ -44,7 +44,7 @@ class DeploymentBuildTests(unittest.TestCase):
             if tag in ('script', 'img', 'source', 'video', 'audio', 'iframe'):
                 self.assert_asset_exists(attrs.get('src'))
                 self.assert_asset_exists(attrs.get('poster'))
-            if tag == 'link' and attrs.get('rel') in ('stylesheet', 'icon', 'preload', 'modulepreload'):
+            if tag == 'link' and attrs.get('rel') in ('stylesheet', 'icon', 'preload', 'modulepreload', 'describedby'):
                 self.assert_asset_exists(attrs.get('href'))
             if tag == 'astro-island':
                 for key in ('component-url', 'renderer-url', 'before-hydration-url'):

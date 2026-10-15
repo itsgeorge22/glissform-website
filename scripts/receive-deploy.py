@@ -10,7 +10,7 @@ import sys
 import tarfile
 import tempfile
 
-ROOT_FILES = {'index.html', 'robots.txt', 'sitemap.xml', 'hero-test.html', 'hero-test-animation.html'}
+ROOT_FILES = {'index.html', 'robots.txt', 'sitemap.xml', 'llms.txt', 'hero-test.html', 'hero-test-animation.html'}
 HTML_PAGES = {'hero-test', 'hero-test-animation', 'privacy'}
 ASSET_DIRECTORIES = {'assets', 'models'}
 
@@ -51,7 +51,7 @@ def publish_build(stage, root, commit):
     for directory in sorted(ASSET_DIRECTORIES):
         if (stage / directory).is_dir():
             shutil.copytree(stage / directory, root / directory, dirs_exist_ok=True)
-    for name in ('robots.txt', 'sitemap.xml', 'hero-test.html', 'hero-test/index.html',
+    for name in ('robots.txt', 'sitemap.xml', 'llms.txt', 'hero-test.html', 'hero-test/index.html',
                  'hero-test-animation.html', 'hero-test-animation/index.html', 'privacy/index.html', 'index.html'):
         if not (stage / name).is_file():
             continue
