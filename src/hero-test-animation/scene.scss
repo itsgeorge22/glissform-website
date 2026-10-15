@@ -1,8 +1,9 @@
+@use '../design-scale' as design;
 .hero-animation-page { background: #000; }
 
 .hero-animation {
   height: 380svh;
-  min-height: 2600px;
+  min-height: design.px(2600);
   background: #000;
 
   &__stage {
@@ -35,12 +36,12 @@
     top: 0;
     left: 0;
     min-height: 0;
-    border-radius: 26px;
+    border-radius: design.px(26);
     transform-origin: 0 0;
     // The opening is a normal, flat hero. Only the moving display is promoted.
     &--moving { will-change: transform; }
     .hero-test__screen { background: #000; }
-    .hero-test__nav { bottom: 20px; }
+    .hero-test__nav { bottom: design.px(20); }
   }
 
   &__desktop {
@@ -75,23 +76,23 @@
 
   &__closing-copy {
     position: absolute;
-    top: clamp(56px, 10svh, 120px);
-    left: 24px;
-    right: 24px;
+    top: clamp(design.px(56), 10svh, design.px(120));
+    left: design.px(24);
+    right: design.px(24);
     text-align: center;
     color: #fff;
     opacity: 0;
-    transform: translateY(22px);
+    transform: translateY(design.px(22));
     pointer-events: none;
 
-    > span { font-size: 13px; line-height: 20px; letter-spacing: .12em; color: #9daabe; }
-    p { margin: 18px 0 0; font-size: clamp(40px, 4vw, 64px); font-weight: 500; line-height: 1.13; letter-spacing: -.045em; }
+    > span { font-size: design.px(13); line-height: design.px(20); letter-spacing: .12em; color: #9daabe; }
+    p { margin: design.px(18) 0 0; font-size: clamp(design.px(40), 4vw, design.px(64)); font-weight: 500; line-height: 1.13; letter-spacing: -.045em; }
     p span { color: #8996a8; }
   }
 
   &__finish {
     position: absolute;
-    bottom: 42px;
+    bottom: design.px(42);
     left: 0;
     right: 0;
     display: flex;
@@ -102,33 +103,33 @@
       appearance: none;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 18px;
-      border: 1px solid #ffffff12;
-      border-radius: 30px;
+      gap: design.px(10);
+      padding: design.px(12) design.px(18);
+      border: design.px(1) solid #ffffff12;
+      border-radius: design.px(30);
       color: #9ca9bb;
       background: #ffffff04;
-      font: 400 12px/18px 'Hero Manrope', sans-serif;
+      font: 400 design.px(12)/design.px(18) 'Hero Manrope', sans-serif;
       cursor: pointer;
       transition: color .2s, background .2s;
       &:hover { color: #fff; background: #ffffff0c; }
-      &:focus-visible { outline: 2px solid #a6d7ff; outline-offset: 4px; }
+      &:focus-visible { outline: design.px(2) solid #a6d7ff; outline-offset: design.px(4); }
     }
   }
 }
 
 @media (max-height: 720px) {
-  .hero-animation__finish { bottom: 18px; }
+  .hero-animation__finish { bottom: design.px(18); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-animation { height: 100svh; min-height: 720px; }
-  .hero-animation__stage { position: relative; height: max(720px, 100svh); }
+  .hero-animation { height: 100svh; min-height: design.px(720); }
+  .hero-animation__stage { position: relative; height: max(design.px(720), 100svh); }
   .hero-animation__closing-copy, .hero-animation__finish, .hero-animation__halo { display: none; }
 }
 
-.hero-animation--static { height: 100svh; min-height: 720px; }
-.hero-animation--static .hero-animation__stage { position: relative; height: max(720px, 100svh); }
+.hero-animation--static { height: 100svh; min-height: design.px(720); }
+.hero-animation--static .hero-animation__stage { position: relative; height: max(design.px(720), 100svh); }
 .hero-animation--static .hero-animation__closing-copy,
 .hero-animation--static .hero-animation__finish,
 .hero-animation--static .hero-animation__halo { display: none; }

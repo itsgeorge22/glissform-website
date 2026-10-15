@@ -1,3 +1,4 @@
+@use '../design-scale' as design;
 .home-next {
   .hero-prelude__glow {
     position: absolute;
@@ -13,7 +14,7 @@
     .hero-animation__surface[data-prelude='pending'] {
       background: #0b121e;
       .hero-test__frame, .hero-test__notch, .hero-prelude__glow, .hero-test__stars { opacity: 0; }
-      .hero-test__notch { translate: 0 -26px; scale: 1 0; }
+      .hero-test__notch { translate: 0 design.px(-26); scale: 1 0; }
     }
   }
 }

@@ -1,3 +1,5 @@
+import { designScale } from './designScale.ts';
+
 export const navigationSections = [
   { id: 'how-it-works', label: 'How it works' },
   { id: 'seamless-close-features', label: 'Features' },
@@ -5,8 +7,8 @@ export const navigationSections = [
 ] as const;
 
 /** Later surfaces win when the FAQ covers the sticky feature section. */
-export function visibleNavigationSection(ranges: { id: string; top: number; bottom: number }[], viewportHeight: number) {
-  const readingLine = Math.min(320, viewportHeight * .35);
+export function visibleNavigationSection(ranges: { id: string; top: number; bottom: number }[], viewportHeight: number, scale = 1) {
+  const readingLine = Math.min(320 * scale, viewportHeight * .35);
   return [...ranges].reverse().find(({ top, bottom }) => top <= readingLine && bottom > readingLine)?.id;
 }
 
@@ -34,7 +36,7 @@ export function trackSectionNavigation() {
       if (!element) return [];
       const { top, bottom } = element.getBoundingClientRect();
       return [{ id, top, bottom }];
-    }), window.innerHeight);
+    }), window.innerHeight, designScale(window.innerWidth));
     for (const link of links) {
       if (link.dataset.sectionLink === active) link.setAttribute('aria-current', 'location');
       else link.removeAttribute('aria-current');

@@ -3,6 +3,7 @@ import { connectStarField } from '../starFieldInteraction';
 import { createHeroStars, type HeroStar } from './heroStarLayout';
 import { connectShootingStars } from './shootingStars';
 import { connectStarRipples } from './starRipple';
+import { elementDesignScale } from '../home-next/designScale';
 
 const starDepths = [2, 5, 8];
 
@@ -24,7 +25,7 @@ export default function HeroStarField({ surfaceRef }: { surfaceRef: RefObject<HT
         const rect = element.getBoundingClientRect();
         return { left: rect.left - bounds.left, top: rect.top - bounds.top, right: rect.right - bounds.left, bottom: rect.bottom - bounds.top };
       });
-      setStars(createHeroStars(bounds.width, bounds.height, quietRegions));
+      setStars(createHeroStars(bounds.width, bounds.height, quietRegions, elementDesignScale(surface)));
     };
     const observer = new ResizeObserver(() => {
       if (!frame) frame = window.requestAnimationFrame(measure);
@@ -44,10 +45,13 @@ export default function HeroStarField({ surfaceRef }: { surfaceRef: RefObject<HT
     if (!surface || !field || !stars.length) return;
     const disconnectField = connectStarField({
       surface, field, starSelector: '.ambient-star',
-      radius: width => Math.max(220, Math.min(300, width * .16)),
+      radius: width => {
+        const scale = elementDesignScale(surface);
+        return Math.max(220 * scale, Math.min(300 * scale, width * .16));
+      },
       // A fuller, rounded swell that holds while the cursor stays nearby.
       hoverScale: influence => 1 + 1.1 * influence * influence * (3 - 2 * influence),
-      parallaxDepth: index => starDepths[index % starDepths.length],
+      parallaxDepth: index => starDepths[index % starDepths.length] * elementDesignScale(surface),
     });
     const disconnectRipples = connectStarRipples(surface, field);
     return () => { disconnectRipples(); disconnectField(); };

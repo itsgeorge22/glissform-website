@@ -1,0 +1,5 @@
+// One design pixel at the approved 1920px reference width. Legacy studies
+// retain their original sizes when the v2 page does not define this variable.
+@function px($value) {
+  @return calc(#{$value} * var(--design-unit, 1px));
+}

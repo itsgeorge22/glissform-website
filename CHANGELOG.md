@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Scale the desktop layout uniformly from the approved 1920px reference, preserving that composition while enlarging typography, controls, spacing, panels, hero decoration and Mac scene geometry proportionally at wider viewports. Keep the scroll reveal and speed cap in the same reference units, retain timed animation durations and the placeholder below 1056px, and refresh the local preview. Publish through the isolated `/v2/` deployment, leaving the main homepage unchanged.
+
 - Add isolated test deployment at `/v2/`, with separate assets, Mac model, OG image and deployment marker. Retain `noindex, nofollow` and the mobile placeholder. Build/type and small deployment checks run before upload; the v2 receiver preserves the current homepage, downloads, updates and root discovery files. The production homepage is not replaced.
 
 - Update v2’s search title and give shared-link previews their own approved title, description and artwork. Export the supplied “Your lid moves. Desktop stays in place” image at 1200 × 630 without changing its composition. Local only; not deployed.

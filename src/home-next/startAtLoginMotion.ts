@@ -1,3 +1,4 @@
+import { elementDesignScale } from './designScale.ts';
 import { ease } from './choreography.ts';
 import { springDisplacement } from './objectMotion.ts';
 import { clickPressure, featureCursorArrival, featureCursorTravel, featureDemoEntrance, featureDemoPause, phase, pointOn, relativeOffset, runFeatureDemo, type Curve } from './featureDemoMotion.ts';
@@ -86,7 +87,7 @@ export function animateStartAtLogin(root: HTMLElement) {
     width = root.clientWidth / unit; height = root.clientHeight / unit;
     const camera = startAtLoginCamera(width, height, 0);
     const fit = camera.scale / initialScale;
-    // Anchor credentials outside the camera so the field keeps a real 60px
+    // Anchor credentials outside the camera so the field keeps a 60 design-pixel
     // bottom gap. Match its original fitted size and measure both click targets
     // again whenever the outer container changes size.
     root.style.setProperty('--login-credentials-unit', `${unit * fit}px`);
@@ -95,7 +96,7 @@ export function animateStartAtLogin(root: HTMLElement) {
       y: fieldOffset.y + field.offsetHeight / 2 };
     const arrow = { x: arrowOffset.x + submit.offsetWidth / 2,
       y: arrowOffset.y + submit.offsetHeight / 2 };
-    arrival = featureCursorArrival(root.clientWidth, root.clientHeight, unit, parseFloat(getComputedStyle(cursor).fontSize) || unit, target);
+    arrival = featureCursorArrival(root.clientWidth, root.clientHeight, unit, parseFloat(getComputedStyle(cursor).fontSize) || unit, target, elementDesignScale(root));
     transfer = [target, { x: target.x + 18 * unit, y: target.y - 6 * unit },
       { x: arrow.x - 18 * unit, y: arrow.y - 6 * unit }, arrow];
     departure = [arrow,

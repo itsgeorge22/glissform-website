@@ -1,24 +1,25 @@
+@use '../design-scale' as design;
 @use 'sass:math';
 @use './feature-copy' as copy;
 
 .privacy-section {
   background: #fff;
   font-family: 'Hero Manrope', sans-serif;
-  padding: var(--privacy-section-gap) max(32px, calc((100% - 1416px) / 2)) 0;
+  padding: var(--privacy-section-gap) max(design.px(32), calc((100% - design.px(1416)) / 2)) 0;
 
   &__panel {
     display: grid;
     // Ten centered 96px columns with nine 24px gutters.
-    max-width: 1176px;
+    max-width: design.px(1176);
     margin-inline: auto;
-    grid-template-columns: minmax(min-content, 360px) max-content;
+    grid-template-columns: minmax(min-content, design.px(360)) max-content;
     align-items: center;
     justify-content: space-between;
-    column-gap: 24px;
-    padding: 56px 64px;
-    border-radius: 24px;
+    column-gap: design.px(24);
+    padding: design.px(56) design.px(64);
+    border-radius: design.px(24);
     background: #edf4fd;
-    scroll-margin-top: 112px;
+    scroll-margin-top: design.px(112);
   }
 
   &__intro {
@@ -41,11 +42,11 @@
     // Preserve the exported glyph's 34 × 40 size within its Figma 48px frame.
     display: grid;
     place-items: center;
-    width: 48px;
-    height: 48px;
-    transform: scale(math.div(copy.$icon-size, 48px));
+    width: design.px(48);
+    height: design.px(48);
+    transform: scale(math.div(40, 48));
 
-    img { display: block; }
+    img { display: block; width: design.px(34); height: design.px(40); }
   }
 
   &__text {
@@ -69,9 +70,9 @@
     gap: copy.$detail-gap;
 
     & + & {
-      margin-top: 24px;
-      border-top: 1px solid #cddef4;
-      padding-top: 24px;
+      margin-top: design.px(24);
+      border-top: design.px(1) solid #cddef4;
+      padding-top: design.px(24);
     }
 
     h3 { @include copy.detail-title; }

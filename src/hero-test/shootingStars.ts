@@ -1,11 +1,15 @@
 import type { QuietRegion } from './heroStarLayout';
+import { elementDesignScale } from '../home-next/designScale';
 
 export type ShootingStar = {
   x: number; y: number; dx: number; dy: number; angle: number;
   size: number; tail: number; duration: number;
 };
 
-export function createShootingStar(width: number, height: number, quietRegions: QuietRegion[], random = Math.random): ShootingStar | null {
+export function createShootingStar(width: number, height: number, quietRegions: QuietRegion[], random = Math.random, scale = 1): ShootingStar | null {
+  width /= scale; height /= scale;
+  quietRegions = quietRegions.map(rect => ({ left: rect.left / scale, top: rect.top / scale,
+    right: rect.right / scale, bottom: rect.bottom / scale }));
   if (width < 600 || height < 300) return null;
   for (let attempt = 0; attempt < 64; attempt++) {
     const angle = 28 + random() * 24;
@@ -43,7 +47,8 @@ export function createShootingStar(width: number, height: number, quietRegions: 
       flight.left < rect.right + 32 && flight.right > rect.left - 32 &&
       flight.top < rect.bottom + 32 && flight.bottom > rect.top - 32);
     if (obscuresContent) continue;
-    return { x, y, dx, dy, angle, tail, size: 4.8 + random() * .8, duration: 1100 + random() * 300 };
+    return { x: x * scale, y: y * scale, dx: dx * scale, dy: dy * scale, angle, tail: tail * scale,
+      size: (4.8 + random() * .8) * scale, duration: 1100 + random() * 300 };
   }
   return null;
 }
@@ -73,7 +78,7 @@ export function connectShootingStars(surface: HTMLElement, field: HTMLElement, s
       const rect = element.getBoundingClientRect();
       return { left: rect.left - bounds.left, top: rect.top - bounds.top, right: rect.right - bounds.left, bottom: rect.bottom - bounds.top };
     });
-    const path = createShootingStar(bounds.width, bounds.height, quietRegions);
+    const path = createShootingStar(bounds.width, bounds.height, quietRegions, Math.random, elementDesignScale(surface));
     first = false;
     if (!path) { schedule(); return; }
     for (const [property, value] of Object.entries(path)) {

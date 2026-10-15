@@ -1,3 +1,4 @@
+import { elementDesignScale } from './designScale.ts';
 import { ease } from './choreography.ts';
 import { springDisplacement } from './objectMotion.ts';
 import { clickPressure, featureCursorArrival, featureCursorTravel, featureDemoEntrance, phase, pointOn, relativeOffset, runFeatureDemo, type Curve, type Point } from './featureDemoMotion.ts';
@@ -63,7 +64,7 @@ export function animateAlwaysActive(root: HTMLElement) {
     const unit = parseFloat(getComputedStyle(root).fontSize) || 1;
     const width = root.clientWidth, height = root.clientHeight;
     const target = { x: x + card.offsetWidth * .68, y: y + card.offsetHeight * .58 };
-    arrival = featureCursorArrival(width, height, unit, parseFloat(getComputedStyle(cursor).fontSize) || unit, target);
+    arrival = featureCursorArrival(width, height, unit, parseFloat(getComputedStyle(cursor).fontSize) || unit, target, elementDesignScale(root));
     departure = [target,
       { x: target.x + 90 * unit, y: target.y - 16 * unit },
       { x: width * .91, y: 20 * unit },

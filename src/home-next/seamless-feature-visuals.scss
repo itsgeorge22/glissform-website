@@ -1,3 +1,4 @@
+@use '../design-scale' as design;
 .seamless-mini-visual {
   position: absolute;
   inset: 0;
@@ -12,7 +13,7 @@
     top: 50%;
     width: 248em;
     height: 206em;
-    font-size: clamp(.8px, .24cqw, 1px);
+    font-size: clamp(design.px(.8), .24cqw, design.px(1));
     transform: translate(-50%, -50%);
   }
 }
@@ -96,7 +97,7 @@
     stroke-dasharray: 1;
     stroke-dashoffset: calc(1 - var(--wait-progress));
     transform: rotate(-90deg);
-    transform-origin: 22px 22px;
+    transform-origin: design.px(22) design.px(22);
   }
   &__pause { stroke-width: 3; opacity: calc(1 - var(--return-confirmation)); }
   &__check {

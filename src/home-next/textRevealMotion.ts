@@ -7,7 +7,7 @@ const revealBlurPx = 8;
 
 /** Shared sharpening curve for reading text and its accompanying feature icon. */
 export const revealBlurFilter = (opacity: number) => opacity === 1 ? 'none'
-  : `blur(${(revealBlurPx * (1 - opacity) ** 2).toFixed(3)}px)`;
+  : `blur(calc(${(revealBlurPx * (1 - opacity) ** 2).toFixed(3)} * var(--design-unit, 1px)))`;
 
 export function textLineDelay(index: number, count: number) {
   return count > 1 ? Math.min(.04, .2 / (count - 1)) * index : 0;

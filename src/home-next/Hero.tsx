@@ -7,6 +7,7 @@ import GlissformBrand from './GlissformBrand';
 import MenuBar from './MenuBar';
 import KeyboardTemplate from './KeyboardTemplate';
 import { macBookDimensions } from './displayGeometry';
+import { designScale } from './designScale';
 import notch from '../hero-test/assets/notch.svg?url';
 import { scenePose, screenPose, scrollCopyProgress } from './choreography';
 import { TextLine } from './TextReveal';
@@ -77,7 +78,7 @@ function DesktopHero() {
     const isStatic = () => motion.matches || compact.matches || failed;
     const controller = new AbortController();
     let renderer: ThreeHardwareRenderer | null = null;
-    const travel = 2000;
+    let travel = 2000, scale = 1;
     let width = 0, height = 0, openingHeight = 0, top = 0;
     let endingScale = 1, endingTranslationY = 0;
     let featureLabelClearance = 1, headlineClearance = 1, subtitleClearance = 1;
@@ -119,7 +120,7 @@ function DesktopHero() {
         perspective: projection.perspective, elevation: 208 * (1 - pose.reveal), opacity: 1,
         shadowOpacity: 1 });
       for (const property of ['border-bottom-left-radius', 'border-bottom-right-radius']) {
-        for (const edge of screenEdges) style(edge, property, `${17 * pose.cornerRoundness}px`);
+        for (const edge of screenEdges) style(edge, property, `${17 * scale * pose.cornerRoundness}px`);
       }
       style(surface, 'transform', active ? `matrix3d(${projection.screen.join(',')})` : 'none');
       const visible = !active || projection.visible;
@@ -133,7 +134,7 @@ function DesktopHero() {
       revealDescription(scrollCopyProgress(firstProgress, subtitleClearance, 'subtitle'));
       style(navigation, 'opacity', String(pose.navigation));
       syncNavigationLayer();
-      style(navigation, 'transform', `translateY(${(1 - pose.navigation) * -18}px) scale(${.97 + .03 * pose.navigation})`);
+      style(navigation, 'transform', `translateY(${(1 - pose.navigation) * -18 * scale}px) scale(${.97 + .03 * pose.navigation})`);
       inert(navigation, pose.navigation < .95);
       const hiddenNavigation = String(pose.navigation < .5);
       if (navigation.getAttribute('aria-hidden') !== hiddenNavigation) navigation.setAttribute('aria-hidden', hiddenNavigation);
@@ -144,7 +145,7 @@ function DesktopHero() {
       const hiddenEnding = String(headlineProgress < .5);
       if (ending.getAttribute('aria-hidden') !== hiddenEnding) ending.setAttribute('aria-hidden', hiddenEnding);
       if (visible) {
-        const effect = screenPose(pose.fold, width - 32, openingHeight - 32);
+        const effect = screenPose(pose.fold, width - 32 * scale, openingHeight - 32 * scale);
         style(desktop, 'transform', pose.fold ? `matrix3d(${effect.matrix.join(',')})` : 'none');
         // Rasterize blur on a separate flat layer. Safari can shrink a filtered
         // projective matrix3d layer to a corner on Retina displays.
@@ -155,10 +156,10 @@ function DesktopHero() {
         style(contact, 'background', `linear-gradient(#000, transparent ${effect.contactWidth}%)`);
         const stageTop = isStatic() ? top - window.scrollY
           : Math.min(Math.max(top - window.scrollY, 0), top + travel - window.scrollY);
-        const inner = compose(translate(0, stageTop), projection.screen, translate(16, 16), effect.matrix);
-        setHeroScreenProjection({ quad: projectQuad(inner, width - 32, openingHeight - 32), width: width - 32, height: openingHeight - 32, interactive: true });
+        const inner = compose(translate(0, stageTop), projection.screen, translate(16 * scale, 16 * scale), effect.matrix);
+        setHeroScreenProjection({ quad: projectQuad(inner, width - 32 * scale, openingHeight - 32 * scale), width: width - 32 * scale, height: openingHeight - 32 * scale, interactive: true });
       } else {
-        setHeroScreenProjection({ quad: projectQuad(projection.screen, width, openingHeight), width: width - 32, height: openingHeight - 32, interactive: false });
+        setHeroScreenProjection({ quad: projectQuad(projection.screen, width, openingHeight), width: width - 32 * scale, height: openingHeight - 32 * scale, interactive: false });
       }
       if (import.meta.env.DEV) {
         stage.dataset.progress = firstProgress.toFixed(5);
@@ -177,14 +178,16 @@ function DesktopHero() {
     const measure = () => {
       scrollInput?.reset();
       width = stage.clientWidth; height = stage.clientHeight;
-      openingHeight = compact.matches ? height : Math.max(720, height);
+      scale = designScale(width);
+      travel = 2000 * scale;
+      openingHeight = compact.matches ? height : Math.max(720 * scale, height);
       const endingBounds = sceneProjection(scenePose(1, width, height, openingHeight), width, height, openingHeight).bounds;
       // Use layout geometry so the copy's visual offset cannot move the Mac.
       const copyBottom = parseFloat(getComputedStyle(ending).top) + ending.getBoundingClientRect().height;
-      const modelTop = copyBottom + 128;
+      const modelTop = copyBottom + 128 * scale;
       endingScale = Math.min(
-        Math.min(1280, width - 128) / (endingBounds.right - endingBounds.left),
-        Math.max(96, height - modelTop - 48) / (endingBounds.bottom - endingBounds.top),
+        Math.min(1280 * scale, width - 128 * scale) / (endingBounds.right - endingBounds.left),
+        Math.max(96 * scale, height - modelTop - 48 * scale) / (endingBounds.bottom - endingBounds.top),
       );
       endingTranslationY = modelTop - endingBounds.top * endingScale;
       const headlineTop = heading.getBoundingClientRect().top - stage.getBoundingClientRect().top;
@@ -254,7 +257,7 @@ function DesktopHero() {
       syncScroll();
       cancelHeroFrame(frame); frame = 0;
       draw();
-    });
+    }, () => scale);
     // Warm static artwork during idle time, without a render loop or visible
     // canvas on the opening hero. Reduced Motion never initializes WebGL.
     const idle = 'requestIdleCallback' in window ? window.requestIdleCallback(() => void initialize(), { timeout: 1500 }) : 0;

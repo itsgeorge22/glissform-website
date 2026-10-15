@@ -12,8 +12,8 @@ export type Point = { x: number; y: number };
 export type Curve = [Point, Point, Point, Point];
 // Mirror the exit's two control handles into a bottom-left approach. Put the
 // silhouette at the clip edge so the shared easing has no hidden lead-in.
-export const featureCursorArrival = (width: number, height: number, unit: number, cursorUnit: number, target: Point): Curve => [
-  { x: -23.55 * cursorUnit, y: height - 38 * cursorUnit - 24 },
+export const featureCursorArrival = (width: number, height: number, unit: number, cursorUnit: number, target: Point, scale = 1): Curve => [
+  { x: -23.55 * cursorUnit, y: height - 38 * cursorUnit - 24 * scale },
   { x: width * .09, y: height - 20 * unit },
   { x: target.x - 90 * unit, y: target.y + 16 * unit },
   target,

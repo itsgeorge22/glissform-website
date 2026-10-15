@@ -1,3 +1,4 @@
+import { elementDesignScale } from './designScale.ts';
 import { ease } from './choreography.ts';
 import { springDisplacement } from './objectMotion.ts';
 import { clickPressure, featureCursorArrival, featureCursorTravel, featureDemoEntrance, featureDemoPause, phase, pointOn, relativeOffset, runFeatureDemo, type Curve } from './featureDemoMotion.ts';
@@ -94,7 +95,7 @@ export function animateStayUpdated(root: HTMLElement) {
     cardHeight = card.offsetHeight / unit;
     confettiFadeRoom = height / unit - cardY - cardHeight - 18;
     const target = { x: x + button.offsetWidth * .64, y: y + button.offsetHeight * .54 };
-    arrival = featureCursorArrival(width, height, unit, parseFloat(getComputedStyle(cursor).fontSize) || unit, target);
+    arrival = featureCursorArrival(width, height, unit, parseFloat(getComputedStyle(cursor).fontSize) || unit, target, elementDesignScale(root));
     departure = [target, { x: target.x + 90 * unit, y: target.y - 16 * unit },
       { x: width * .91, y: 20 * unit }, { x: width + 36 * unit, y: -36 * unit }];
   };

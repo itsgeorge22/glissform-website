@@ -1,25 +1,26 @@
+@use '../design-scale' as design;
 @use './feature-copy' as copy;
 
 .seamless-close-features {
   background: #fff;
   font-family: 'Hero Manrope', sans-serif;
-  padding: var(--privacy-section-gap) max(32px, calc((100% - 1416px) / 2)) 0;
+  padding: var(--privacy-section-gap) max(design.px(32), calc((100% - design.px(1416)) / 2)) 0;
 
   &__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: 24px;
-    row-gap: 64px;
+    column-gap: design.px(24);
+    row-gap: design.px(64);
   }
 
   &__item { min-width: 0; }
 
   &__placeholder {
-    --demo-stroke-width: clamp(6.4px, 1.92cqw, 8px);
+    --demo-stroke-width: clamp(#{design.px(6.4)}, 1.92cqw, #{design.px(8)});
     position: relative;
     width: 100%;
     aspect-ratio: 4 / 3;
-    border-radius: 24px;
+    border-radius: design.px(24);
     background: color-mix(in srgb, var(--placeholder-colour) 16%, transparent);
 
     &--blue { --placeholder-colour: #428fe8; }
@@ -35,7 +36,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: copy.$detail-gap;
-    margin-top: 24px;
+    margin-top: design.px(24);
 
     h3 {
       @include copy.detail-title;

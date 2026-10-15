@@ -1,6 +1,7 @@
 import { compose, facesCamera, identity, multiply, projectQuad, translate } from '../hero-test-animation/sceneProjection.ts';
 import { hardware, scenePose } from './choreography.ts';
 import { displayDimensions as display, displayMapping, macBookDimensions as body } from './displayGeometry.ts';
+import { designScale } from './designScale.ts';
 
 const scale = (x: number, y: number, z = 1) => { const m = identity(); m[0] = x; m[5] = y; m[10] = z; return m; };
 const rotate = (axis: 'x' | 'y' | 'z', degrees: number) => {
@@ -70,12 +71,13 @@ export function cameraLayout(width: number, height: number, perspective: number,
 
 /** Project the original live hero onto the original shell, around the Pro hinge. */
 export function sceneProjection(pose: ReturnType<typeof scenePose>, width: number, height: number, openingHeight: number) {
-  const perspective = Math.max(2400, width * 2.5);
+  const unit = designScale(width);
+  const perspective = Math.max(2400 * unit, width * 2.5);
   const mapping = displayMapping(width, openingHeight);
   const startX = 1 / (mapping.scaleX - body.lidRecess / perspective);
   const distance = 1 + body.lidRecess * startX / perspective;
   const startY = distance / mapping.scaleY;
-  const startHinge = height / 2 + (16 - height / 2) * distance
+  const startHinge = height / 2 + (16 * unit - height / 2) * distance
     - startY * (display.top + body.hingeDrop - body.depth);
   const remaining = 1 - pose.reveal;
   const model = compose(translate(width / 2 + pose.x, pose.hingeY + (startHinge - openingHeight) * remaining),

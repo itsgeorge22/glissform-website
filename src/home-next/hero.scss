@@ -1,4 +1,11 @@
+@use '../design-scale' as design;
 .home-next-page { background: #fff; color-scheme: light; overflow-x: clip; }
+
+// All desktop design lengths share the owner's approved 1920px composition.
+// Keep the narrow-window placeholder at its original readable size.
+@media (min-width: 1056px) {
+  .home-next { --design-unit: calc(100vw / var(--design-reference-width)); }
+}
 
 .home-next-page, .home-next {
   scrollbar-width: none;
@@ -8,8 +15,8 @@
 }
 
 .home-next {
-  --section-gap: 200px;
-  --privacy-section-gap: 160px;
+  --section-gap: #{design.px(200)};
+  --privacy-section-gap: #{design.px(160)};
   --feature-panel-surface: #f1f3f6;
   background: #fff;
   color: #171c24;
@@ -25,9 +32,9 @@
     top: 0; left: 0; height: 100%;
     width: var(--active-link-width, 0px);
     transform: translateX(var(--active-link-x, 0px));
-    border-radius: 14px;
+    border-radius: design.px(14);
     background: rgb(255 255 255 / 12%);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 8%);
+    box-shadow: inset 0 0 0 design.px(1) rgb(255 255 255 / 8%);
     pointer-events: none;
     opacity: 0;
     &[data-positioned='true'] {
@@ -41,7 +48,7 @@
   // sees the same page height before and after hydration.
   .hero-animation {
     background: #fff;
-    height: calc(100svh + var(--mac-reveal-distance, 2000px));
+    height: calc(100svh + var(--mac-reveal-distance, design.px(2000)));
     min-height: 0;
   }
   .hero-animation__stage { overflow: visible; z-index: 2; pointer-events: none; }
@@ -65,52 +72,52 @@
   .hero-animation__ending {
     position: absolute;
     z-index: 1;
-    top: calc(clamp(112px, 15svh, 190px) + 32px);
-    translate: 0 16px;
-    min-height: 224px; // Preserve the Mac framing when copy gaps change.
-    left: 32px;
-    right: 32px;
+    top: calc(clamp(design.px(112), 15svh, design.px(190)) + design.px(32));
+    translate: 0 design.px(16);
+    min-height: design.px(224); // Preserve the Mac framing when copy gaps change.
+    left: design.px(32);
+    right: design.px(32);
     text-align: center;
     pointer-events: none;
 
-    h2 { margin: 0 auto; max-width: 1300px; color: #090b0e;  }
+    h2 { margin: 0 auto; max-width: design.px(1300); color: #090b0e;  }
   }
   .hero-animation__ending .text-reveal__content { opacity: 0; }
   .hero-animation__feature-label {
     // Stay outside the measured copy footprint to preserve the Mac's framing.
     position: absolute;
-    top: -44px;
+    top: design.px(-44);
     left: 0;
     right: 0;
     margin: 0;
     color: #0068df;
-    font: 600 15px/24px 'Hero Manrope', sans-serif;
+    font: 600 design.px(15)/design.px(24) 'Hero Manrope', sans-serif;
     letter-spacing: -.01em;
 
     .text-reveal__ink {
       position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      height: 24px;
+      gap: design.px(8);
+      height: design.px(24);
       vertical-align: top;
 
       &::before {
         content: '';
-        width: 32px;
-        height: 32px;
+        width: design.px(32);
+        height: design.px(32);
         flex: none;
-        border-radius: 9px;
+        border-radius: design.px(9);
         background: rgb(0 115 255 / 12%);
       }
       &::after {
         content: '';
         position: absolute;
-        left: 6px;
+        left: design.px(6);
         top: 50%;
         translate: 0 -50%;
-        width: 20px;
-        height: 20px;
+        width: design.px(20);
+        height: design.px(20);
         background: #0073ff;
         mask: url('/assets/seamless-close.svg') center / contain no-repeat;
       }
@@ -126,30 +133,30 @@
     }
   }
   .hero-animation__description {
-    margin: 20px auto 0; color: #555b63;
+    margin: design.px(20) auto 0; color: #555b63;
   }
   .hero-animation__navigation {
-    position: fixed; z-index: 1; top: 8px; left: 0; right: 0; height: 64px;
+    position: fixed; z-index: 1; top: design.px(8); left: 0; right: 0; height: design.px(64);
     opacity: 0; color-scheme: dark; pointer-events: none; transform-origin: 50% 0;
     font-family: 'Hero Manrope', sans-serif;
     .hero-test__nav { bottom: 0; pointer-events: auto; }
     .hero-test__nav-dock { box-shadow: none; }
     .hero-test__links a { color: #fff; }
     .download-link { font-family: 'Hero Manrope', sans-serif; }
-    .download-link__label { letter-spacing: -.3px; }
+    .download-link__label { letter-spacing: design.px(-.3); }
   }
-  .hero-animation--static { height: 100svh; min-height: 720px; }
+  .hero-animation--static { height: 100svh; min-height: design.px(720); }
   .hero-animation--static .hero-animation__ending,
   .hero-animation--static .hero-animation__ambience,
   .hero-animation--static ~ .hero-animation__navigation { display: none; }
 
   // The screen geometry is stable before the React island hydrates.
-  .hero-animation__surface { width: 100%; height: max(720px, 100svh); border-radius: 0; }
+  .hero-animation__surface { width: 100%; height: max(design.px(720), 100svh); border-radius: 0; }
   // Only the display is composited above WebGL. The model owns the surrounding
   // bezel from the first moving frame, so its depth ordering never switches.
   .hero-animation__surface--moving { background: transparent; }
   .hero-test__screen, .hero-test__frame {
-    border-radius: 17px;
+    border-radius: design.px(17);
     transform-origin: 0 0;
   }
   .hero-test__notch { transform-origin: 50% 0; }
@@ -157,18 +164,18 @@
 
 @media (prefers-reduced-motion: reduce) {
   .home-next .hero-test__active-link[data-positioned='true'] { transition: none; }
-  .home-next .hero-animation { height: 100svh; min-height: 720px; }
+  .home-next .hero-animation { height: 100svh; min-height: design.px(720); }
   .home-next :is(.hero-animation__ending, .hero-animation__ambience, .hero-animation__navigation) { display: none; }
 }
 
-// Main section copy shares the same fixed desktop typography.
+// Main section copy shares the same proportional desktop typography.
 .home-next {
   .hero-test__copy h1, .hero-animation__ending h2, .feature-section-intro h2 {
-    font: 600 64px/72px 'Hero Manrope', sans-serif;
+    font: 600 design.px(64)/design.px(72) 'Hero Manrope', sans-serif;
     letter-spacing: -.04em;
   }
   .hero-test__copy p, .hero-animation__description, .feature-section-intro p {
-    font: 400 18px/28px 'Hero Manrope', sans-serif;
+    font: 400 design.px(18)/design.px(28) 'Hero Manrope', sans-serif;
     letter-spacing: normal;
   }
 }

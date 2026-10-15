@@ -4,6 +4,7 @@ import { createShootingStar } from '../hero-test/shootingStars';
 import { playStarRipple, starRipple } from '../hero-test/starRipple';
 import { unprojectPlanePoint } from './projectedPointer';
 import { cancelHeroFrame, getHeroScreenProjection, registerHeroInteraction, requestSceneFrame, type HeroScreenProjection } from './frameSync';
+import { elementDesignScale } from '../home-next/designScale';
 
 const starDepths = [2, 5, 8];
 type CachedStar = {
@@ -58,7 +59,7 @@ export default function AnimationHeroStarField({ surfaceRef }: { surfaceRef: Ref
       }
       layoutRef.current = { width, height, quiet: quietRegions(root, protectedElements), fallback };
       controllerRef.current?.resize();
-      setStars(createHeroStars(width, height, quietRegions(root, offers)));
+      setStars(createHeroStars(width, height, quietRegions(root, offers), elementDesignScale(surface)));
     };
     const observer = new ResizeObserver(() => { if (!frame) frame = requestSceneFrame(measure); });
     observer.observe(field);
@@ -112,14 +113,15 @@ export default function AnimationHeroStarField({ surfaceRef }: { surfaceRef: Ref
       const point = pointerPoint(clientX, clientY, projection);
       const { width, height } = layoutRef.current;
       if (!point || point.x < -16 || point.y < -16 || point.x > width + 16 || point.y > height + 16) { resetPointer(); return; }
-      const reach = Math.max(220, Math.min(300, width * .16));
+      const unit = elementDesignScale(surface);
+      const reach = Math.max(220 * unit, Math.min(300 * unit, width * .16));
       const viewX = Math.max(-1, Math.min(1, point.x / width * 2 - 1));
       const viewY = Math.max(-1, Math.min(1, point.y / height * 2 - 1));
       for (const star of cachedStarsRef.current) {
         const dx = point.x - star.x, dy = point.y - star.y;
         const influence = Math.max(0, 1 - Math.hypot(dx, dy) / reach);
         const scale = 1 + 1.1 * influence * influence * (3 - 2 * influence);
-        const transform = `translate(${dx * influence * .18 - viewX * star.depth}px, ${dy * influence * .18 - viewY * star.depth}px) scale(${scale})`;
+        const transform = `translate(${dx * influence * .18 - viewX * star.depth * unit}px, ${dy * influence * .18 - viewY * star.depth * unit}px) scale(${scale})`;
         const filter = `brightness(${1 + influence * 1.8})`;
         if (star.transform !== transform) { star.element.style.transform = transform; star.transform = transform; }
         if (star.filter !== filter) { star.element.style.filter = filter; star.filter = filter; }
@@ -138,10 +140,11 @@ export default function AnimationHeroStarField({ surfaceRef }: { surfaceRef: Ref
         (event.target !== screen && event.target !== desktop && event.target !== content)) return;
       const point = pointerPoint(event.clientX, event.clientY);
       const { width, height } = layoutRef.current;
-      if (!point || point.y < 48 || point.x < 0 || point.x > width || point.y > height) return;
+      const scale = elementDesignScale(surface);
+      if (!point || point.y < 48 * scale || point.x < 0 || point.x > width || point.y > height) return;
       for (const star of cachedStarsRef.current) {
         const { wave } = star;
-        const ripple = starRipple(star.x, star.y, point.x, point.y);
+        const ripple = starRipple(star.x, star.y, point.x, point.y, scale);
         if (!ripple || star.opacity === 0) continue;
         playStarRipple(wave, ripple, ripples);
       }
@@ -154,7 +157,7 @@ export default function AnimationHeroStarField({ surfaceRef }: { surfaceRef: Ref
       timer = 0;
       if (!playing) return;
       const { width, height, quiet } = layoutRef.current;
-      const path = createShootingStar(width, height, quiet);
+      const path = createShootingStar(width, height, quiet, Math.random, elementDesignScale(surface));
       firstFlight = false;
       if (!path) { schedule(); return; }
       for (const [property, value] of Object.entries(path)) {

@@ -1,3 +1,4 @@
+@use '../design-scale' as design;
 .manual-angle-visual {
   position: absolute;
   inset: 0;
@@ -8,7 +9,7 @@
   --angle-position: 63.636364%;
   --angle-pressure: 0;
 
-  &__control, &__cursor { font-size: clamp(.8px, .24cqw, 1px); }
+  &__control, &__cursor { font-size: clamp(design.px(.8), .24cqw, design.px(1)); }
 
   &__control {
     position: absolute;

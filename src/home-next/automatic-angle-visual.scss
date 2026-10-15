@@ -1,3 +1,4 @@
+@use '../design-scale' as design;
 .automatic-angle-visual {
   position: absolute;
   inset: 0;
@@ -30,7 +31,7 @@
 
   &__reading {
     position: absolute;
-    font-size: clamp(.8px, .24cqw, 1px);
+    font-size: clamp(design.px(.8), .24cqw, design.px(1));
     transform: translate(-50%, -50%);
   }
 

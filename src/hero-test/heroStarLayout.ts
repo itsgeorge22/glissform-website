@@ -7,9 +7,12 @@ const smoothstep = (value: number) => {
   return t * t * (3 - 2 * t);
 };
 
-export function createHeroStars(width: number, height: number, quietRegions: QuietRegion[]): HeroStar[] {
+export function createHeroStars(width: number, height: number, quietRegions: QuietRegion[], scale = 1): HeroStar[] {
+  width /= scale; height /= scale;
+  quietRegions = quietRegions.map(rect => ({ left: rect.left / scale, top: rect.top / scale,
+    right: rect.right / scale, bottom: rect.bottom / scale }));
   if (width <= 0 || height <= 120) return [];
-  // Less dense than the card. More screen area adds stars, never oversized stars.
+  // Keep the reference field's density and positions as its composition scales.
   const count = Math.min(120, Math.max(36, Math.round(width * height / 18000)));
   return Array.from({ length: count }, (_, id) => {
     // A deterministic low-discrepancy field avoids both rows and random clumps.
@@ -22,8 +25,8 @@ export function createHeroStars(width: number, height: number, quietRegions: Qui
       return Math.min(fade, smoothstep((Math.hypot(dx, dy) - 32) / 100));
     }, 1);
     return {
-      id, x, y,
-      size: (id % 11 === 0 ? 2.8 : id % 4 === 0 ? 1.9 : 1.25) * 1.1,
+      id, x: x * scale, y: y * scale,
+      size: (id % 11 === 0 ? 2.8 : id % 4 === 0 ? 1.9 : 1.25) * 1.1 * scale,
       opacity: (.65 + fraction(id * .381966011) * .35) * quietFade,
       duration: (10 + (id % 7) * 1.2) / 1.25,
       delay: -id * 1.7 / 1.25,

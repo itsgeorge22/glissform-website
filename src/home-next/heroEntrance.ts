@@ -4,9 +4,11 @@ import { cancelHeroFrame, requestSceneFrame } from '../hero-test-animation/frame
 import { springDisplacement } from './objectMotion.ts';
 import { createHeroPrelude } from './heroPrelude.ts';
 import { heroPreludeTiming } from './heroScreenFormation.ts';
+import { elementDesignScale } from './designScale.ts';
 
 /** A single opening sequence; scrolling takes over with fully settled content. */
 export function playHeroEntrance(content: HTMLElement) {
+  const scale = elementDesignScale(content);
   const prelude = createHeroPrelude(content);
   const headline = content.querySelector<HTMLElement>('h1')!;
   const heading = createTextReveal(headline);
@@ -40,7 +42,7 @@ export function playHeroEntrance(content: HTMLElement) {
       // Opacity stays monotonic while position and scale gently overshoot.
       group.element.style.opacity = String(ease(phase / .24));
       group.element.style.transform = phase === 1 ? 'none'
-        : `perspective(800px) translate3d(0, ${remaining * group.y}px, 0) rotateX(${remaining * group.tilt}deg) scale(${1 + (group.scale - 1) * remaining})`;
+        : `perspective(${800 * scale}px) translate3d(0, ${remaining * group.y * scale}px, 0) rotateX(${remaining * group.tilt}deg) scale(${1 + (group.scale - 1) * remaining})`;
     }
     if (time >= contentDuration && !contentSettled) {
       contentSettled = true;

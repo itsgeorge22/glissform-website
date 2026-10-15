@@ -1,10 +1,12 @@
-export function starRipple(x: number, y: number, originX: number, originY: number) {
-  const dx = x - originX;
-  const dy = y - originY;
+import { elementDesignScale } from '../home-next/designScale';
+
+export function starRipple(x: number, y: number, originX: number, originY: number, scale = 1) {
+  const dx = (x - originX) / scale;
+  const dy = (y - originY) / scale;
   const distance = Math.hypot(dx, dy);
   if (distance >= 660) return null;
   const strength = (1 - distance / 660) ** .7;
-  const displacement = 24 * strength;
+  const displacement = 24 * strength * scale;
   // Hover already enlarges and lights nearby stars; let the click only move them.
   const accentProgress = Math.max(0, Math.min(1, (distance - 120) / 100));
   const accentWeight = accentProgress ** 2 * (3 - 2 * accentProgress);
@@ -46,10 +48,11 @@ export function connectStarRipples(surface: HTMLElement, field: HTMLElement) {
     const bounds = field.getBoundingClientRect();
     const x = event.clientX - bounds.left;
     const y = event.clientY - bounds.top;
-    if (y < 48) return;
+    const scale = elementDesignScale(surface);
+    if (y < 48 * scale) return;
     field.querySelectorAll<HTMLElement>('.ambient-star').forEach(star => {
       const wave = star.querySelector<HTMLElement>('.ambient-star__wave');
-      const ripple = starRipple(star.offsetLeft, star.offsetTop, x, y);
+      const ripple = starRipple(star.offsetLeft, star.offsetTop, x, y, scale);
       if (!wave || !ripple || Number(star.style.opacity) === 0) return;
       playStarRipple(wave, ripple, animations);
     });

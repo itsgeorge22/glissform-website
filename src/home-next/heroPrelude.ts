@@ -1,4 +1,5 @@
 import { drawScreenFormation, heroPreludeTiming } from './heroScreenFormation.ts';
+import { elementDesignScale } from './designScale.ts';
 
 /** Driven by the hero's existing entrance clock; owns no additional frame loop. */
 export function createHeroPrelude(content: HTMLElement) {
@@ -9,6 +10,7 @@ export function createHeroPrelude(content: HTMLElement) {
   const glow = content.querySelector<HTMLElement>('.hero-prelude__glow')!;
   const field = content.querySelector<HTMLElement>('.hero-test__stars')!;
   const width = content.clientWidth, height = content.clientHeight;
+  const scale = elementDesignScale(content);
   let done = false;
   let stars: { element: HTMLElement; x: number; y: number }[] = [];
   const seed = () => {
@@ -45,7 +47,7 @@ export function createHeroPrelude(content: HTMLElement) {
     if (done) return;
     if (time >= heroPreludeTiming.duration) { finish(); return; }
     surface.dataset.prelude = 'running';
-    drawScreenFormation(time, { surface, screen, frame, notch, glow, field, width, height, stars });
+    drawScreenFormation(time, { surface, screen, frame, notch, glow, field, width, height, stars, scale });
   };
   return { draw, finish };
 }

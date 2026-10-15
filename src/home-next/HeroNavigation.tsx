@@ -8,7 +8,8 @@ export default function AnimationHeroNavigation({ downloadHref, flat = false }: 
     <div className="hero-test__nav-dock" style={flat ? {
       // Preserve the standard property alongside the Safari form; the CSS
       // optimizer currently keeps only the prefixed form in the shared sheet.
-      backdropFilter: 'blur(24px) saturate(135%)', WebkitBackdropFilter: 'blur(24px) saturate(135%)',
+      backdropFilter: 'blur(calc(24 * var(--design-unit, 1px))) saturate(135%)',
+      WebkitBackdropFilter: 'blur(calc(24 * var(--design-unit, 1px))) saturate(135%)',
     } : undefined}>
       <a className="hero-test__home" href={import.meta.env.BASE_URL} aria-label="Glissform home">
         <img src={logo} width="32" height="32" alt="" />

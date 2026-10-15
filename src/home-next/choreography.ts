@@ -1,5 +1,6 @@
 import { ease, hardware } from '../hero-test-animation/choreography.ts';
 import { textLineDelay } from './textRevealMotion.ts';
+import { designScale } from './designScale.ts';
 
 export { ease, hardware, screenPose } from '../hero-test-animation/choreography.ts';
 
@@ -37,7 +38,9 @@ export function scenePose(progress: number, width: number, height: number, openi
   // The track now ends at the old 94% completion point, without its idle tail.
   const p = Math.max(0, Math.min(1, Number.isFinite(progress) ? progress : 0)) * .94;
   const reveal = ease(p / .94);
-  const size = Math.min(1.24, width * .62 / hardware.width, height * (height < 640 ? .72 : .80) / 600);
+  const scale = designScale(width);
+  const short = height / scale < 640;
+  const size = Math.min(1.24 * scale, width * .62 / hardware.width, height * (short ? .72 : .80) / 600);
   const close = ease((p - .08) / .86);
   return {
     scaleX: blend(width / hardware.width, size, reveal),
@@ -52,7 +55,7 @@ export function scenePose(progress: number, width: number, height: number, openi
     reveal,
     cornerRoundness: 1 - ease(p / .20),
     centerX: width / 2,
-    centerY: height * (height < 640 ? .73 : .70),
+    centerY: height * (short ? .73 : .70),
     navigation: ease((p - .32) / .20),
     screenNavigation: 1,
   };

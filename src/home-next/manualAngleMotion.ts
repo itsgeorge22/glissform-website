@@ -1,3 +1,4 @@
+import { elementDesignScale } from './designScale.ts';
 import { ease } from './choreography.ts';
 import { createAngleCounter } from './angleCounterMotion.ts';
 import { featureCursorArrival, featureCursorTravel, featureDemoEntrance, phase, pointOn, relativeOffset, type Curve } from './featureDemoMotion.ts';
@@ -53,7 +54,7 @@ export function animateManualAngle(root: HTMLElement) {
     const unit = parseFloat(getComputedStyle(control).fontSize) || 1;
     const from = { x: startX + trackWidth * (90 - 20) / 110, y: trackY };
     const to = from;
-    arrival = featureCursorArrival(root.clientWidth, root.clientHeight, unit, unit, from);
+    arrival = featureCursorArrival(root.clientWidth, root.clientHeight, unit, unit, from, elementDesignScale(root));
     departure = [to,
       { x: to.x + 60 * unit, y: to.y - 12 * unit },
       { x: root.clientWidth * .95, y: 30 * unit },
@@ -69,7 +70,7 @@ export function animateManualAngle(root: HTMLElement) {
     root.dataset.angle = String(Math.round(pose.angle));
     root.dataset.holding = String(pose.holding);
     tooltip.style.opacity = String(pose.tooltip);
-    tooltip.style.transform = `translate(-50%, ${(1 - pose.tooltip) * 5}px) scale(${.96 + .04 * pose.tooltip})`;
+    tooltip.style.transform = `translate(-50%, ${(1 - pose.tooltip) * 5}em) scale(${.96 + .04 * pose.tooltip})`;
     drawCounter(pose.angle);
     const point = pose.time < manualAngleTiming.drag
       ? pointOn(arrival, phase(pose.time, manualAngleTiming.enter, manualAngleTiming.approach))

@@ -1,6 +1,7 @@
+@use '../design-scale' as design;
 .home-ending {
-  --faq-section-gap: 200px;
-  --faq-corner-radius: 40px;
+  --faq-section-gap: #{design.px(200)};
+  --faq-corner-radius: #{design.px(40)};
   --cover-distance: 0px;
   isolation: isolate;
 

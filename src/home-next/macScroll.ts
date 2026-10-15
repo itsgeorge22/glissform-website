@@ -3,17 +3,17 @@ import { cancelHeroFrame, requestSceneFrame } from '../hero-test-animation/frame
 export const macScrollTiming = { maxSpeed: 1600, maxPendingMs: 80, maxFrameMs: 64 } as const;
 
 /** Keep small deltas exact; discard excess pressure instead of banking a long flick. */
-export function createMacScrollLimiter() {
+export function createMacScrollLimiter(scale: () => number = () => 1) {
   let pending = 0;
   return {
     add(delta: number) {
       if (!Number.isFinite(delta) || !delta) return;
       if (Math.sign(delta) !== Math.sign(pending)) pending = 0;
-      const limit = macScrollTiming.maxSpeed * macScrollTiming.maxPendingMs / 1000;
+      const limit = macScrollTiming.maxSpeed * scale() * macScrollTiming.maxPendingMs / 1000;
       pending = Math.sign(delta) * Math.min(limit, Math.abs(pending) + Math.abs(delta));
     },
     step(elapsed: number) {
-      const allowance = macScrollTiming.maxSpeed * Math.max(0, Math.min(macScrollTiming.maxFrameMs, elapsed)) / 1000;
+      const allowance = macScrollTiming.maxSpeed * scale() * Math.max(0, Math.min(macScrollTiming.maxFrameMs, elapsed)) / 1000;
       const delta = Math.sign(pending) * Math.min(Math.abs(pending), allowance);
       pending -= delta;
       return delta;
@@ -24,8 +24,8 @@ export function createMacScrollLimiter() {
 }
 
 /** Own wheel movement only inside the Mac scene; the page and its artwork share one position. */
-export function controlMacScroll(bounds: () => { start: number; end: number; enabled: boolean }, onMove: () => void) {
-  const limiter = createMacScrollLimiter();
+export function controlMacScroll(bounds: () => { start: number; end: number; enabled: boolean }, onMove: () => void, scale: () => number = () => 1) {
+  const limiter = createMacScrollLimiter(scale);
   let frame = 0, previousTime = 0, position = window.scrollY, writtenY = position;
   const reset = () => {
     cancelHeroFrame(frame); frame = 0;

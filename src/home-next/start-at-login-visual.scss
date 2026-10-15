@@ -1,3 +1,4 @@
+@use '../design-scale' as design;
 .start-at-login-visual {
   position: absolute;
   inset: 0;
@@ -58,7 +59,7 @@
   &__credentials {
     position: absolute;
     left: calc(50% - 87.71em);
-    bottom: 60px;
+    bottom: design.px(60);
     width: 177em;
     font-size: var(--login-credentials-unit, 1em);
     opacity: var(--login-opacity, 0);
@@ -110,8 +111,8 @@
   }
   &__hint {
     position: absolute;
-    top: calc(100% + 8px);
-    font-size: min(13em, 16px);
+    top: calc(100% + design.px(8));
+    font-size: min(13em, design.px(16));
     line-height: 1.23077;
     white-space: nowrap;
   }

@@ -1,6 +1,7 @@
+@use '../design-scale' as design;
 .text-reveal__line {
   display: block;
-  perspective: 1000px;
+  perspective: design.px(1000);
   transform-style: preserve-3d;
 }
 

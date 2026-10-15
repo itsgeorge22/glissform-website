@@ -4,6 +4,7 @@ import FaqSection from '../home-next/FaqSection';
 import PrivacySection from '../home-next/PrivacySection';
 import SeamlessCloseFeatures from '../home-next/SeamlessCloseFeatures';
 import SettingsFeatures from '../home-next/SettingsFeatures';
+import { designReferenceWidth } from '../home-next/designScale';
 import '../home-next/home-ending.scss';
 import logo from '../hero-test/assets/glissform.webp?url';
 import favicon from '../generated/assets/favicon.png?url';
@@ -40,10 +41,10 @@ import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, so
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(softwareApplication)} />
   </head>
-  <body class="home-next">
+  <body class="home-next" style={`--design-reference-width: ${designReferenceWidth}`}>
     <!-- Keep static fallback rules after Astro's generated stylesheets. -->
     <noscript><style is:global>
-      .home-next .hero-animation { height: 100svh; min-height: 720px; }
+      .home-next .hero-animation { height: 100svh; min-height: calc(720 * var(--design-unit, 1px)); }
       .home-next :is(.hero-animation__ending, .hero-animation__ambience, .hero-animation__navigation) { display: none; }
       .home-next .hero-animation__screen-content[data-entrance='pending'] :is(.hero-test__menu, .hero-test__brand, .hero-animation__action, .hero-test__nav-dock, .text-reveal__content) { opacity: 1; }
       .home-next .hero-animation__surface[data-prelude='pending'] { background: #000; }

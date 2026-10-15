@@ -1,40 +1,41 @@
-$icon-size: 40px;
-$icon-gap: 24px;
-$text-gap: 16px;
-$detail-gap: 8px;
+@use '../design-scale' as design;
+$icon-size: design.px(40);
+$icon-gap: design.px(24);
+$text-gap: design.px(16);
+$detail-gap: design.px(8);
 
 @mixin title {
   margin: 0;
   color: #090b0e;
-  font-size: 52px;
+  font-size: design.px(52);
   font-weight: 600;
-  line-height: 60px;
-  letter-spacing: -2px;
+  line-height: design.px(60);
+  letter-spacing: design.px(-2);
 }
 
 @mixin body {
   margin: 0;
   color: #555b63;
-  font-size: 18px;
+  font-size: design.px(18);
   font-weight: 400;
-  line-height: 28px;
+  line-height: design.px(28);
   letter-spacing: normal;
 }
 
 @mixin detail-title {
   margin: 0;
   color: #090b0e;
-  font-size: 24px;
+  font-size: design.px(24);
   font-weight: 600;
-  line-height: 32px;
-  letter-spacing: -.5px;
+  line-height: design.px(32);
+  letter-spacing: design.px(-.5);
 }
 
 @mixin detail-body {
   margin: 0;
   color: #555b63;
-  font-size: 16px;
+  font-size: design.px(16);
   font-weight: 400;
-  line-height: 24px;
+  line-height: design.px(24);
   letter-spacing: normal;
 }

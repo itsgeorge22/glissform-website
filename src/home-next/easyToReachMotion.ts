@@ -1,3 +1,4 @@
+import { elementDesignScale } from './designScale.ts';
 import { ease } from './choreography.ts';
 import { springDisplacement } from './objectMotion.ts';
 import { clickPressure, featureCursorArrival, featureCursorTravel, featureDemoEntrance, featureDemoPause, phase, pointOn, relativeOffset, runFeatureDemo, type Curve, type Point } from './featureDemoMotion.ts';
@@ -46,7 +47,7 @@ export function animateEasyToReach(root: HTMLElement) {
     const unit = parseFloat(getComputedStyle(root).fontSize) || 1;
     const width = root.clientWidth, height = root.clientHeight;
     const target = { x: x + icon.offsetWidth / 2, y: y + icon.offsetHeight / 2 };
-    arrival = featureCursorArrival(width, height, unit, parseFloat(getComputedStyle(cursor).fontSize) || unit, target);
+    arrival = featureCursorArrival(width, height, unit, parseFloat(getComputedStyle(cursor).fontSize) || unit, target, elementDesignScale(root));
     // Bow right into the panel, then curve back left toward the icon.
     arrival[1] = { x: width * .7, y: height * .82 };
     arrival[2] = { x: target.x + 150 * unit, y: target.y + 130 * unit };

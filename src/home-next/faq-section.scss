@@ -1,23 +1,24 @@
+@use '../design-scale' as design;
 @use './feature-copy' as copy;
 
 .faq-section {
   position: relative;
   z-index: 1;
   background: var(--feature-panel-surface);
-  border-radius: var(--faq-corner-radius, 40px) var(--faq-corner-radius, 40px) 0 0;
+  border-radius: var(--faq-corner-radius, design.px(40)) var(--faq-corner-radius, design.px(40)) 0 0;
   font-family: 'Hero Manrope', sans-serif;
   // Overlap the hold space; keep the original gap and total page length.
-  margin-top: calc(var(--faq-section-gap, 200px) - var(--cover-distance, 0px));
-  padding: 200px max(32px, calc((100% - 1416px) / 2)) 32px;
+  margin-top: calc(var(--faq-section-gap, design.px(200)) - var(--cover-distance, 0px));
+  padding: design.px(200) max(design.px(32), calc((100% - design.px(1416)) / 2)) design.px(32);
 
   &__layout {
     display: grid;
-    max-width: 1176px;
+    max-width: design.px(1176);
     margin-inline: auto;
     grid-template-columns: repeat(10, minmax(0, 1fr));
-    column-gap: 24px;
+    column-gap: design.px(24);
     align-items: start;
-    scroll-margin-top: 112px;
+    scroll-margin-top: design.px(112);
   }
 
   &__intro {
@@ -37,14 +38,14 @@
   &__item {
     box-sizing: border-box;
 
-    & + & { border-top: 1px solid #e4e8ed; }
+    & + & { border-top: design.px(1) solid #e4e8ed; }
 
     summary {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
-      padding-block: 24px;
+      gap: design.px(24);
+      padding-block: design.px(24);
       color: #090b0e;
       list-style: none;
       cursor: pointer;
@@ -53,9 +54,9 @@
       &::marker { content: ''; }
 
       &:focus-visible {
-        outline: 3px solid #1459d5;
-        outline-offset: 4px;
-        border-radius: 4px;
+        outline: design.px(3) solid #1459d5;
+        outline-offset: design.px(4);
+        border-radius: design.px(4);
       }
 
       h3 {
@@ -80,23 +81,25 @@
   &__toggle {
     display: block;
     flex: none;
+    width: design.px(24);
+    height: design.px(24);
   }
 
   &__toggle-vertical {
-    transform-origin: 12px 12px;
+    transform-origin: 12px 12px; // Coordinates inside the unchanged SVG viewBox.
     transition: opacity 240ms ease-out, transform 360ms cubic-bezier(.22, 1, .36, 1);
 
     @media (prefers-reduced-motion: reduce) { transition: none; }
   }
 
   &__answer {
-    padding: 0 48px 24px 0;
+    padding: 0 design.px(48) design.px(24) 0;
 
     p { @include copy.detail-body; text-wrap: pretty; }
     a {
       color: #007aff;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 3px;
+      text-decoration-thickness: design.px(1);
+      text-underline-offset: design.px(3);
     }
   }
 }

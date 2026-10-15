@@ -1,3 +1,4 @@
+@use '../design-scale' as design;
 @each $weight in 400, 500, 600, 700 {
   @font-face {
     font-family: 'Hero Manrope';
@@ -29,17 +30,17 @@
 
 .hero-test, .hero-download {
   .download-link { font-family: 'Hero Manrope', sans-serif; font-weight: 700; }
-  .download-link:not(.download-link--secondary) { width: auto; padding-inline: 24px; }
+  .download-link:not(.download-link--secondary) { width: auto; padding-inline: design.px(24); }
   .download-link:not(.download-link--secondary) > span,
-  .download-link--secondary .download-link__label { letter-spacing: -.3px; }
+  .download-link--secondary .download-link__label { letter-spacing: design.px(-.3); }
 }
 
 .hero-test {
   position: relative;
   isolation: isolate;
-  min-height: 720px;
+  min-height: design.px(720);
   height: 100svh;
-  padding: 16px;
+  padding: design.px(16);
   overflow: hidden;
   font-family: 'Hero Manrope', sans-serif;
   background: #000;
@@ -54,7 +55,7 @@
     height: 100%;
     overflow: hidden;
     background: #0b121e;
-    border-radius: 17px;
+    border-radius: design.px(17);
     cursor: default;
   }
 
@@ -64,40 +65,40 @@
     border-radius: 50%;
     opacity: .6;
     // Figma layer blur 500 exports with a Gaussian standard deviation of 250.
-    filter: blur(250px);
-    height: 320px;
-    bottom: -160px;
+    filter: blur(design.px(250));
+    height: design.px(320);
+    bottom: design.px(-160);
     // Match Figma's stretch constraints; keep side ellipses alive on narrow desktops.
-    width: max(160px, calc(100% - 1320px));
+    width: max(design.px(160), calc(100% - design.px(1320)));
     animation: hero-glow-breathe var(--glow-duration) ease-in-out infinite;
     animation-delay: var(--glow-delay, 0s);
     animation-play-state: paused;
 
     &--blue {
-      left: 160px;
-      right: 160px;
+      left: design.px(160);
+      right: design.px(160);
       width: auto;
-      height: 640px;
-      bottom: -320px;
+      height: design.px(640);
+      bottom: design.px(-320);
       background: #0088ff;
-      filter: blur(300px);
+      filter: blur(design.px(300));
       --glow-duration: 18s;
       --glow-delay: -4s;
-      --glow-drift: 48px;
+      --glow-drift: #{design.px(48)};
     }
     &--violet {
-      right: 160px;
+      right: design.px(160);
       background: rgb(106.25 0 255);
       --glow-duration: 16s;
       --glow-delay: -7s;
-      --glow-drift: -60px;
+      --glow-drift: #{design.px(-60)};
     }
     &--teal {
-      left: 160px;
+      left: design.px(160);
       background: rgb(0 178.5 255);
       --glow-duration: 20s;
       --glow-delay: -13s;
-      --glow-drift: 40px;
+      --glow-drift: #{design.px(40)};
     }
     @media (prefers-reduced-motion: reduce) { animation: none; }
   }
@@ -110,8 +111,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: var(--shooting-size, 5.2px);
-    height: var(--shooting-size, 5.2px);
+    width: var(--shooting-size, design.px(5.2));
+    height: var(--shooting-size, design.px(5.2));
     opacity: 0;
     pointer-events: none;
 
@@ -120,8 +121,8 @@
       position: absolute;
       right: 50%;
       top: 50%;
-      width: var(--shooting-tail, 48px);
-      height: 1.8px;
+      width: var(--shooting-tail, design.px(48));
+      height: design.px(1.8);
       transform: translateY(-50%);
       transform-origin: right center;
       border-radius: 50%;
@@ -133,7 +134,7 @@
       inset: 0;
       border-radius: 50%;
       background: #f1fbff;
-      box-shadow: 0 0 7px #d9f2ffb3, 0 0 14px #82bfff70;
+      box-shadow: 0 0 design.px(7) #d9f2ffb3, 0 0 design.px(14) #82bfff70;
     }
     &[data-shooting='true'] {
       opacity: 1;
@@ -148,33 +149,33 @@
     position: absolute;
     z-index: 1;
     inset: 0 0 auto;
-    height: 48px;
-    padding: 12px;
+    height: design.px(48);
+    padding: design.px(12);
     display: flex;
     align-items: center;
     justify-content: space-between;
     color: #fff;
-    font: 590 13px/16px -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro', system-ui, sans-serif;
+    font: 590 design.px(13)/design.px(16) -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro', system-ui, sans-serif;
     letter-spacing: 0;
     white-space: nowrap;
     pointer-events: none;
     user-select: none;
   }
-  &__menu-group { display: flex; align-items: center; height: 24px; }
-  &__menu-label { padding: 4px 12px; }
+  &__menu-group { display: flex; align-items: center; height: design.px(24); }
+  &__menu-label { padding: design.px(4) design.px(12); }
   &__menu-app { font-weight: 700; }
-  &__menu-clock { display: flex; gap: 8px; padding: 4px 12px; font-variant-numeric: tabular-nums; }
+  &__menu-clock { display: flex; gap: design.px(8); padding: design.px(4) design.px(12); font-variant-numeric: tabular-nums; }
   // Crop only the original vector symbols; all menu labels are live system text.
   &__menu-icon {
     position: relative;
     display: block;
     flex: none;
-    height: 24px;
+    height: design.px(24);
     overflow: hidden;
-    img { position: absolute; top: -12px; max-width: none; width: 1888px; height: 48px; }
-    &--apple { width: 33px; img { left: -12px; } }
-    &--wifi { width: 40px; img { left: -1643px; } }
-    &--controls { width: 38px; img { left: -1683px; } }
+    img { position: absolute; top: design.px(-12); max-width: none; width: design.px(1888); height: design.px(48); }
+    &--apple { width: design.px(33); img { left: design.px(-12); } }
+    &--wifi { width: design.px(40); img { left: design.px(-1643); } }
+    &--controls { width: design.px(38); img { left: design.px(-1683); } }
   }
 
   &__offer {
@@ -182,146 +183,146 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 48px;
-    width: min(744px, calc(100% - 48px));
-    margin: clamp(140px, calc(50svh - 300px), 240px) auto 140px;
+    gap: design.px(48);
+    width: min(design.px(744), calc(100% - design.px(48)));
+    margin: clamp(design.px(140), calc(50svh - design.px(300)), design.px(240)) auto design.px(140);
   }
 
-  &__intro { display: flex; flex-direction: column; align-items: center; gap: 32px; width: 100%; }
+  &__intro { display: flex; flex-direction: column; align-items: center; gap: design.px(32); width: 100%; }
   &__brand {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 22px;
-    line-height: 28px;
+    gap: design.px(12);
+    font-size: design.px(22);
+    line-height: design.px(28);
     font-weight: 600;
-    letter-spacing: -1px;
+    letter-spacing: design.px(-1);
 
     span { opacity: .8; }
-    img { display: block; border-radius: 1px; }
+    img { display: block; width: design.px(28); height: design.px(28); border-radius: design.px(1); }
   }
   &__copy {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: design.px(24);
     width: 100%;
     text-align: center;
 
-    h1 { font: 600 64px/72px 'Hero Manrope', sans-serif; letter-spacing: -.04em; }
-    p { font-size: 18px; line-height: 28px; font-weight: 400; opacity: .8; }
+    h1 { font: 600 design.px(64)/design.px(72) 'Hero Manrope', sans-serif; letter-spacing: -.04em; }
+    p { font-size: design.px(18); line-height: design.px(28); font-weight: 400; opacity: .8; }
     p span { display: block; }
   }
 
   // Resize the screen outline independently from the fixed-size notch and lens.
   &__frame {
     position: absolute;
-    inset: 16px;
+    inset: design.px(16);
     z-index: 2;
-    border: 1px solid rgb(166 191 230 / 12%);
-    border-radius: 17px;
+    border: design.px(1) solid rgb(166 191 230 / 12%);
+    border-radius: design.px(17);
     pointer-events: none;
   }
   &__notch {
     position: absolute;
-    top: 15.5px;
+    top: design.px(15.5);
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
-    width: 214px;
-    height: 42px;
+    width: design.px(214);
+    height: design.px(42);
     max-width: none;
     pointer-events: none;
   }
 
   &__nav {
     position: absolute;
-    bottom: 36px;
+    bottom: design.px(36);
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: design.px(12);
     width: max-content;
 
     .download-link--secondary {
       color: #fff;
-      font-size: 16px;
+      font-size: design.px(16);
       font-weight: 600;
     }
     .download-link__glass::after {
-      background: radial-gradient(ellipse 85px 36px at var(--glass-x) var(--glass-y), rgb(255 255 255 / 30%), #ffffff00 75%), radial-gradient(ellipse 100px 24px at var(--glass-x) 110%, #52aaff70, #74bcff00 80%);
+      background: radial-gradient(ellipse design.px(85) design.px(36) at var(--glass-x) var(--glass-y), rgb(255 255 255 / 30%), #ffffff00 75%), radial-gradient(ellipse design.px(100) design.px(24) at var(--glass-x) 110%, #52aaff70, #74bcff00 80%);
     }
     .download-link--secondary:hover:not(:active):not(:focus-visible) .download-link__glass {
       border-color: #c4dcff;
       background-color: transparent;
-      box-shadow: 0 12px 12px #356ab917, 0 3px 6px #356ab900, inset 0 1px 1px #ffffff80, inset 0 -2px 1px #97c1ff66, inset 0 0 12px #b9d9ff00;
+      box-shadow: 0 design.px(12) design.px(12) #356ab917, 0 design.px(3) design.px(6) #356ab900, inset 0 design.px(1) design.px(1) #ffffff80, inset 0 design.px(-2) design.px(1) #97c1ff66, inset 0 0 design.px(12) #b9d9ff00;
     }
-    .download-link--secondary:focus-visible { outline: 2px solid #d6efff; outline-offset: 4px; }
+    .download-link--secondary:focus-visible { outline: #{design.px(2)} solid #d6efff; outline-offset: #{design.px(4)}; }
   }
   &__download-slot {
     display: grid;
     place-items: center;
     flex: none;
-    height: 48px;
+    height: design.px(48);
     // Dock inset (8px) + 4px keeps the outer button margins at 12px.
-    padding: 4px 4px 4px 0;
+    padding: design.px(4) design.px(4) design.px(4) 0;
   }
 
   &__nav-dock {
     display: flex;
     align-items: center;
     gap: 0;
-    height: 64px;
-    padding: 7px;
-    border: 1px solid #cbddff30;
-    border-radius: 22px;
+    height: design.px(64);
+    padding: design.px(7);
+    border: design.px(1) solid #cbddff30;
+    border-radius: design.px(22);
     background: linear-gradient(140deg, #14263be6, #101e35db);
-    box-shadow: 0 12px 28px rgb(0 0 0 / 12%), 0 3px 8px rgb(0 0 0 / 6%), inset 0 1px 0 rgb(255 255 255 / 4%);
-    backdrop-filter: blur(24px) saturate(135%);
-    -webkit-backdrop-filter: blur(24px) saturate(135%);
+    box-shadow: 0 design.px(12) design.px(28) rgb(0 0 0 / 12%), 0 design.px(3) design.px(8) rgb(0 0 0 / 6%), inset 0 design.px(1) 0 rgb(255 255 255 / 4%);
+    backdrop-filter: blur(design.px(24)) saturate(135%);
+    -webkit-backdrop-filter: blur(design.px(24)) saturate(135%);
   }
   &__home {
     display: grid;
     place-items: center;
     flex: none;
-    width: 48px;
+    width: design.px(48);
     // Equal 16px visible icon insets at the left, top and bottom.
-    margin-inline: 0 -8px;
-    height: 48px;
-    border-radius: 14px;
+    margin-inline: 0 design.px(-8);
+    height: design.px(48);
+    border-radius: design.px(14);
     transition: background-color .2s ease, transform .18s ease;
-    img { display: block; }
+    img { display: block; width: design.px(32); height: design.px(32); }
     &:hover { background: #ffffff0d; }
     &:active { transform: scale(.95); }
   }
-  &__nav-divider { flex: none; width: 1px; height: 22px; margin-inline: 24px; background: rgb(212 231 255 / 9%); }
+  &__nav-divider { flex: none; width: design.px(1); height: design.px(22); margin-inline: design.px(24); background: rgb(212 231 255 / 9%); }
   &__links {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: design.px(4);
     // Cancel outer label padding so divider gaps follow the visible text.
-    margin-inline: -16px;
-    font-size: 16px;
-    line-height: 24px;
+    margin-inline: design.px(-16);
+    font-size: design.px(16);
+    line-height: design.px(24);
     font-weight: 600;
-    letter-spacing: -.3px;
+    letter-spacing: design.px(-.3);
     a {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
-      padding: 12px 16px;
-      border-radius: 14px;
+      min-height: design.px(48);
+      padding: design.px(12) design.px(16);
+      border-radius: design.px(14);
       color: #e5edf9;
       text-decoration: none;
       transition: color .2s ease, background-color .2s ease, transform .18s ease;
       &:hover { color: #fff; background: #ffffff0d; }
-      &:active { transform: translateY(1px); background: #ffffff14; }
+      &:active { transform: translateY(design.px(1)); background: #ffffff14; }
     }
   }
-  &__nav-dock a:focus-visible { outline: 2px solid #c4e4ff; outline-offset: -2px; }
+  &__nav-dock a:focus-visible { outline: design.px(2) solid #c4e4ff; outline-offset: design.px(-2); }
   @media (prefers-reduced-motion: reduce) {
     &__home, &__links a { transition: none; }
     &__home:active, &__links a:active { transform: none; }
@@ -332,7 +333,7 @@
 
 @keyframes hero-glow-breathe {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: .54; }
-  50% { transform: translate3d(var(--glow-drift), 28px, 0) scale(1.08); opacity: .66; }
+  50% { transform: translate3d(var(--glow-drift), design.px(28), 0) scale(1.08); opacity: .66; }
 }
 
 @keyframes hero-shooting-star {
@@ -359,13 +360,13 @@
   60%, 76% {
     transform: scale(1);
     opacity: .95;
-    box-shadow: 0 0 7px #d9f2ffb3, 0 0 14px #82bfff70;
+    box-shadow: 0 0 design.px(7) #d9f2ffb3, 0 0 design.px(14) #82bfff70;
   }
   86% {
     transform: scale(1.6);
     opacity: 1;
-    box-shadow: 0 0 10px #edf9ffe6, 0 0 20px #8dceff99;
+    box-shadow: 0 0 design.px(10) #edf9ffe6, 0 0 design.px(20) #8dceff99;
   }
   93% { transform: scale(1.1); opacity: .55; }
-  100% { transform: scale(.2); opacity: 0; box-shadow: 0 0 12px #8dceff00; }
+  100% { transform: scale(.2); opacity: 0; box-shadow: 0 0 design.px(12) #8dceff00; }
 }
