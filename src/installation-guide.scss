@@ -1,0 +1,121 @@
+@use './manrope';
+@use './dialog-controls' as controls;
+@use './home-next/feature-copy' as copy;
+
+html.installation-guide-open,
+html.installation-guide-open body { overflow: hidden; overscroll-behavior: none; }
+
+.installation-guide {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 24px;
+  border: 0;
+  background: transparent;
+  color: #090b0e;
+  color-scheme: light;
+  overflow: hidden;
+  overscroll-behavior: none;
+  font: 16px/1.5 'Hero Manrope', sans-serif;
+
+  &[open] { display: grid; place-items: center; }
+  &::backdrop { background: transparent; }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(5 13 26 / 58%);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
+  &__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(600px, 100%);
+    max-height: 100%;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 70%);
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 32px 100px rgb(4 17 38 / 24%), 0 4px 16px rgb(4 17 38 / 8%);
+  }
+
+  &__header { position: relative; flex: none; padding: 28px 32px 24px; }
+  h2 { @include copy.detail-title; font-size: 24px; line-height: 32px; margin: 0 48px 8px 0; outline: none; }
+  &__header > p { @include copy.body; }
+
+  button, a { -webkit-tap-highlight-color: transparent; }
+  button { cursor: pointer; }
+  :is(button, a):focus-visible { outline: 3px solid #0073ff; outline-offset: 3px; }
+  &__close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: #f1f3f6;
+    color: #555b63;
+    transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+    &:hover { background: #e7ecf2; color: #090b0e; }
+    &:active { transform: scale(.94); }
+  }
+
+  &__body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 32px 24px; scrollbar-width: thin; scrollbar-color: #cdd5df transparent; }
+  &__body:focus-visible { outline: 2px solid #0073ff; outline-offset: -3px; border-radius: 4px; }
+  &__steps { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
+  &__step { min-width: 0; padding: 16px 18px; border-radius: 16px; background: #f1f3f6; }
+  h3 { @include copy.detail-title; font-size: 18px; line-height: 26px; margin-bottom: 8px; }
+  &__step > p { @include copy.detail-body; }
+  strong { color: #252d38; font-weight: 600; }
+
+  &__note {
+    margin-top: 24px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgb(0 115 255 / 12%);
+    color: #0073ff;
+    p { @include copy.detail-body; color: inherit; }
+    a { display: inline-block; color: inherit; text-underline-offset: 3px; }
+  }
+
+  &__footer { display: flex; align-items: center; justify-content: space-between; flex: none; gap: 16px; padding: 18px 32px; border-top: 1px solid #edf0f4; background: #fff; }
+  &__retry { @include controls.button-type; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; color: #555b63; text-decoration: none; border-radius: 4px; &:hover { color: #0067e5; } }
+  &__done { @include controls.button; @include controls.primary; min-width: 112px; }
+  &__sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  @media (width < 600px) {
+    padding: 12px;
+    &__header { padding: 24px 24px 20px; }
+    h2 { margin-top: 0; }
+    &__header > p { max-width: 30ch; }
+    &__close { top: 14px; right: 14px; }
+    &__body { padding: 0 24px 20px; }
+    &__step { padding: 16px; }
+    &__note { padding: 12px; }
+    &__footer { padding: 14px 24px; gap: 12px; }
+    &__done { min-width: 88px; }
+  }
+
+  @media (width < 360px) {
+    &__header { padding-inline: 20px; }
+    &__body { padding-inline: 20px; }
+    &__footer { padding-inline: 20px; }
+    &__retry { gap: 6px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button { transition: none; }
+    &__close:active { transform: none; }
+  }
+}

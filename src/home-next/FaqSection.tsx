@@ -18,7 +18,7 @@ const questions = [
   {
     id: 'installation',
     question: 'How do I install Glissform on my Mac?',
-    answer: <p>Download Glissform, open the DMG and drag the app into Applications. The current release is not notarized by Apple. If macOS blocks the first launch, follow <a href="https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac">Apple’s instructions for opening an app you trust</a>. Once open, allow Screen Recording access to enable Seamless Close.</p>,
+    answer: <p>Download Glissform, open the DMG and drag the app into Applications. The current release is not notarized by Apple, so macOS may ask for your approval on first launch. <a href="https://support.apple.com/en-gb/102445" data-installation-guide>Open the installation guide</a> for the steps. Once open, allow Screen Recording access to enable Seamless Close.</p>,
   },
   {
     id: 'screen-access',

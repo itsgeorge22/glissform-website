@@ -1,0 +1,24 @@
+// Shared controls for the privacy consent card and installation guide.
+@mixin button-type {
+  font: 600 14px/1.6 'Hero Manrope', sans-serif;
+}
+
+@mixin button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 12px;
+  @include button-type;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@mixin primary {
+  background: #0073ff;
+  color: #fff;
+  &:hover { background: #0067e5; }
+}

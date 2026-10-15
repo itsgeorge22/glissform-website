@@ -1,4 +1,5 @@
 @use './manrope';
+@use './dialog-controls' as controls;
 
 .analytics-consent {
   position: fixed;
@@ -25,23 +26,9 @@
 
   &__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-  button, &__details {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    min-height: 44px;
-    padding: 10px 16px;
-    border: 0;
-    border-radius: 12px;
-    font: inherit;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-  }
+  button, &__details { @include controls.button; }
 
-  [data-analytics-choice='accepted'] { background: #0073ff; color: #fff; }
-  [data-analytics-choice='accepted']:hover { background: #0067e5; }
+  [data-analytics-choice='accepted'] { @include controls.primary; }
   &__details { background: #f0f2f5; color: #3e4652; }
   &__details:hover { background: #e5e9ef; }
   button.analytics-consent__decline {

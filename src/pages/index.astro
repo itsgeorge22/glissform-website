@@ -2,6 +2,7 @@
 import '../site.scss';
 import Hero from '../home-next/Hero';
 import AnalyticsConsent from '../AnalyticsConsent.astro';
+import InstallationGuide from '../InstallationGuide.astro';
 import PageEnding from '../home-next/PageEnding.astro';
 import PrivacySection from '../home-next/PrivacySection';
 import SeamlessCloseFeatures from '../home-next/SeamlessCloseFeatures';
@@ -52,6 +53,7 @@ import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, so
         <SeamlessCloseFeatures client:load />
       </PageEnding>
     </main>
+    <InstallationGuide />
     <AnalyticsConsent />
     <script>
       if (import.meta.env.DEV && new URLSearchParams(location.search).has('profile')) {

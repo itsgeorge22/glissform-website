@@ -35,7 +35,7 @@ export function controlMacScroll(bounds: () => { start: number; end: number; ena
   const tick = (time: number) => {
     frame = 0;
     const { start, end, enabled } = bounds();
-    if (!enabled || document.hidden) { reset(); return; }
+    if (!enabled || document.hidden || document.querySelector('dialog:modal')) { reset(); return; }
     const elapsed = Math.max(0, Math.min(macScrollTiming.maxFrameMs, time - previousTime));
     const delta = limiter.step(elapsed);
     previousTime = Math.max(previousTime, time);
@@ -48,6 +48,7 @@ export function controlMacScroll(bounds: () => { start: number; end: number; ena
     else previousTime = 0;
   };
   const wheel = (event: WheelEvent) => {
+    if (document.querySelector('dialog:modal')) { reset(); return; }
     // Preserve other controls, pinch zoom and horizontal gestures.
     if (event.defaultPrevented || !event.cancelable || event.ctrlKey || !event.deltaY
       || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;

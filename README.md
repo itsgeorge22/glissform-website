@@ -18,6 +18,8 @@ The shared gray FAQ container ends with a download card spanning the middle ten 
 
 The homepage and privacy page share `src/home-next/PageEnding.astro`: place the preceding page content in its slot to reuse the FAQ, download card and footer. On supported desktop views, that content remains readable before it holds and the rounded gray surface scrolls over it, dimming it from 0% to 28%. Reversing scroll uncovers the content and clears the overlay. Compact, touch, reduced-motion and no-JavaScript views retain ordinary page flow. `FixedNavigation.tsx` shares the homepage’s glass dock with inner pages; the homepage retains its scene entrance, while privacy shows it immediately with a compact Explore menu on phones. Shared page styling lives in `src/site.scss`.
 
+Download buttons on the homepage and privacy page open a shared installation guide while preserving the original DMG download. Four numbered cards stack vertically in a narrow, text-only modal and cover Applications, the first-open alert, Privacy & Security approval and confirmation. The header has a square close button and no app-icon label. The guide reuses the main page's heading/body styles and the privacy card's primary button, alongside the site's spring motion, a dimmed backdrop, native modal focus handling, Escape/outside-click dismissal and reduced-motion support. The installation guide link in the FAQ reopens it without downloading again. The Mac reveal's scroll limiter yields while a modal is open. Source: `src/InstallationGuide.astro`, `src/installationGuide.ts` and `src/installation-guide.scss`.
+
 ## Responsive layout
 
 | Viewport range | Main review width | Layout |

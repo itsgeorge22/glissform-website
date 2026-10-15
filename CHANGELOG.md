@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-15 — Installation guide
+
+- Add a shared installation guide after homepage and privacy-page download clicks, with four stacked numbered cards, a square close button, a blue information note and the site's typography. Preserve the DMG download and reopen the guide from the installation FAQ.
+- Share button styling with the privacy consent card and reuse the update icon for Download again. Support a dark blurred backdrop, smooth entrance/dismissal, internal scrolling, native keyboard focus, Escape/outside-click dismissal and reduced motion. Let the Mac reveal scroll limiter yield while a modal is open.
+
 ## 2026-10-15 — Analytics card motion
 
 - Give the website analytics card a shared spring move-in after a 0.5-second automatic-appearance delay (immediate when opened from settings) and fade it to zero opacity after Allow or No thanks. Reduce bottom padding by 4px. Keep reduced-motion changes instant and allow reopening during dismissal.
