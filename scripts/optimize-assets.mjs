@@ -32,3 +32,22 @@ for (const file of await readdir(source)) {
 // Browsers need only a small PNG for the favicon, not the 2048px master.
 await sharp(path.join(source, 'glissform-icon.png')).resize(64, 64)
   .png({ compressionLevel: 9 }).toFile(path.join(output, 'favicon.png'));
+
+// Keep the approved hero logo and Mac render as the largest sources. Smaller
+// candidates preserve their composition and avoid sending desktop pixels to phones.
+for (const width of [32, 64, 96]) {
+  const target = path.join(output, `hero-logo-${width}.webp`);
+  await sharp('src/hero-test/assets/glissform.webp').resize({ width })
+    .webp({ lossless: true, effort: 6 }).toFile(target);
+  console.log(`${path.basename(target)}: ${(await stat(target)).size} bytes`);
+}
+for (const width of [384, 768]) {
+  const target = path.join(output, `macbook-resting-${width}.webp`);
+  await sharp('public/assets/macbook-resting.webp').resize({ width })
+    // A lossless 768px re-encode exceeds the original's size. Highest-quality
+    // WebP retains full-quality alpha; larger displays keep the untouched render.
+    .webp(width === 384 ? { lossless: true, effort: 6 }
+      : { quality: 100, alphaQuality: 100, effort: 6, smartSubsample: true })
+    .toFile(target);
+  console.log(`${path.basename(target)}: ${(await stat(target)).size} bytes`);
+}

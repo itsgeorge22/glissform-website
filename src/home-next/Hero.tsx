@@ -293,7 +293,7 @@ export default function Hero() {
       <div className="hero-animation__hardware-viewport" aria-hidden="true">
         <canvas className="hero-animation__hardware" ref={canvasRef} />
       </div>
-      <div className="hero-test hero-animation__surface" ref={surfaceRef} aria-labelledby="hero-test-title" data-prelude="pending">
+      <div className="hero-test hero-animation__surface" ref={surfaceRef} data-prelude="pending">
         <div className="hero-test__screen">
           <div className="hero-animation__desktop" ref={desktopRef}>
             <div className="hero-animation__screen-content" ref={screenContentRef} data-entrance="pending">
@@ -303,11 +303,11 @@ export default function Hero() {
               <div className="hero-test__intro">
                 <GlissformBrand />
                 <div className="hero-test__copy">
-                  <h1 id="hero-test-title" aria-label="Your Lid Moves. Desktop Stays In Place">
+                  <h1 id="hero-test-title">
                     <TextLine text="Your Lid Moves." />{' '}
                     <TextLine text="Desktop Stays In Place" />
                   </h1>
-                  <p aria-label="An iPhone Duo-style animation for your MacBook. Perspective, blur and shadow follow the lid as it closes.">
+                  <p>
                     <TextLine text="An iPhone Duo-style animation for your MacBook." />{' '}
                     <TextLine text="Perspective, blur and shadow follow the lid as it closes." />
                   </p>
@@ -325,14 +325,14 @@ export default function Hero() {
         <img className="hero-test__notch" src={notch} width="214" height="42" alt="" aria-hidden="true" />
       </div>
       <div className="hero-animation__ending" aria-hidden={sceneEnabled ? true : undefined}>
-        <p className="hero-animation__feature-label" aria-label="Seamless Close">
+        <p className="hero-animation__feature-label">
           <TextLine text="Seamless Close" />
         </p>
-        <h2 aria-label="Even closing feels satisfying">
+        <h2>
           <TextLine text="Even closing" />{' '}
           <TextLine text="feels satisfying" />
         </h2>
-        <p className="hero-animation__description" aria-label="A smooth MacBook lid animation that responds as you close it. Adjust the starting angle and blur strength in Glissform for macOS.">
+        <p className="hero-animation__description">
           <TextLine text="A smooth MacBook lid animation that responds as you close it." />{' '}
           <TextLine text="Adjust the starting angle and blur strength in Glissform for macOS." />
         </p>

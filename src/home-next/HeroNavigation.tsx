@@ -1,4 +1,4 @@
-import logo from '../hero-test/assets/glissform.webp?url';
+import { logoSource, logoSources } from './logoImages';
 import GlassDownloadLink from '../GlassDownloadLink';
 import { navigationSections, navigationHref } from './sectionNavigation';
 
@@ -12,7 +12,8 @@ export default function AnimationHeroNavigation({ downloadHref, flat = false, on
       WebkitBackdropFilter: 'blur(calc(24 * var(--design-unit, 1px))) saturate(135%)',
     } : undefined}>
       <a className="hero-test__home" href={import.meta.env.BASE_URL} aria-label="Glissform home">
-        <img src={logo} width="32" height="32" alt="" />
+        <img src={logoSource} srcSet={logoSources} sizes="(min-width: 1200px) 1.666667vw, 32px"
+          width="32" height="32" alt="" />
       </a>
       <span className="hero-test__nav-divider" aria-hidden="true" />
       <div className="hero-test__links">

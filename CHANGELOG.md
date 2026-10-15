@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-15 — Loading and accessibility
+
+- Remove unused legacy homepage styles from production, deduplicate font declarations, inline page CSS and preload the existing regular and semibold fonts. Add responsive logo and compact MacBook sources, defer lower-page hydration, and avoid offscreen demo and compact FAQ scroll-over layout work. Preserve the approved colors, typography, geometry and animation timing.
+- Expose the existing hero text correctly to assistive technology, rename the analytics link to “About analytics”, and include the privacy page in the sitemap. Contrast adjustments remain excluded.
+- Add HTTP/2, privacy-page cache revalidation and staged security headers to the maintained Nginx templates. Server configuration is installed separately from content deployment. Publication authorized on 15 October 2026.
+
 ## 2026-10-15 — Privacy wording
 
 - Clarify that PostHog’s one-year reporting window does not guarantee deletion, and that expired local analytics records are cleaned up when the app or website next runs. Give the homepage privacy items clearer titles and mention optional app and website analytics in a subtitle that stays on one line on desktop.

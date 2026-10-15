@@ -2,6 +2,7 @@
 import '../site.scss';
 import AnalyticsConsent from '../AnalyticsConsent.astro';
 import InstallationGuide from '../InstallationGuide.astro';
+import FontPreloads from '../FontPreloads.astro';
 import FixedNavigation from '../home-next/FixedNavigation';
 import PageEnding from '../home-next/PageEnding.astro';
 import favicon from '../generated/assets/favicon.png?url';
@@ -13,6 +14,7 @@ import '../privacy-page.scss';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <FontPreloads />
     <title>Privacy — Glissform</title>
     <meta name="description" content="How Glissform handles screen images, optional usage analytics and your privacy choices." />
     <link rel="canonical" href="https://glissform.app/privacy/" />

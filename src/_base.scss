@@ -1,0 +1,42 @@
+@use './tokens' as *;
+
+@each $weight in 400, 500, 600 {
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-display: swap;
+    font-weight: $weight;
+    src: url('@fontsource/inter/files/inter-latin-#{$weight}-normal.woff2') format('woff2');
+  }
+}
+
+// Match Inter's fallback advance widths and line metrics during font decoding.
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.4%;
+  ascent-override: 90.2%;
+  descent-override: 22.48%;
+  line-gap-override: 0%;
+}
+
+:root {
+  font-family: 'Inter', 'Inter Fallback', sans-serif;
+  color: $ink;
+  background: $surface;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+html { scroll-behavior: smooth; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
+a { color: $blue; }
+a:focus-visible, button:focus-visible { outline: 3px solid #1459d5; outline-offset: 4px; }
+h1, h2, h3, p { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

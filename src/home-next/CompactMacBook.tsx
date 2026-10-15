@@ -1,12 +1,16 @@
 import { useId } from 'react';
 import logo from '../hero-test/assets/glissform.webp?url';
+import resting384 from '../generated/assets/macbook-resting-384.webp?url';
+import resting768 from '../generated/assets/macbook-resting-768.webp?url';
 
 /** Compact views share the desktop's resting pose without loading its renderer. */
 export default function CompactMacBook() {
   const id = useId();
   return <>
     <picture className="compact-macbook compact-macbook--resting" aria-hidden="true">
-      <source media="(width < 1200px)" srcSet={`${import.meta.env.BASE_URL}assets/macbook-resting.webp`} />
+      <source media="(width < 1200px)"
+        srcSet={`${resting384} 384w, ${resting768} 768w, ${import.meta.env.BASE_URL}assets/macbook-resting.webp 1408w`}
+        sizes="min(calc(100vw - 48px), 772px)" />
       <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
         width="1408" height="560" alt="" loading="lazy" decoding="async" />
     </picture>

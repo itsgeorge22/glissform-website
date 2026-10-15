@@ -10,7 +10,9 @@ export default defineConfig({
   output: 'static',
   integrations: [react()],
   devToolbar: { enabled: false },
-  build: { assets: 'assets' },
+  // Deliver the shared styles with the small static pages instead of making
+  // first paint wait for two more requests. Fonts remain independently cached.
+  build: { assets: 'assets', inlineStylesheets: 'always' },
   vite: {
     server: { strictPort: true, headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
     preview: { strictPort: true, headers: { 'X-Robots-Tag': 'noindex, nofollow' } },

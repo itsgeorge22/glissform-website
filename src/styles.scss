@@ -1,42 +1,10 @@
 @use './design-scale' as design;
 @use './tokens' as *;
+@use './base';
+@use './download-link';
+@use './keyboard-template';
+@use './ambient-stars';
 
-@each $weight in 400, 500, 600 {
-  @font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-display: swap;
-    font-weight: $weight;
-    src: url('@fontsource/inter/files/inter-latin-#{$weight}-normal.woff2') format('woff2');
-  }
-}
-
-// Match Inter's fallback advance widths and line metrics during font decoding.
-@font-face {
-  font-family: 'Inter Fallback';
-  src: local('Arial');
-  size-adjust: 107.4%;
-  ascent-override: 90.2%;
-  descent-override: 22.48%;
-  line-gap-override: 0%;
-}
-
-:root {
-  font-family: 'Inter', 'Inter Fallback', sans-serif;
-  color: $ink;
-  background: $surface;
-  font-synthesis: none;
-  -webkit-font-smoothing: antialiased;
-}
-
-html { scroll-behavior: smooth; }
-* { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; }
-button, a { -webkit-tap-highlight-color: transparent; }
-button { font: inherit; }
-a { color: $blue; }
-a:focus-visible, button:focus-visible { outline: 3px solid #1459d5; outline-offset: 4px; }
-h1, h2, h3, p { margin: 0; }
 .shell { width: min(1128px, calc(100% - 28px)); margin-inline: auto; }
 .responsive-break { display: block; }
 .desktop-site { position: relative; overflow: clip; }
@@ -121,186 +89,6 @@ h1, h2, h3, p { margin: 0; }
   &:focus-visible { outline: design.px(3) solid #1459d5; outline-offset: design.px(2); }
 }
 
-.download-link {
-  position: relative;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: design.px(7);
-  min-height: design.px(56);
-  padding: design.px(15) design.px(24);
-  border: design.px(1) solid #fff;
-  border-radius: design.px(100);
-  background: linear-gradient(180deg, #0073ff, #0da2ff);
-  box-shadow: 0 design.px(40) design.px(108) #57b1ff57, 0 design.px(24) design.px(32) #57b1ff30, 0 design.px(12) design.px(12) #57b1ff38, 0 design.px(4) design.px(4) #57b1ff26, inset 0 design.px(1) design.px(16) #d2eaff, inset 0 design.px(1) design.px(4) #d2eaff;
-  color: #fff;
-  font: 600 design.px(16)/design.px(24) 'SF Pro Rounded', ui-rounded, 'Inter', 'Inter Fallback', sans-serif;
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: box-shadow .2s ease-out, filter .2s ease-out;
-
-  &:not(&--secondary) {
-    width: design.px(192);
-    transform: translateY(0) scale(1);
-    transition: transform .6s cubic-bezier(.2, 1.35, .4, 1), filter .2s ease, box-shadow .2s ease, border-color .12s ease;
-
-    &:hover { box-shadow: 0 design.px(36) design.px(96) #57b1ff66, 0 design.px(20) design.px(36) #57b1ff3d, 0 design.px(8) design.px(14) #57b1ff33, 0 design.px(3) design.px(5) #57b1ff29, inset 0 design.px(1) design.px(16) #d2eaffcc, inset 0 design.px(1) design.px(4) #d2eaffcc; }
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      pointer-events: none;
-      background: linear-gradient(115deg, transparent 25%, #ffffff14 35%, #ffffff52 45%, #ffffff14 55%, transparent 65%) 110% 0 / 250% 100% no-repeat;
-      opacity: 0;
-      transition: opacity .2s ease;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        transform: translateY(design.px(-1.5)) scale(1.008);
-        transition-duration: .36s, .2s, .2s, .12s;
-        filter: brightness(1.04) saturate(1.03);
-      }
-      &:hover::after {
-        opacity: 1;
-        transition-duration: 0s;
-        animation: download-button-shimmer .65s cubic-bezier(.25, .1, .25, 1) both;
-      }
-    }
-
-    &:active {
-      transform: translateY(design.px(.75)) scale(.985);
-      filter: brightness(.98) saturate(1.04);
-      border-color: transparent;
-      // Keep transparent outer layers so the glow interpolates smoothly on release.
-      box-shadow: 0 design.px(16) design.px(52) #57b1ff00, 0 design.px(8) design.px(16) #57b1ff00, 0 design.px(3) design.px(6) #57b1ff00, 0 design.px(1) design.px(2) #57b1ff00, inset 0 design.px(1) design.px(12) #d2eaff99, inset 0 design.px(1) design.px(3) #d2eaff8c;
-      transition-duration: .18s, .15s, .15s, .15s;
-      transition-timing-function: cubic-bezier(.2, .8, .3, 1), ease, ease, ease;
-    }
-    &:active::after {
-      opacity: 0;
-      transition-duration: .15s;
-      animation: none;
-    }
-
-    span { flex: none; letter-spacing: design.px(-.65); }
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-    border-radius: inherit;
-    // The lossless strip keeps the original pixel scale and horizontal repeat.
-    background: url('./generated/assets/button-texture.webp') top left / design.px(307.2) auto;
-    opacity: .4;
-    mix-blend-mode: plus-lighter;
-  }
-
-  &--secondary {
-    --glass-x: 50%;
-    --glass-y: 50%;
-    --glass-pose: perspective(#{design.px(600)}) translateY(0) rotateX(0deg) rotateY(0deg) scale(1);
-    width: auto;
-    min-height: design.px(40);
-    padding: design.px(7) design.px(16);
-    border-color: transparent;
-    background: none;
-    box-shadow: none;
-    color: $blue;
-    user-select: none;
-
-    // A fixed hit area surrounds the moving glass and label.
-    &::before { content: none; }
-    > * {
-      transform: var(--glass-pose);
-      transition: transform .6s cubic-bezier(.2, 1.35, .4, 1);
-      pointer-events: none;
-    }
-    > .download-link__label { position: relative; z-index: 1; }
-    .download-link__label { flex: none; text-align: center; letter-spacing: design.px(-.8); }
-
-    .download-link__glass {
-      position: absolute;
-      inset: design.px(-1);
-      overflow: hidden;
-      border: design.px(1) solid #c4dcff;
-      border-radius: inherit;
-      background: linear-gradient(180deg, #dceaff33, #97c1ff33);
-      -webkit-backdrop-filter: blur(design.px(2)) saturate(125%);
-      backdrop-filter: blur(design.px(2)) saturate(125%);
-      box-shadow: 0 design.px(12) design.px(12) #356ab917, 0 design.px(3) design.px(6) #356ab900, inset 0 design.px(1) design.px(1) #ffffff80, inset 0 design.px(-2) design.px(1) #97c1ff66, inset 0 0 design.px(12) #b9d9ff00;
-      transition: transform .6s cubic-bezier(.2, 1.35, .4, 1), box-shadow .25s ease, border-color .2s ease, background-color .2s ease;
-
-      &::before, &::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
-      &::before { background: url('./generated/assets/try-button-texture.webp') top left / design.px(1024) auto; opacity: .06; mix-blend-mode: soft-light; }
-      &::after {
-        background: radial-gradient(ellipse design.px(85) design.px(36) at var(--glass-x) var(--glass-y), #ffffffc7, #ffffff00 75%), radial-gradient(ellipse design.px(100) design.px(24) at var(--glass-x) 110%, #52aaff70, #74bcff00 80%);
-        opacity: 0;
-        transition: opacity .28s ease;
-      }
-    }
-    .download-link__glint {
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: linear-gradient(115deg, transparent 30%, #ffffff10 39%, #ffffffb3 46%, #ffffff26 50%, transparent 60%) 110% 0 / 250% 100% no-repeat;
-      opacity: 0;
-      transition: opacity .18s ease;
-    }
-
-    &:focus-visible .download-link__glass {
-      border-color: #8dbdff;
-      background-color: #daebff40;
-      box-shadow: 0 design.px(14) design.px(22) #356ab922, 0 design.px(3) design.px(6) #356ab90a, inset 0 design.px(1) design.px(1) #fff, inset 0 design.px(-2) design.px(1) #73b1ff80, inset 0 0 design.px(12) #b9d9ff26;
-      &::after { opacity: .65; }
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        --glass-pose: perspective(#{design.px(600)}) translateY(#{design.px(-1.5)}) rotateX(var(--glass-rotate-x, 0deg)) rotateY(var(--glass-rotate-y, 0deg)) scale(1.018);
-        > * { transition-duration: .36s, .22s, .22s, .22s; }
-        .download-link__glass {
-          border-color: #a3caff;
-          background-color: #daebff40;
-          box-shadow: 0 design.px(14) design.px(22) #356ab922, 0 design.px(3) design.px(6) #356ab90a, inset 0 design.px(1) design.px(1) #fff, inset 0 design.px(-2) design.px(1) #73b1ff80, inset 0 0 design.px(12) #b9d9ff26;
-          &::after { opacity: 1; }
-        }
-        .download-link__glint { opacity: 1; animation: download-button-shimmer .65s cubic-bezier(.25, .1, .25, 1) both; }
-      }
-    }
-
-    &:active {
-      --glass-pose: perspective(#{design.px(600)}) translateY(#{design.px(.75)}) rotateX(0deg) rotateY(0deg) scale(.97);
-      > * { transition-duration: .18s, .12s, .12s, .12s; transition-timing-function: cubic-bezier(.2, .8, .3, 1), cubic-bezier(.16, 1, .3, 1), cubic-bezier(.16, 1, .3, 1), cubic-bezier(.16, 1, .3, 1); }
-      .download-link__glass {
-        border-color: #8db8f052;
-        background-color: #adcfff40;
-        box-shadow: 0 design.px(3) design.px(6) #356ab900, 0 design.px(1) design.px(2) #356ab900, inset 0 design.px(2) design.px(4) #427fb02b, inset 0 design.px(-1) design.px(1) #ffffffd9, inset 0 0 design.px(12) #9ecaff4d;
-        &::after { opacity: .45; }
-      }
-      .download-link__glint { opacity: 0; animation: none; }
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &--secondary {
-      &, &:hover, &:active { --glass-pose: none; }
-      > *, .download-link__glass, .download-link__glass::after { transition: none; }
-      .download-link__glint { display: none; animation: none; }
-    }
-  }
-}
-
-@keyframes download-button-shimmer {
-  from { background-position: 110% 0; }
-  to { background-position: -40% 0; }
-}
 
 .hero {
   display: flex;
@@ -526,49 +314,6 @@ h1, h2, h3, p { margin: 0; }
       background: linear-gradient(120deg, #80858b, #ecedef 38%, #f7f8f9 50%, #a6abb0 68%, #797f86);
       mask: url('/assets/macbook-lid-mark.svg') center / contain no-repeat;
     }
-    .seamless-macbook__deck {
-      display: block;
-      position: absolute;
-      left: var(--hardware-left);
-      top: 3px;
-      width: var(--hardware-width);
-      height: var(--hardware-depth);
-      border-radius: var(--hardware-radius);
-      background: radial-gradient(ellipse at 45% 15%, #ffffff38, transparent 60%), linear-gradient(100deg, #b7bcc1, #d1d4d7 17%, #e0e2e4 50%, #c9cdd1 83%, #aeb4ba);
-      transform-origin: 50% 100%;
-      transform-style: preserve-3d;
-      transform: rotateX(-90deg);
-      box-shadow: inset 0 0 0 1px #a8aeb4;
-    }
-    .seamless-macbook__keyboard {
-      position: absolute;
-      left: 86px;
-      right: 86px;
-      bottom: 38px;
-      height: 252px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      transform: rotateX(180deg);
-    }
-    .seamless-macbook__key-row { display: flex; gap: 6px; flex: 1; min-height: 0; }
-    .seamless-macbook__key {
-      position: relative;
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #151719;
-      border-radius: 5px;
-      background: linear-gradient(145deg, #303236, #24262a 55%, #1d1f22);
-      box-shadow: 0 0 0 1.25px #777c80, 0 1.5px 1px #ffffff75, inset 0 1px .5px #575a604d, inset 0 -1px 1px #030405;
-    }
-    .seamless-macbook__key--touch-id::before { content: ''; width: 22px; height: 22px; border: 1px solid #60636a; border-radius: 50%; background: linear-gradient(135deg, #17191c, #33363b); box-shadow: inset 0 0 0 1px #111315; }
-    .seamless-macbook__key--space { background: linear-gradient(#2c2e32, #24262a); }
-    .seamless-macbook__arrows { display: flex; gap: 6px; flex: 3; align-items: flex-end; }
-    .seamless-macbook__arrows > .seamless-macbook__key { height: calc(50% - 2px); }
-    .seamless-macbook__arrow-pair { display: flex; flex-direction: column; height: 100%; flex: 1; gap: 4px; }
-    .seamless-macbook__key--arrow { border-radius: 3px; }
     .seamless-macbook__hinge {
       position: absolute;
       left: 58px;
@@ -725,23 +470,6 @@ h1, h2, h3, p { margin: 0; }
 }
 .download-panel__aurora--blue { left: -8%; background: radial-gradient(ellipse, #25cfff 0%, #007bff70 42%, transparent 70%); }
 .download-panel__aurora--violet { right: -12%; bottom: -62%; background: radial-gradient(ellipse, #8271ffbd 0%, #4864ff52 42%, transparent 70%); animation-delay: -7s; animation-direction: alternate-reverse; }
-.download-panel__spark, .ambient-star {
-  position: absolute;
-  width: var(--spark-size);
-  height: var(--spark-size);
-  transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .7s ease;
-}
-.download-panel__spark-core, .ambient-star__core {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: #d0f3ff;
-  box-shadow: 0 0 design.px(9) design.px(2) #60bfff55;
-  opacity: .25;
-  animation: download-spark var(--spark-duration) ease-in-out var(--spark-delay) infinite;
-  animation-play-state: paused;
-}
 .download-panel[data-playing='true'] .download-panel__aurora,
 .download-panel[data-playing='true'] .download-panel__spark-core { animation-play-state: running; }
 .download-panel:has(.download-link:hover) .download-panel__aurora,
@@ -751,10 +479,6 @@ h1, h2, h3, p { margin: 0; }
 @keyframes download-aurora {
   from { transform: translate(-5%, 4%) rotate(-12deg) scale(.9); }
   to { transform: translate(15%, -12%) rotate(12deg) scale(1.1); }
-}
-@keyframes download-spark {
-  0%, 100% { transform: translate3d(0, 9px, 0); opacity: .08; }
-  50% { transform: translate3d(8px, -13px, 0); opacity: .55; }
 }
 @media (prefers-reduced-motion: reduce) {
   .download-panel__aurora, .download-panel__spark, .download-panel__spark-core,

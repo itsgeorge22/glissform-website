@@ -3,6 +3,7 @@ import '../site.scss';
 import Hero from '../home-next/Hero';
 import AnalyticsConsent from '../AnalyticsConsent.astro';
 import InstallationGuide from '../InstallationGuide.astro';
+import FontPreloads from '../FontPreloads.astro';
 import PageEnding from '../home-next/PageEnding.astro';
 import PrivacySection from '../home-next/PrivacySection';
 import SeamlessCloseFeatures from '../home-next/SeamlessCloseFeatures';
@@ -16,6 +17,7 @@ import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, so
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <FontPreloads />
     <script is:inline>
       document.documentElement.classList.remove('no-js');
       // Restore native behavior, including history entries made by older previews.
@@ -47,10 +49,10 @@ import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, so
     <a class="home-next__skip" href="#how-it-works">Skip to features</a>
     <main>
       <Hero client:load />
-      <SettingsFeatures client:load />
+      <SettingsFeatures client:visible={{ rootMargin: '400px' }} />
       <PrivacySection />
       <PageEnding contentId="seamless-close-features">
-        <SeamlessCloseFeatures client:load />
+        <SeamlessCloseFeatures client:visible={{ rootMargin: '400px' }} />
       </PageEnding>
     </main>
     <InstallationGuide />

@@ -1,0 +1,28 @@
+@use './design-scale' as design;
+
+.download-panel__spark, .ambient-star {
+  position: absolute;
+  width: var(--spark-size);
+  height: var(--spark-size);
+  transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .7s ease;
+}
+.download-panel__spark-core, .ambient-star__core {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #d0f3ff;
+  box-shadow: 0 0 design.px(9) design.px(2) #60bfff55;
+  opacity: .25;
+  animation: download-spark var(--spark-duration) ease-in-out var(--spark-delay) infinite;
+  animation-play-state: paused;
+}
+@keyframes download-spark {
+  0%, 100% { transform: translate3d(0, 9px, 0); opacity: .08; }
+  50% { transform: translate3d(8px, -13px, 0); opacity: .55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .download-panel__spark, .download-panel__spark-core,
+  .ambient-star, .ambient-star__core { animation: none; transition: none; }
+}

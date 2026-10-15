@@ -1,0 +1,46 @@
+// Shared with the retained legacy renderer; these dimensions define the key atlas.
+.seamless-macbook--animated {
+  .seamless-macbook__deck {
+    display: block;
+    position: absolute;
+    left: var(--hardware-left);
+    top: 3px;
+    width: var(--hardware-width);
+    height: var(--hardware-depth);
+    border-radius: var(--hardware-radius);
+    background: radial-gradient(ellipse at 45% 15%, #ffffff38, transparent 60%), linear-gradient(100deg, #b7bcc1, #d1d4d7 17%, #e0e2e4 50%, #c9cdd1 83%, #aeb4ba);
+    transform-origin: 50% 100%;
+    transform-style: preserve-3d;
+    transform: rotateX(-90deg);
+    box-shadow: inset 0 0 0 1px #a8aeb4;
+  }
+  .seamless-macbook__keyboard {
+    position: absolute;
+    left: 86px;
+    right: 86px;
+    bottom: 38px;
+    height: 252px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transform: rotateX(180deg);
+  }
+  .seamless-macbook__key-row { display: flex; gap: 6px; flex: 1; min-height: 0; }
+  .seamless-macbook__key {
+    position: relative;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #151719;
+    border-radius: 5px;
+    background: linear-gradient(145deg, #303236, #24262a 55%, #1d1f22);
+    box-shadow: 0 0 0 1.25px #777c80, 0 1.5px 1px #ffffff75, inset 0 1px .5px #575a604d, inset 0 -1px 1px #030405;
+  }
+  .seamless-macbook__key--touch-id::before { content: ''; width: 22px; height: 22px; border: 1px solid #60636a; border-radius: 50%; background: linear-gradient(135deg, #17191c, #33363b); box-shadow: inset 0 0 0 1px #111315; }
+  .seamless-macbook__key--space { background: linear-gradient(#2c2e32, #24262a); }
+  .seamless-macbook__arrows { display: flex; gap: 6px; flex: 3; align-items: flex-end; }
+  .seamless-macbook__arrows > .seamless-macbook__key { height: calc(50% - 2px); }
+  .seamless-macbook__arrow-pair { display: flex; flex-direction: column; height: 100%; flex: 1; gap: 4px; }
+  .seamless-macbook__key--arrow { border-radius: 3px; }
+}

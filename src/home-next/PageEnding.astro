@@ -12,7 +12,7 @@ const { contentId } = Astro.props;
   <div class="page-ending__underlay" id={contentId}>
     <div class="page-ending__content"><slot /></div>
   </div>
-  <FaqSection client:load />
+  <FaqSection client:visible={{ rootMargin: '400px' }} />
 </glissform-page-ending>
 
 <script>

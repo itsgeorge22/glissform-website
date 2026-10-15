@@ -78,14 +78,22 @@ export function runFeatureDemo(root: HTMLElement, demo: FeatureDemo, playback?: 
   const updateCycle = () => { clock.cycle = Math.max(0, ...clock.durations.values()) + (playback?.rest ?? 0); };
   updateCycle();
 
-  let frame = 0, visible = false, running = false, disposed = false;
+  let frame = 0, nearViewport = false, visible = false, running = false, disposed = false;
+  let measured = false, needsMeasure = true;
   const draw = () => {
     const seconds = playback
       ? playback.start + Math.min(clock.elapsed % clock.cycle, playback.finish - playback.start)
       : clock.elapsed;
     demo.draw(reduced.matches ? 0 : seconds, reduced.matches);
   };
-  const measure = () => { demo.measure(); draw(); };
+  const measure = () => {
+    // Prepare the first pose before it enters view, while keeping distant
+    // panels from forcing layout during the initial page load.
+    if (!nearViewport) { needsMeasure = true; return; }
+    demo.measure();
+    measured = true; needsMeasure = false;
+    draw();
+  };
   const tick = (now: number) => {
     frame = 0;
     if (!running || disposed) return;
@@ -100,33 +108,41 @@ export function runFeatureDemo(root: HTMLElement, demo: FeatureDemo, playback?: 
   };
   const sync = () => {
     if (disposed) return;
+    if (nearViewport && needsMeasure) measure();
     const next = visible && !reduced.matches && !document.hidden;
     if (reduced.matches) { clock.elapsed = initialTime; clock.lastTime = 0; }
     root.dataset.playing = String(next);
-    if (next === running) { if (!next) draw(); return; }
+    if (next === running) { if (!next && measured) draw(); return; }
     running = next;
     cancelHeroFrame(frame); frame = 0;
     if (running) {
       if (!clock.active.size) clock.lastTime = 0;
       clock.active.add(member);
-      measure(); frame = requestSceneFrame(tick);
+      if (needsMeasure) measure();
+      frame = requestSceneFrame(tick);
     } else {
       clock.active.delete(member);
       if (!clock.active.size) clock.lastTime = 0;
-      draw();
+      if (measured) draw();
     }
   };
+  const preparation = new IntersectionObserver(entries => {
+    nearViewport = entries[0].isIntersecting;
+    sync();
+  }, { rootMargin: '400px' });
   const visibility = new IntersectionObserver(entries => {
     visible = entries[0].isIntersecting && entries[0].intersectionRatio >= .5;
+    if (visible) nearViewport = true;
     sync();
-  }, { threshold: [.5] });
+  }, { threshold: [0, .5] });
   const size = new ResizeObserver(measure);
+  preparation.observe(panel);
   visibility.observe(panel);
   size.observe(root);
   for (const target of demo.resizeTargets ?? []) size.observe(target);
   reduced.addEventListener('change', sync);
   document.addEventListener('visibilitychange', sync);
-  measure(); sync();
+  sync();
   return () => {
     if (disposed) return;
     disposed = true;
@@ -136,7 +152,7 @@ export function runFeatureDemo(root: HTMLElement, demo: FeatureDemo, playback?: 
     if (!clock.active.size) clock.lastTime = 0;
     updateCycle();
     if (playback && !clock.durations.size) groupClocks.delete(playback.group);
-    visibility.disconnect(); size.disconnect();
+    preparation.disconnect(); visibility.disconnect(); size.disconnect();
     reduced.removeEventListener('change', sync);
     document.removeEventListener('visibilitychange', sync);
     root.removeAttribute('data-playing');

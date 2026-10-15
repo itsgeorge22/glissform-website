@@ -101,7 +101,7 @@ class DeploymentBuildTests(unittest.TestCase):
         self.assertNotRegex((DIST / 'robots.txt').read_text(), r'(?im)^Disallow:\s*/\s*$')
         from xml.etree import ElementTree
         sitemap = ElementTree.parse(DIST / 'sitemap.xml')
-        self.assertEqual([loc.text for loc in sitemap.iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc')], [SITE_URL])
+        self.assertEqual([loc.text for loc in sitemap.iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc')], [SITE_URL, SITE_URL + 'privacy/'])
 
 
 if __name__ == '__main__':

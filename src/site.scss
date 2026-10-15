@@ -1,4 +1,7 @@
-@use './styles';
+@use './base';
+@use './download-link';
+@use './keyboard-template';
+@use './ambient-stars';
 @use './hero-test/hero-test';
 @use './design-scale' as design;
 @use './home-next/responsive' as responsive;
