@@ -15,7 +15,6 @@ html { scroll-behavior: smooth; }
   *, *::before, *::after { box-sizing: border-box; }
   a, button { -webkit-tap-highlight-color: transparent; }
   a:focus-visible, button:focus-visible { outline: 3px solid #0073ff; outline-offset: 4px; }
-  a { text-underline-offset: 4px; }
 }
 
 // Eight 96px columns and seven 24px gutters in the homepage's 1920px grid.
@@ -45,7 +44,7 @@ html { scroll-behavior: smooth; }
   p { margin: 0; }
   p + p { margin-top: 16px; }
   strong { color: #3e4652; font-weight: 600; }
-  a { color: #0068df; overflow-wrap: anywhere; }
+  a { color: #0068df; overflow-wrap: anywhere; text-underline-offset: 4px; }
   ul { margin: 20px 0; padding-left: 24px; }
   li { padding-left: 4px; }
   li + li { margin-top: 12px; }
