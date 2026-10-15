@@ -5,7 +5,7 @@
     font-style: normal;
     font-weight: $weight;
     font-display: swap;
-    src: url('./assets/manrope-#{$weight}.ttf') format('truetype');
+    src: url('./assets/manrope-#{$weight}.woff2') format('woff2');
   }
 }
 

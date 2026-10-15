@@ -13,10 +13,12 @@ receiver = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(receiver)
 
 
-def archive(extra=(), discovery=True):
+def archive(extra=(), discovery=True, models=True):
     stream = io.BytesIO()
     with tarfile.open(fileobj=stream, mode='w:gz') as tar:
         items = [('index.html', b'<main>Product</main>'), ('assets/new.js', b'console.log(1)')]
+        if models:
+            items.append(('models/macbook-details.glb', b'model'))
         if discovery:
             items += [('robots.txt', b'User-agent: *\nAllow: /'), ('sitemap.xml', b'<urlset/>')]
         for name, value in items:
@@ -35,7 +37,8 @@ class ReceiverTests(unittest.TestCase):
             base = Path(directory)
             stage, root = base / 'stage', base / 'root'
             stage.mkdir(); root.mkdir()
-            for name in ('downloads', 'updates', 'assets'):
+            (root / 'google-verification.html').write_text('preserve')
+            for name in ('downloads', 'updates', 'assets', 'models', 'v2'):
                 (root / name).mkdir()
                 (root / name / 'existing').write_text('preserve')
             receiver.extract_build(archive(), stage)
@@ -44,12 +47,14 @@ class ReceiverTests(unittest.TestCase):
             def record(source, destination):
                 order.append(Path(destination).name)
                 self.assertTrue((root / 'assets/new.js').is_file())
+                self.assertEqual((root / 'models/macbook-details.glb').read_bytes(), b'model')
                 return original(source, destination)
             with patch.object(receiver.os, 'replace', side_effect=record):
                 receiver.publish_build(stage, root, 'a' * 40)
             self.assertEqual(order, ['robots.txt', 'sitemap.xml', 'index.html', 'deployment.json'])
             self.assertEqual(json.loads((root / 'deployment.json').read_text())['commit'], 'a' * 40)
-            for name in ('downloads', 'updates', 'assets'):
+            self.assertEqual((root / 'google-verification.html').read_text(), 'preserve')
+            for name in ('downloads', 'updates', 'assets', 'models', 'v2'):
                 self.assertEqual((root / name / 'existing').read_text(), 'preserve')
 
     def test_hero_page_is_accepted_and_published(self):
@@ -64,7 +69,7 @@ class ReceiverTests(unittest.TestCase):
 
     def test_legacy_build_still_accepted(self):
         with tempfile.TemporaryDirectory() as directory:
-            receiver.extract_build(archive(discovery=False), Path(directory))
+            receiver.extract_build(archive(discovery=False, models=False), Path(directory))
 
     def test_animation_page_is_accepted_and_published(self):
         entries = [tarfile.TarInfo('hero-test-animation.html'), tarfile.TarInfo('hero-test-animation/index.html')]
@@ -80,17 +85,19 @@ class ReceiverTests(unittest.TestCase):
         for name in ('../index.html', '/index.html', 'assets/../escape', 'downloads/new.dmg',
                      'updates/appcast.xml', 'hero-test/other.html', 'hero-test/assets/bad.js',
                      'hero-test-animation/other.html', 'hero-test-animation/assets/bad.js',
-                     'deployment.json', 'robots.txt/nested', 'assets'):
+                     'deployment.json', 'robots.txt/nested', 'assets', 'models', 'models/../escape',
+                     'v2/index.html', 'google-verification.html'):
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 with self.assertRaises(ValueError):
                     receiver.extract_build(archive([tarfile.TarInfo(name)]), Path(directory))
-        for kind in (tarfile.SYMTYPE, tarfile.LNKTYPE):
-            entry = tarfile.TarInfo('assets/linked')
-            entry.type = kind
-            entry.linkname = '/etc/passwd'
-            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as directory:
-                with self.assertRaises(ValueError):
-                    receiver.extract_build(archive([entry]), Path(directory))
+        for directory in ('assets', 'models'):
+            for kind in (tarfile.SYMTYPE, tarfile.LNKTYPE):
+                entry = tarfile.TarInfo(directory + '/linked')
+                entry.type = kind
+                entry.linkname = '/etc/passwd'
+                with self.subTest(directory=directory, kind=kind), tempfile.TemporaryDirectory() as staging:
+                    with self.assertRaises(ValueError):
+                        receiver.extract_build(archive([entry]), Path(staging))
         entry = tarfile.TarInfo('sitemap.xml')
         entry.type = tarfile.DIRTYPE
         with tempfile.TemporaryDirectory() as directory, self.assertRaises(ValueError):

@@ -196,7 +196,8 @@ h1, h2, h3, p { margin: 0; }
     z-index: -1;
     inset: 0;
     border-radius: inherit;
-    background: url('./generated/assets/button-texture.webp') top left / design.px(307.2) design.px(307.2);
+    // The lossless strip keeps the original pixel scale and horizontal repeat.
+    background: url('./generated/assets/button-texture.webp') top left / design.px(307.2) auto;
     opacity: .4;
     mix-blend-mode: plus-lighter;
   }
@@ -237,7 +238,7 @@ h1, h2, h3, p { margin: 0; }
       transition: transform .6s cubic-bezier(.2, 1.35, .4, 1), box-shadow .25s ease, border-color .2s ease, background-color .2s ease;
 
       &::before, &::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
-      &::before { background: url('./generated/assets/try-button-texture.webp') top left / design.px(1024) design.px(1024); opacity: .06; mix-blend-mode: soft-light; }
+      &::before { background: url('./generated/assets/try-button-texture.webp') top left / design.px(1024) auto; opacity: .06; mix-blend-mode: soft-light; }
       &::after {
         background: radial-gradient(ellipse design.px(85) design.px(36) at var(--glass-x) var(--glass-y), #ffffffc7, #ffffff00 75%), radial-gradient(ellipse design.px(100) design.px(24) at var(--glass-x) 110%, #52aaff70, #74bcff00 80%);
         opacity: 0;

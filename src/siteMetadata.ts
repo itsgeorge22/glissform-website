@@ -1,4 +1,4 @@
-export const siteUrl = 'https://glissform.app/v2/';
+export const siteUrl = 'https://glissform.app/';
 export const siteTitle = 'Glissform — Free MacBook Lid Animation';
 export const siteDescription = 'Add subtle animations to everyday MacBook moments with Glissform, a free macOS app. Explore Seamless Close, an iPhone Duo-style lid animation, in the public beta.';
 export const socialTitle = 'Glissform — A better closing act for your Mac';

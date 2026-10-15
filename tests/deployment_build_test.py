@@ -1,15 +1,14 @@
-"""Small, offline checks for a built v2 candidate; no copy/layout assertions."""
+"""Small, offline production checks; no copy/layout assertions."""
 from html.parser import HTMLParser
 import json
-import os
 from pathlib import Path
 import re
 import unittest
 from urllib.parse import unquote, urljoin, urlsplit
 
-DEPLOY_V2 = os.environ.get('DEPLOY_V2') == '1'
-BASE = '/v2/' if DEPLOY_V2 else '/'
-DIST = Path(__file__).resolve().parents[1] / ('dist-v2' if DEPLOY_V2 else 'dist')
+BASE = '/'
+SITE_URL = 'https://glissform.app/'
+DIST = Path(__file__).resolve().parents[1] / 'dist'
 
 
 class BuildPage(HTMLParser):
@@ -40,7 +39,8 @@ class DeploymentBuildTests(unittest.TestCase):
         for tag, attrs in self.page.tags:
             if tag == 'meta' and attrs.get('property') == 'og:image':
                 image_path = urlsplit(attrs.get('content', '')).path
-                self.assert_asset_exists(image_path if DEPLOY_V2 else image_path.removeprefix('/v2'))
+                self.assertEqual(attrs.get('content'), SITE_URL + 'assets/glissform-social.png')
+                self.assert_asset_exists(image_path)
             if tag in ('script', 'img', 'source', 'video', 'audio', 'iframe'):
                 self.assert_asset_exists(attrs.get('src'))
                 self.assert_asset_exists(attrs.get('poster'))
@@ -73,6 +73,9 @@ class DeploymentBuildTests(unittest.TestCase):
             r'<script\b[^>]*type=[\"\']application/ld\+json[\"\'][^>]*>(.*?)</script>', self.html, re.S)]
         app = next((schema for schema in schemas if schema.get('@type') == 'SoftwareApplication'), None)
         self.assertIsNotNone(app, 'Missing app release metadata')
+        self.assertEqual(app.get('url'), SITE_URL)
+        self.assertEqual(app.get('@id'), SITE_URL + '#software-application')
+        self.assertEqual(app.get('image'), SITE_URL + 'assets/glissform-social.png')
         expected = f'https://glissform.app/downloads/Glissform-{app["softwareVersion"]}.dmg'
         self.assertEqual(app.get('downloadUrl'), expected)
         downloads = [attrs.get('href') for tag, attrs in self.page.tags if tag == 'a' and
@@ -81,13 +84,24 @@ class DeploymentBuildTests(unittest.TestCase):
         for href in downloads:
             self.assertEqual(href, expected, f'Incorrect download destination: {href}')
 
-    def test_v2_stays_excluded_from_indexing(self):
+    def test_production_is_indexable_at_the_canonical_url(self):
         directives = set()
         for tag, attrs in self.page.tags:
             if tag == 'meta' and attrs.get('name', '').lower() == 'robots':
                 directives.update(value.strip().lower() for value in attrs.get('content', '').split(','))
-        self.assertTrue({'noindex', 'nofollow'} <= directives, 'V2 must retain noindex, nofollow')
-        self.assertFalse({'index', 'follow', 'all'} & directives, 'Conflicting indexing directives')
+        self.assertTrue({'index', 'follow'} <= directives, 'Production must allow indexing and following')
+        self.assertFalse({'noindex', 'nofollow', 'none'} & directives, 'Conflicting indexing directives')
+        canonicals = [attrs.get('href') for tag, attrs in self.page.tags
+                      if tag == 'link' and attrs.get('rel') == 'canonical']
+        social_urls = [attrs.get('content') for tag, attrs in self.page.tags
+                       if tag == 'meta' and attrs.get('property') == 'og:url']
+        self.assertEqual(canonicals, [SITE_URL])
+        self.assertEqual(social_urls, [SITE_URL])
+        self.assertIn('Sitemap: ' + SITE_URL + 'sitemap.xml', (DIST / 'robots.txt').read_text())
+        self.assertNotRegex((DIST / 'robots.txt').read_text(), r'(?im)^Disallow:\s*/\s*$')
+        from xml.etree import ElementTree
+        sitemap = ElementTree.parse(DIST / 'sitemap.xml')
+        self.assertEqual([loc.text for loc in sitemap.iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc')], [SITE_URL])
 
 
 if __name__ == '__main__':

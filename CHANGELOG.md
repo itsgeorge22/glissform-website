@@ -1,10 +1,19 @@
 # Changelog
 
-## Unreleased
+## 2026-10-15 — Production homepage
 
-- Replace the personal desktop wallpaper in Start at login and Menu bar access with the supplied abstract wallpaper at every viewport size. Generate responsive WebP sources and load them lazily, retaining the existing demo layouts and motion. Remove the former 13.5 MB PNG from build output. Saved on the v2 branch; not deployed.
+- Promote the reviewed v2 design to the canonical homepage. Enable production indexing, use root canonical/social/structured-data URLs, retain the root sitemap and robots policy, and keep local previews excluded from indexing. Retire the separate v2 uploader and redirect its public homepage to `/`.
+- Update production deployment to accept and publish Mac models before the homepage, preserve downloads, update feeds, verification and existing assets, and validate root indexing/URLs. Add maintained Nginx configuration for canonical HTTPS and `www`, preview redirects, and immutable caching for Astro assets. Retain a server backup for rollback.
 
-- Adapt every v2 section for phone, tablet and desktop layouts at 768px and 1200px, with 414px, 768px and 1440px review references. Replace the narrow-window placeholder with shared semantic content, compact navigation and responsive feature, privacy, FAQ and footer layouts. Use a native horizontal customization scroller on phones, full content width for tablet FAQ and download cards, consistent compact header gutters and naturally wrapping privacy copy. Show the desktop MacBook's nearly closed resting pose on phones and tablets, center their FAQ intro with a single-line heading and shared spacing, align tablet privacy columns at the top, and give phone privacy and download content more room. Restore visible hero and download-card stars by removing the oversized copy-exclusion area below 1200px. Retain readable desktop type, usable controls and the original 1920px composition. Load the Mac scene only for supported desktop interaction, keep compact and touch views in normal page flow, and preserve visible feature demos and reduced-motion states. Keep `noindex, nofollow`; saved on the v2 branch for manual review, not deployed.
+- Reduce v2 font and button-texture downloads without changing their appearance. Serve the existing Manrope faces as WOFF2 with every glyph, metric and hinting table retained. Export only the texture strips painted by the buttons, preserving their pixels, scale, blending and placement.
+
+- Replace the personal desktop wallpaper in Start at login and Menu bar access with the supplied abstract wallpaper at every viewport size. Generate responsive WebP sources and load them lazily, retaining the existing demo layouts and motion. Remove the former 13.5 MB PNG from build output.
+
+- Adapt every v2 section for phone, tablet and desktop layouts at 768px and 1200px, with 414px, 768px and 1440px review references. Replace the narrow-window placeholder with shared semantic content, compact navigation and responsive feature, privacy, FAQ and footer layouts. Use a native horizontal customization scroller on phones, full content width for tablet FAQ and download cards, consistent compact header gutters and naturally wrapping privacy copy. Show the desktop MacBook's nearly closed resting pose on phones and tablets, center their FAQ intro with a single-line heading and shared spacing, align tablet privacy columns at the top, and give phone privacy and download content more room. Restore visible hero and download-card stars by removing the oversized copy-exclusion area below 1200px. Retain readable desktop type, usable controls and the original 1920px composition. Load the Mac scene only for supported desktop interaction, keep compact and touch views in normal page flow, and preserve visible feature demos and reduced-motion states.
+
+## V2 development history
+
+The entries below record the state and publication scope at the time of each change, before the production promotion above.
 
 - Scale the desktop layout uniformly from the approved 1920px reference, preserving that composition while enlarging typography, controls, spacing, panels, hero decoration and Mac scene geometry proportionally at wider viewports. Keep the scroll reveal and speed cap in the same reference units, retain timed animation durations and the placeholder below 1056px, and refresh the local preview. Publish through the isolated `/v2/` deployment, leaving the main homepage unchanged.
 

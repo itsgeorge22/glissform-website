@@ -12,6 +12,7 @@ import tempfile
 
 ROOT_FILES = {'index.html', 'robots.txt', 'sitemap.xml', 'hero-test.html', 'hero-test-animation.html'}
 PREVIEW_PAGES = {'hero-test', 'hero-test-animation'}
+ASSET_DIRECTORIES = {'assets', 'models'}
 
 
 def extract_build(stream, stage):
@@ -25,7 +26,7 @@ def extract_build(stream, stage):
             if not parts and member.isdir():
                 continue
             root_file = len(parts) == 1 and parts[0] in ROOT_FILES and member.isfile()
-            asset = parts and parts[0] == 'assets' and (len(parts) > 1 or member.isdir())
+            asset = parts and parts[0] in ASSET_DIRECTORIES and (len(parts) > 1 or member.isdir())
             hero = any((parts == (page,) and member.isdir()) or
                        (parts == (page, 'index.html') and member.isfile()) for page in PREVIEW_PAGES)
             if not (root_file or asset or hero) or not (member.isfile() or member.isdir()):
@@ -47,7 +48,9 @@ def extract_build(stream, stage):
 
 def publish_build(stage, root, commit):
     # Publish dependencies and discovery files before replacing the page.
-    shutil.copytree(stage / 'assets', root / 'assets', dirs_exist_ok=True)
+    for directory in sorted(ASSET_DIRECTORIES):
+        if (stage / directory).is_dir():
+            shutil.copytree(stage / directory, root / directory, dirs_exist_ok=True)
     for name in ('robots.txt', 'sitemap.xml', 'hero-test.html', 'hero-test/index.html',
                  'hero-test-animation.html', 'hero-test-animation/index.html', 'index.html'):
         if not (stage / name).is_file():

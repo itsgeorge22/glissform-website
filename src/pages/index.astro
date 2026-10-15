@@ -27,7 +27,7 @@ import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, so
       }
     </script>
     <meta name="theme-color" content="#ffffff" />
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content={import.meta.env.DEV ? 'noindex, nofollow' : 'index, follow'} />
     <title>{siteTitle}</title>
     <meta name="description" content={siteDescription} />
     <link rel="canonical" href={siteUrl} />
