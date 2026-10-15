@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-15 — Analytics card motion
+
+- Give the website analytics card a shared spring move-in after a 0.5-second automatic-appearance delay (immediate when opened from settings) and fade it to zero opacity after Allow or No thanks. Reduce bottom padding by 4px. Keep reduced-motion changes instant and allow reopening during dismissal.
+
 ## 2026-10-15 — Website analytics and privacy
 
 - Reuse the homepage’s fixed glass navbar on the privacy page and share one FAQ, download card and footer ending across both pages. Preserve the desktop scroll-over and darkening effect, compact/reduced-motion flow and homepage navbar entrance; make section and home links work across pages.

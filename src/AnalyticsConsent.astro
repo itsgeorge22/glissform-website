@@ -14,8 +14,59 @@ import './analytics-consent.scss';
 </aside>
 <script>
   import { analyticsChoice, chooseAnalytics, startAnalytics } from './analytics';
+  import { springDisplacement } from './home-next/objectMotion';
   const banner = document.querySelector<HTMLElement>('.analytics-consent');
-  const update = () => { if (banner) banner.hidden = analyticsChoice() !== 'undecided'; };
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let animation: Animation | undefined;
+  let visible = false;
+  let opener: HTMLElement | undefined;
+  const settle = () => {
+    if (banner) banner.hidden = !visible;
+    animation?.cancel();
+    animation = undefined;
+  };
+  const reveal = (show: boolean, delay = 0) => {
+    if (!banner) return;
+    if (visible === show) {
+      // A settings click also skips an automatic entrance that is still waiting.
+      if (show && delay === 0 && animation) {
+        const pendingDelay = animation.effect?.getTiming().delay ?? 0;
+        if (typeof animation.currentTime === 'number' && animation.currentTime < pendingDelay) {
+          animation.currentTime = pendingDelay;
+        }
+      }
+      return;
+    }
+    const wasHidden = banner.hidden;
+    const current = getComputedStyle(banner);
+    const opacity = wasHidden ? 0 : Number(current.opacity);
+    const y = wasHidden ? 24 : new DOMMatrixReadOnly(current.transform).m42;
+    animation?.cancel();
+    visible = show;
+    banner.hidden = false;
+    banner.inert = !show;
+    if (!show && banner.contains(document.activeElement)) {
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
+      else (document.activeElement as HTMLElement)?.blur();
+    }
+    if (motion.matches) { settle(); return; }
+    const frames = show
+      ? Array.from({ length: 41 }, (_, index) => {
+          const progress = index / 40;
+          return { offset: progress,
+            opacity: opacity + (1 - opacity) * Math.min(1, progress * 2),
+            transform: `translateY(${y * springDisplacement(progress, 9, 10)}px)` };
+        })
+      : [{ opacity, transform: `translateY(${y}px)` }, { opacity: 0, transform: `translateY(${y}px)` }];
+    animation = banner.animate(frames, {
+      duration: show ? 600 : 180, delay: show ? delay : 0,
+      easing: show ? 'linear' : 'ease-out', fill: 'both',
+    });
+    animation.onfinish = settle;
+  };
+  motion.addEventListener('change', settle);
+  window.addEventListener('pagehide', settle);
+  const update = () => reveal(analyticsChoice() === 'undecided', 500);
   update();
   startAnalytics();
   window.addEventListener('glissform:analytics-choice', update);
@@ -25,12 +76,13 @@ import './analytics-consent.scss';
     if (choice === 'accepted' || choice === 'declined') {
       chooseAnalytics(choice);
       // When storage is blocked, dismiss for this page and keep analytics off.
-      if (banner) banner.hidden = true;
+      reveal(false);
     }
     if (target?.closest('[data-analytics-settings]') && banner) {
       event.preventDefault();
-      banner.hidden = false;
-      banner.querySelector('button')?.focus();
+      opener = target.closest<HTMLElement>('[data-analytics-settings]') ?? undefined;
+      reveal(true);
+      banner.querySelector('button')?.focus({ preventScroll: true });
     }
   });
 </script>
