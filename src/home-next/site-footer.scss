@@ -70,10 +70,6 @@
 
     p { @include copy.detail-body; }
 
-    a, button {
-      &:hover { color: tokens.$blue; }
-      &:active { color: #005bc8; }
-    }
   }
 
   &__privacy {
@@ -88,6 +84,9 @@
       align-items: center;
       text-decoration: underline;
       text-underline-offset: auto;
+
+      &:hover { color: tokens.$blue; }
+      &:active { color: #005bc8; }
     }
     button { border: 0; background: none; padding: 0; cursor: pointer; }
   }

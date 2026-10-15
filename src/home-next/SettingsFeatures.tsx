@@ -13,18 +13,18 @@ const features = [
     lines: ['Launch Glissform when you sign in to your Mac,', 'with your saved animation settings.'],
   },
   {
-    id: 'easy-to-reach',
-    icon: 'menubar',
-    visualLeft: true,
-    title: 'Menu bar access',
-    lines: ['Open Settings from the macOS menu bar', 'whenever you want to adjust an effect.'],
-  },
-  {
     id: 'always-active',
     icon: 'background',
-    visualLeft: false,
+    visualLeft: true,
     title: 'Stay active',
     lines: ['Keep animations running after closing the app', 'with Run in background enabled.'],
+  },
+  {
+    id: 'easy-to-reach',
+    icon: 'menubar',
+    visualLeft: false,
+    title: 'Menu bar access',
+    lines: ['Open Settings from the macOS menu bar', 'whenever you want to adjust an effect.'],
   },
   {
     id: 'stay-updated',
