@@ -63,7 +63,8 @@ import '../privacy-page.scss';
             <section id="storage" aria-labelledby="storage-title">
               <h2 id="storage-title">Storage and services</h2>
               <p>PostHog processes analytics for us in its EU region. We disable location enrichment and person profiles, and don’t store IP addresses in analytics events. Like any internet service, PostHog receives an IP address while handling a request.</p>
-              <p>Browser IDs expire with your choice. Unsent app counts stay on your Mac for up to 30 days while sharing is enabled. Collected analytics is retained for up to one year, unless deleted earlier.</p>
+              <p>Your browser choice expires after 180 days. The website removes the old analytics ID when it next checks your choice, such as on your next visit. While sharing is enabled, the app discards unsent statistics older than its 30-day retry window when it next runs or checks for uploads. These local records can remain longer while the website or app is closed.</p>
+              <p>PostHog’s free plan makes the last year of analytics events available in reports. This reporting window does not guarantee that older data is deleted. See <a href="https://posthog.com/docs/data/events-retention">PostHog’s retention information</a> for details.</p>
               <p>We use these statistics to improve Glissform and may share aggregate totals, never installation IDs. We don’t sell analytics data.</p>
               <p>Our hosting provider also handles the normal requests needed to deliver the website, downloads and update feed. These connections are separate from optional analytics.</p>
             </section>

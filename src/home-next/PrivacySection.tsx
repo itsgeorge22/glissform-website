@@ -2,16 +2,16 @@ import './privacy-section.scss';
 
 const privacyNotes = [
   {
-    title: 'One screenshot per gesture',
+    title: 'Captured once per gesture',
     description: 'Screen Recording access lets Glissform capture one still image.',
   },
   {
-    title: 'Never saved or shared',
+    title: 'Screen images stay local',
     description: 'Screen images stay in memory. Never saved or uploaded.',
   },
   {
-    title: 'Your choice',
-    description: 'Website analytics are optional. Screen images are never included.',
+    title: 'Usage sharing is optional',
+    description: 'App and web analytics never include screen images.',
   },
 ];
 

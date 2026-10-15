@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-15 — Privacy wording
+
+- Clarify that PostHog’s one-year reporting window does not guarantee deletion, and that expired local analytics records are cleaned up when the app or website next runs. Give the homepage privacy items clearer titles and mention optional app and website analytics in a subtitle that stays on one line on desktop.
+
 ## 2026-10-15 — Installation guide
 
 - Add a shared installation guide after homepage and privacy-page download clicks, with four stacked numbered cards, a square close button, a blue information note and the site's typography. Preserve the DMG download and reopen the guide from the installation FAQ.
