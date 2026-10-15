@@ -71,6 +71,21 @@ class ReceiverTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             receiver.extract_build(archive(discovery=False, models=False), Path(directory))
 
+    def test_privacy_page_is_accepted_and_published_before_homepage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            stage, root = Path(directory) / 'stage', Path(directory) / 'root'
+            stage.mkdir(); root.mkdir()
+            receiver.extract_build(archive([tarfile.TarInfo('privacy/index.html')]), stage)
+            original = receiver.os.replace
+            order = []
+            def record(source, destination):
+                order.append(Path(destination).relative_to(root).as_posix())
+                return original(source, destination)
+            with patch.object(receiver.os, 'replace', side_effect=record):
+                receiver.publish_build(stage, root, 'd' * 40)
+            self.assertTrue((root / 'privacy/index.html').is_file())
+            self.assertLess(order.index('privacy/index.html'), order.index('index.html'))
+
     def test_animation_page_is_accepted_and_published(self):
         entries = [tarfile.TarInfo('hero-test-animation.html'), tarfile.TarInfo('hero-test-animation/index.html')]
         with tempfile.TemporaryDirectory() as directory:
@@ -86,7 +101,7 @@ class ReceiverTests(unittest.TestCase):
                      'updates/appcast.xml', 'hero-test/other.html', 'hero-test/assets/bad.js',
                      'hero-test-animation/other.html', 'hero-test-animation/assets/bad.js',
                      'deployment.json', 'robots.txt/nested', 'assets', 'models', 'models/../escape',
-                     'v2/index.html', 'google-verification.html'):
+                     'v2/index.html', 'google-verification.html', 'privacy/other.html', 'privacy/assets/bad.js'):
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 with self.assertRaises(ValueError):
                     receiver.extract_build(archive([tarfile.TarInfo(name)]), Path(directory))

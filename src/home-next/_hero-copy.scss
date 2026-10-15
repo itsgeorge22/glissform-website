@@ -1,0 +1,21 @@
+@use '../design-scale' as design;
+
+@mixin headline {
+  font: 600 max(44px, design.px(64))/1.125 'Hero Manrope', sans-serif;
+  letter-spacing: -.04em;
+}
+
+@mixin subtitle {
+  font: 400 max(16px, design.px(18))/1.56 'Hero Manrope', sans-serif;
+  letter-spacing: normal;
+}
+
+@mixin compact-headline {
+  font-size: clamp(30px, 8.5vw, 62px);
+  line-height: 1.14;
+}
+
+@mixin compact-subtitle {
+  font-size: 16px;
+  line-height: 1.65;
+}

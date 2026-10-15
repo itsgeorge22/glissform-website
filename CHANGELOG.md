@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-15 — Website analytics and privacy
+
+- Reuse the homepage’s fixed glass navbar on the privacy page and share one FAQ, download card and footer ending across both pages. Preserve the desktop scroll-over and darkening effect, compact/reduced-motion flow and homepage navbar entrance; make section and home links work across pages.
+
+- Add optional PostHog EU analytics for homepage visitors, traffic sources and download clicks by button location. Use a compact bottom-right prompt with the feature-blue Allow button, grey Read More link and a compact text-only No thanks action. Center the privacy page in the middle eight desktop columns, reuse the hero typography, and describe privacy practices without release-specific wording. Let visitors withdraw through the footer or privacy page. Exclude local test activity from the production dashboard and keep recordings, automatic capture and person profiles disabled.
+- Update the restricted deployment receiver and upload package to publish the privacy page before the homepage.
+
 ## 2026-10-15 — Production homepage
 
 - Promote the reviewed v2 design to the canonical homepage. Enable production indexing, use root canonical/social/structured-data URLs, retain the root sitemap and robots policy, and keep local previews excluded from indexing. Retire the separate v2 uploader and redirect its public homepage to `/`.

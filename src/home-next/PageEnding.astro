@@ -1,0 +1,36 @@
+---
+import FaqSection from './FaqSection';
+import './page-ending.scss';
+
+interface Props {
+  contentId?: string;
+}
+const { contentId } = Astro.props;
+---
+
+<glissform-page-ending class="page-ending">
+  <div class="page-ending__underlay" id={contentId}>
+    <div class="page-ending__content"><slot /></div>
+  </div>
+  <FaqSection client:load />
+</glissform-page-ending>
+
+<script>
+  import { trackPageEnding } from './pageEndingScroll';
+
+  class GlissformPageEnding extends HTMLElement {
+    private cleanup?: () => void;
+
+    connectedCallback() {
+      this.cleanup = trackPageEnding(this);
+    }
+
+    disconnectedCallback() {
+      this.cleanup?.();
+    }
+  }
+
+  if (!customElements.get('glissform-page-ending')) {
+    customElements.define('glissform-page-ending', GlissformPageEnding);
+  }
+</script>

@@ -1,0 +1,81 @@
+---
+import '../site.scss';
+import AnalyticsConsent from '../AnalyticsConsent.astro';
+import FixedNavigation from '../home-next/FixedNavigation';
+import PageEnding from '../home-next/PageEnding.astro';
+import favicon from '../generated/assets/favicon.png?url';
+import { designReferenceWidth } from '../home-next/designScale';
+import '../privacy-page.scss';
+---
+<!doctype html>
+<html lang="en" class="site-page-root">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy — Glissform</title>
+    <meta name="description" content="How Glissform handles screen images, optional usage analytics and your privacy choices." />
+    <link rel="canonical" href="https://glissform.app/privacy/" />
+    <link rel="icon" type="image/png" href={favicon} />
+    <meta name="robots" content={import.meta.env.DEV ? 'noindex, nofollow' : 'index, follow'} />
+  </head>
+  <body class="site-page privacy-page" style={`--design-reference-width: ${designReferenceWidth}`}>
+    <a class="privacy-skip" href="#privacy-content">Skip to privacy details</a>
+    <FixedNavigation client:load />
+    <main>
+      <PageEnding>
+        <article class="privacy-shell">
+          <div class="privacy-intro">
+            <img class="privacy-intro__icon" src="/assets/privacy-shield.svg" width="34" height="40" alt="" />
+            <h1>Privacy,<br />plain and simple</h1>
+            <p>Your screen stays on your Mac.<br />Usage statistics are always your choice.</p>
+            <span class="privacy-updated">Last updated 15 October 2026</span>
+          </div>
+          <div class="privacy-content" id="privacy-content">
+            <section class="privacy-screen" id="screen-images" aria-labelledby="screen-title">
+              <h2 id="screen-title">Your screen stays on your Mac</h2>
+              <p>Seamless Close takes one still image per closing attempt to create its animation. It stays in memory and is released after the gesture or cancellation. A closing image may be kept through sleep for the following opening.</p>
+              <p>Screen images are never saved or uploaded. Glissform does not continuously record your screen or capture audio.</p>
+            </section>
+            <section id="website-analytics" aria-labelledby="website-title">
+              <h2 id="website-title">Optional website analytics</h2>
+              <p>If you choose Allow, basic usage statistics help us understand how people find the website and use its download buttons. We use PostHog’s EU service for this.</p>
+              <ul>
+                <li><strong>Visits and clicks:</strong> page views and which download button you click.</li>
+                <li><strong>Traffic sources:</strong> the referring website and simple campaign labels. We don’t send full referring URLs, arbitrary query strings or page content.</li>
+                <li><strong>A random browser ID:</strong> stored in your browser to estimate visitors. It is separate from your app installation.</li>
+              </ul>
+              <p>We don’t use session recordings or advertising IDs. Your choice lasts 180 days. You can change it anytime; choosing No thanks removes the browser analytics ID and stops new analytics requests. The website and downloads work either way.</p>
+              <button class="privacy-choice" type="button" data-analytics-settings>Change website analytics choice</button>
+            </section>
+            <section id="app-analytics" aria-labelledby="app-title">
+              <h2 id="app-title">Optional app analytics</h2>
+              <p>Glissform only shares usage statistics if you allow it. You can manage this in <strong>Settings → Privacy &amp; about</strong>. When enabled, the app sends these details to PostHog EU:</p>
+              <ul>
+                <li>A random installation ID, app version and whether this is a new installation.</li>
+                <li>Days the app runs and daily counts of Seamless Close use.</li>
+                <li>Whether Seamless Close has worked on a new installation, to help measure successful setup.</li>
+              </ul>
+              <p>These statistics help us understand active installations, feature use and continued use. They don’t include screen images, window titles, lid angles, serial numbers, names or email addresses. We don’t measure time spent looking at your screen.</p>
+              <p>Turning sharing off removes the local analytics ID and unsent counts, and stops new requests. Turning it on again starts with a new ID. Data already received is not automatically deleted.</p>
+              <p>Counts estimate participating installations, not exact people or every download. App updates aren’t deliberately counted as new installations; resetting preferences can affect these estimates.</p>
+            </section>
+            <section id="storage" aria-labelledby="storage-title">
+              <h2 id="storage-title">Storage and services</h2>
+              <p>PostHog processes analytics for us in its EU region. We disable location enrichment and person profiles, and don’t store IP addresses in analytics events. Like any internet service, PostHog receives an IP address while handling a request.</p>
+              <p>Browser IDs expire with your choice. Unsent app counts stay on your Mac for up to 30 days while sharing is enabled. Collected analytics is retained for up to one year, unless deleted earlier.</p>
+              <p>We use these statistics to improve Glissform and may share aggregate totals, never installation IDs. We don’t sell analytics data.</p>
+              <p>Our hosting provider also handles the normal requests needed to deliver the website, downloads and update feed. These connections are separate from optional analytics.</p>
+            </section>
+            <section id="your-choices" aria-labelledby="choices-title">
+              <h2 id="choices-title">Your choices and rights</h2>
+              <p>Optional analytics relies on your consent. You can withdraw it without losing website or app features. Depending on your location, you may request access, correction or deletion of personal data, or complain to your data protection authority.</p>
+              <p>Glissform is developed by George Palkin. For privacy questions or requests, email <a href="mailto:support@glissform.app">support@glissform.app</a>. We can help identify records associated with your random analytics ID; we don’t collect your identity automatically.</p>
+              <p>You can also read <a href="https://posthog.com/privacy">PostHog’s privacy information</a>.</p>
+            </section>
+          </div>
+        </article>
+      </PageEnding>
+    </main>
+    <AnalyticsConsent />
+  </body>
+</html>

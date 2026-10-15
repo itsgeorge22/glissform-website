@@ -1,0 +1,23 @@
+@use '../design-scale' as design;
+@use './responsive' as responsive;
+
+.site-page .fixed-navigation {
+  position: fixed;
+  z-index: 8;
+  top: design.px(8);
+  left: 0;
+  right: 0;
+  height: max(60px, #{design.px(64)});
+  color-scheme: dark;
+  pointer-events: none;
+  transform-origin: 50% 0;
+  font-family: 'Hero Manrope', sans-serif;
+
+  .hero-test__nav { bottom: 0; pointer-events: auto; }
+  .hero-test__nav-dock { box-shadow: none; }
+  .hero-test__links a { color: #fff; }
+  .download-link { font-family: 'Hero Manrope', sans-serif; }
+  .download-link__label { letter-spacing: design.px(-.3); }
+
+  @media (width < responsive.$tablet) { display: none; }
+}

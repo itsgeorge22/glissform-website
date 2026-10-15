@@ -1,6 +1,7 @@
+import type { DownloadPlacement } from './analytics';
 import { useEffect, useRef, type ReactNode } from 'react';
 
-export default function GlassDownloadLink({ href, label = 'Download for MacOS', icon }: { href: string; label?: string; icon?: ReactNode }) {
+export default function GlassDownloadLink({ href, label = 'Download for MacOS', icon, placement }: { href: string; label?: string; icon?: ReactNode; placement?: DownloadPlacement }) {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -63,7 +64,7 @@ export default function GlassDownloadLink({ href, label = 'Download for MacOS', 
     };
   }, []);
 
-  return <a ref={linkRef} className="download-link download-link--secondary" href={href}>
+  return <a ref={linkRef} className="download-link download-link--secondary" href={href} data-download-placement={placement}>
     <span className="download-link__glass" aria-hidden="true"><span className="download-link__glint" /></span>
     <span className="download-link__label">{label}{icon}</span>
   </a>;

@@ -1,13 +1,5 @@
 @use '../design-scale' as design;
-@each $weight in 400, 500, 600, 700 {
-  @font-face {
-    font-family: 'Hero Manrope';
-    font-style: normal;
-    font-weight: $weight;
-    font-display: swap;
-    src: url('./assets/manrope-#{$weight}.woff2') format('woff2');
-  }
-}
+@use '../manrope';
 
 .hero-test-page { background: #000; color: #fff; }
 
@@ -369,4 +361,13 @@
   }
   93% { transform: scale(1.1); opacity: .55; }
   100% { transform: scale(.2); opacity: 0; box-shadow: 0 0 design.px(12) #8dceff00; }
+}
+
+.hero-prelude__glow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform-origin: 50% 100%;
 }

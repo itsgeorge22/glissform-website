@@ -70,6 +70,12 @@
     p { @include copy.detail-body; }
   }
 
+  &__privacy {
+    display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: center;
+    a, button { color: #3e5066; font: inherit; font-size: 14px; min-height: 44px; display: inline-flex; align-items: center; }
+    button { border: 0; background: none; padding: 0; cursor: pointer; text-decoration: underline; }
+  }
+
   &__home {
     display: inline-flex;
     align-items: center;

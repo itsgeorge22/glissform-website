@@ -1,13 +1,14 @@
 @use '../design-scale' as design;
 @use './responsive' as responsive;
 
-.home-ending {
+.page-ending {
   --faq-section-gap: #{design.px(200)};
   --faq-corner-radius: #{design.px(40)};
   --cover-distance: 0px;
+  display: block;
   isolation: isolate;
 
-  &__customization {
+  &__underlay {
     position: relative;
 
     &::before {
@@ -31,17 +32,17 @@
     &[data-scroll-cover='ready'] {
       --cover-distance: 100svh;
 
-      .home-ending__customization {
-        // Stop painting covered demos, retaining the area behind the rounded edge.
+      .page-ending__underlay {
+        // Stop painting covered content, retaining the area behind the rounded edge.
         clip-path: inset(0 0 max(0px, calc(var(--cover-distance) - var(--faq-section-gap) - var(--faq-corner-radius))) 0);
 
         &::before { opacity: calc(var(--cover-progress, 0) * .28); }
       }
 
-      .seamless-close-features {
+      .page-ending__content {
         position: sticky;
-        // Read through tall grids before holding as the gray sheet enters.
-        top: min(0px, calc(100svh - var(--customization-height) - var(--faq-section-gap)));
+        // Read through tall content before holding as the gray sheet enters.
+        top: min(0px, calc(100svh - var(--preceding-content-height) - var(--faq-section-gap)));
       }
     }
   }

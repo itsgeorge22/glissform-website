@@ -18,13 +18,14 @@ export default function SiteFooter() {
             <p>Make closing your Mac even more satisfying</p>
           </div>
           <div className="hero-download">
-            <DownloadLink href={new URL(downloadUrl, siteUrl).href} />
+            <DownloadLink href={new URL(downloadUrl, siteUrl).href} placement="download_card" />
           </div>
         </div>
       </div>
     </section>
     <div className="home-footer__bottom">
-      <a className="home-footer__home" href="#" aria-label="Glissform home"><GlissformBrand /></a>
+      <a className="home-footer__home" href={import.meta.env.BASE_URL} aria-label="Glissform home"><GlissformBrand /></a>
+      <div className="home-footer__privacy"><a href="/privacy/">Privacy</a><button type="button" data-analytics-settings>Analytics choices</button></div>
       <p>© {new Date().getFullYear()} Glissform</p>
     </div>
   </footer>;

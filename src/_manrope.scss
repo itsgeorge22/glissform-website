@@ -1,0 +1,9 @@
+@each $weight in 400, 500, 600, 700 {
+  @font-face {
+    font-family: 'Hero Manrope';
+    font-style: normal;
+    font-weight: $weight;
+    font-display: swap;
+    src: url('./hero-test/assets/manrope-#{$weight}.woff2') format('woff2');
+  }
+}

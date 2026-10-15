@@ -1,9 +1,8 @@
-import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 import { ManualAngleVisual } from './ManualAngleVisual';
 import { AutomaticAngleVisual } from './AutomaticAngleVisual';
 import { BlurVisual, DesktopReturnVisual } from './SeamlessFeatureVisuals';
 import { FeatureSectionIntro } from './FeatureSectionIntro';
-import { trackCustomizationCover } from './customizationScrollCover';
 import { tabletBreakpoint } from './responsive';
 import './seamless-close-features.scss';
 
@@ -56,15 +55,9 @@ const features = [
 ];
 
 export default function SeamlessCloseFeatures() {
-  const sectionRef = useRef<HTMLElement>(null);
   const phoneLayout = useSyncExternalStore(subscribeToPhoneLayout, phoneSnapshot, serverPhoneSnapshot);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (section) return trackCustomizationCover(section);
-  }, []);
-
-  return <section ref={sectionRef} className="seamless-close-features home-next-desktop" aria-label="Seamless Close features">
+  return <section className="seamless-close-features home-next-desktop" aria-label="Seamless Close features">
     <FeatureSectionIntro
       title="Make every close your own"
       description="Choose when Seamless Close starts, how it looks and how your desktop returns"

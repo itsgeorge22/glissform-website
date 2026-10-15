@@ -1,10 +1,10 @@
 import { desktopSceneQuery } from './responsive';
 
 /** Keep the native sticky hold and its dimming layer aligned with the FAQ edge. */
-export function trackCustomizationCover(section: HTMLElement) {
-  const ending = section.closest<HTMLElement>('.home-ending');
-  const faq = ending?.querySelector<HTMLElement>('.faq-section');
-  if (!ending || !faq) return;
+export function trackPageEnding(ending: HTMLElement) {
+  const content = ending.querySelector<HTMLElement>('.page-ending__content');
+  const faq = ending.querySelector<HTMLElement>('.faq-section');
+  if (!content || !faq) return;
 
   const motion = window.matchMedia(desktopSceneQuery);
   let frame = 0, lastHeight = 0, lastProgress = '';
@@ -20,17 +20,17 @@ export function trackCustomizationCover(section: HTMLElement) {
   };
   const schedule = () => { if (!frame) frame = requestAnimationFrame(draw); };
   const measure = () => {
-    const height = section.getBoundingClientRect().height;
+    const height = content.getBoundingClientRect().height;
     if (height && height !== lastHeight) {
       lastHeight = height;
-      ending.style.setProperty('--customization-height', `${height}px`);
+      ending.style.setProperty('--preceding-content-height', `${height}px`);
     }
     if (motion.matches) ending.dataset.scrollCover = 'ready';
     else delete ending.dataset.scrollCover;
     schedule();
   };
   const size = new ResizeObserver(measure);
-  size.observe(section);
+  size.observe(content);
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
   window.addEventListener('pageshow', schedule);
@@ -44,7 +44,7 @@ export function trackCustomizationCover(section: HTMLElement) {
     window.removeEventListener('resize', schedule);
     window.removeEventListener('pageshow', schedule);
     motion.removeEventListener('change', measure);
-    ending.style.removeProperty('--customization-height');
+    ending.style.removeProperty('--preceding-content-height');
     ending.style.removeProperty('--cover-progress');
     delete ending.dataset.scrollCover;
   };

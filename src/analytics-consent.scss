@@ -1,0 +1,66 @@
+@use './manrope';
+
+.analytics-consent {
+  position: fixed;
+  inset: auto 24px 24px auto;
+  z-index: 1000;
+  box-sizing: border-box;
+  width: min(384px, calc(100% - 48px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid #d4dfed;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 8px 40px #102b4c24;
+  color: #090b0e;
+  font: 14px/1.6 'Hero Manrope', sans-serif;
+
+  &[hidden] { display: none; }
+  strong { font-size: 18px; font-weight: 600; line-height: 1.4; }
+  p { margin: 12px 0 0; color: #555b63; }
+
+  &__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  button, &__details {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 12px;
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  [data-analytics-choice='accepted'] { background: #0073ff; color: #fff; }
+  [data-analytics-choice='accepted']:hover { background: #0067e5; }
+  &__details { background: #f0f2f5; color: #3e4652; }
+  &__details:hover { background: #e5e9ef; }
+  button.analytics-consent__decline {
+    grid-column: 1 / -1;
+    justify-self: center;
+    min-height: 28px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: transparent;
+    color: #555b63;
+    &:hover { color: #090b0e; text-decoration: underline; text-underline-offset: 3px; }
+  }
+  :focus-visible { outline: 3px solid #0073ff; outline-offset: 3px; }
+
+  @media (width < 768px) {
+    inset: auto 12px 12px;
+    width: calc(100% - 24px);
+    max-height: calc(100dvh - 24px);
+    padding: 20px;
+    gap: 16px;
+  }
+}

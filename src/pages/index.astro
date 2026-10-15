@@ -1,16 +1,17 @@
 ---
+import '../site.scss';
 import Hero from '../home-next/Hero';
-import FaqSection from '../home-next/FaqSection';
+import AnalyticsConsent from '../AnalyticsConsent.astro';
+import PageEnding from '../home-next/PageEnding.astro';
 import PrivacySection from '../home-next/PrivacySection';
 import SeamlessCloseFeatures from '../home-next/SeamlessCloseFeatures';
 import SettingsFeatures from '../home-next/SettingsFeatures';
 import { designReferenceWidth } from '../home-next/designScale';
-import '../home-next/home-ending.scss';
 import favicon from '../generated/assets/favicon.png?url';
 import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, socialImage, softwareApplication } from '../siteMetadata';
 ---
 <!doctype html>
-<html lang="en" class="home-next-page no-js">
+<html lang="en" class="site-page-root home-next-page no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -41,19 +42,17 @@ import { siteUrl, siteTitle, siteDescription, socialTitle, socialDescription, so
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(softwareApplication)} />
   </head>
-  <body class="home-next" style={`--design-reference-width: ${designReferenceWidth}`}>
+  <body class="site-page home-next" style={`--design-reference-width: ${designReferenceWidth}`}>
     <a class="home-next__skip" href="#how-it-works">Skip to features</a>
     <main>
       <Hero client:load />
       <SettingsFeatures client:load />
       <PrivacySection />
-      <div class="home-ending">
-        <div class="home-ending__customization" id="seamless-close-features">
-          <SeamlessCloseFeatures client:load />
-        </div>
-        <FaqSection client:load />
-      </div>
+      <PageEnding contentId="seamless-close-features">
+        <SeamlessCloseFeatures client:load />
+      </PageEnding>
     </main>
+    <AnalyticsConsent />
     <script>
       if (import.meta.env.DEV && new URLSearchParams(location.search).has('profile')) {
         import('../hero-test-animation/frameProbe').then(({ mountFrameProbe }) => mountFrameProbe());

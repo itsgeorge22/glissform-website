@@ -11,7 +11,7 @@ import tarfile
 import tempfile
 
 ROOT_FILES = {'index.html', 'robots.txt', 'sitemap.xml', 'hero-test.html', 'hero-test-animation.html'}
-PREVIEW_PAGES = {'hero-test', 'hero-test-animation'}
+HTML_PAGES = {'hero-test', 'hero-test-animation', 'privacy'}
 ASSET_DIRECTORIES = {'assets', 'models'}
 
 
@@ -27,9 +27,9 @@ def extract_build(stream, stage):
                 continue
             root_file = len(parts) == 1 and parts[0] in ROOT_FILES and member.isfile()
             asset = parts and parts[0] in ASSET_DIRECTORIES and (len(parts) > 1 or member.isdir())
-            hero = any((parts == (page,) and member.isdir()) or
-                       (parts == (page, 'index.html') and member.isfile()) for page in PREVIEW_PAGES)
-            if not (root_file or asset or hero) or not (member.isfile() or member.isdir()):
+            page = any((parts == (page,) and member.isdir()) or
+                       (parts == (page, 'index.html') and member.isfile()) for page in HTML_PAGES)
+            if not (root_file or asset or page) or not (member.isfile() or member.isdir()):
                 raise ValueError('Unexpected archive member')
             total += member.size
             if total > 250_000_000:
@@ -52,7 +52,7 @@ def publish_build(stage, root, commit):
         if (stage / directory).is_dir():
             shutil.copytree(stage / directory, root / directory, dirs_exist_ok=True)
     for name in ('robots.txt', 'sitemap.xml', 'hero-test.html', 'hero-test/index.html',
-                 'hero-test-animation.html', 'hero-test-animation/index.html', 'index.html'):
+                 'hero-test-animation.html', 'hero-test-animation/index.html', 'privacy/index.html', 'index.html'):
         if not (stage / name).is_file():
             continue
         (root / name).parent.mkdir(parents=True, exist_ok=True)

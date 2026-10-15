@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, typ
 import DownloadLink from '../DownloadLink';
 import { downloadUrl, siteUrl } from '../siteMetadata';
 import AnimationHeroNavigation from './HeroNavigation';
+import FixedNavigation from './FixedNavigation';
 import HeroAtmosphere from './HeroAtmosphere';
 import GlissformBrand from './GlissformBrand';
 import MenuBar from './MenuBar';
@@ -23,8 +24,6 @@ import { sceneProjection, lidClearProgress, cameraLayout, projectHardwareScreen 
 import { connectProjectedGlass } from '../hero-test-animation/projectedGlass';
 import { cancelHeroFrame, requestSceneFrame, setHeroScreenProjection } from '../hero-test-animation/frameSync';
 import type { ThreeHardwareRenderer } from './threeHardware';
-import '../styles.scss';
-import '../hero-test/hero-test.scss';
 import '../hero-test-animation/scene.scss';
 import './hero.scss';
 import './hero-prelude.scss';
@@ -314,7 +313,7 @@ export default function Hero() {
                   </p>
                 </div>
               </div>
-              <div className="hero-animation__action"><DownloadLink href={previewDownloadUrl} /></div>
+              <div className="hero-animation__action"><DownloadLink href={previewDownloadUrl} placement="hero" /></div>
             </div>
             <AnimationHeroNavigation downloadHref={previewDownloadUrl} />
             </div>
@@ -347,8 +346,6 @@ export default function Hero() {
       <div className="seamless-macbook__deck"><KeyboardTemplate /></div>
     </div>}
   </section>
-    <div className="hero-animation__navigation" ref={navigationRef} aria-hidden="true" inert>
-      <AnimationHeroNavigation downloadHref={previewDownloadUrl} flat />
-    </div>
+    <FixedNavigation ref={navigationRef} sceneControlled />
   </>;
 }

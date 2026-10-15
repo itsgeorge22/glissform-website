@@ -6,6 +6,10 @@ export const navigationSections = [
   { id: 'good-to-know', label: 'FAQ' },
 ] as const;
 
+export function navigationHref(id: string, onHomePage: boolean) {
+  return `${onHomePage || id === 'good-to-know' ? '' : import.meta.env.BASE_URL}#${id}`;
+}
+
 /** Later surfaces win when the FAQ covers the sticky feature section. */
 export function visibleNavigationSection(ranges: { id: string; top: number; bottom: number }[], viewportHeight: number, scale = 1) {
   const readingLine = Math.min(320 * scale, viewportHeight * .35);

@@ -1,50 +1,8 @@
 @use '../design-scale' as design;
 @use './responsive' as responsive;
-.home-next-page { background: #fff; color-scheme: light; overflow-x: clip; }
-
-// All desktop design lengths share the owner's approved 1920px composition.
-@media (min-width: responsive.$desktop) {
-  .home-next { --design-unit: calc(100vw / var(--design-reference-width)); }
-}
-
-.home-next-page, .home-next {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-
-  &::-webkit-scrollbar { display: none; width: 0; height: 0; }
-}
+@use './hero-copy' as copy;
 
 .home-next {
-  --page-gutter: 20px;
-  --section-gap: #{design.px(200)};
-  --privacy-section-gap: #{design.px(160)};
-  --feature-panel-surface: #f1f3f6;
-  background: #fff;
-  color: #171c24;
-
-  .hero-test__links {
-    position: relative;
-    isolation: isolate;
-    a { position: relative; z-index: 1; }
-    a[aria-current='location'] { color: #fff; }
-  }
-  .hero-test__active-link {
-    position: absolute;
-    top: 0; left: 0; height: 100%;
-    width: var(--active-link-width, 0px);
-    transform: translateX(var(--active-link-x, 0px));
-    border-radius: design.px(14);
-    background: rgb(255 255 255 / 12%);
-    box-shadow: inset 0 0 0 design.px(1) rgb(255 255 255 / 8%);
-    pointer-events: none;
-    opacity: 0;
-    &[data-positioned='true'] {
-      transition: transform 360ms cubic-bezier(.22, 1, .36, 1),
-        width 360ms cubic-bezier(.22, 1, .36, 1), opacity 180ms ease;
-    }
-    &[data-visible='true'] { opacity: 1; }
-  }
-
   // Reserve the full scroll track in the initial HTML so browser restoration
   // sees the same page height before and after hydration.
   .hero-animation {
@@ -145,16 +103,7 @@
   .hero-animation__description {
     margin: design.px(20) auto 0; color: #555b63;
   }
-  .hero-animation__navigation {
-    position: fixed; z-index: 1; top: design.px(8); left: 0; right: 0; height: design.px(64);
-    opacity: 0; color-scheme: dark; pointer-events: none; transform-origin: 50% 0;
-    font-family: 'Hero Manrope', sans-serif;
-    .hero-test__nav { bottom: 0; pointer-events: auto; }
-    .hero-test__nav-dock { box-shadow: none; }
-    .hero-test__links a { color: #fff; }
-    .download-link { font-family: 'Hero Manrope', sans-serif; }
-    .download-link__label { letter-spacing: design.px(-.3); }
-  }
+  .hero-animation__navigation { z-index: 1; opacity: 0; }
   .hero-animation--static { height: 100svh; min-height: design.px(720); }
   .hero-animation--static .hero-animation__ending,
   .hero-animation--static .hero-animation__ambience,
@@ -173,7 +122,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-next .hero-test__active-link[data-positioned='true'] { transition: none; }
   .home-next .hero-animation { height: 100svh; min-height: design.px(720); }
   .home-next :is(.hero-animation__ending, .hero-animation__ambience, .hero-animation__navigation) { display: none; }
 }
@@ -181,12 +129,10 @@
 // Main section copy shares the same proportional desktop typography.
 .home-next {
   .hero-test__copy h1, .hero-animation__ending h2 {
-    font: 600 max(44px, design.px(64))/1.125 'Hero Manrope', sans-serif;
-    letter-spacing: -.04em;
+    @include copy.headline;
   }
   .hero-test__copy p, .hero-animation__description {
-    font: 400 max(16px, design.px(18))/1.56 'Hero Manrope', sans-serif;
-    letter-spacing: normal;
+    @include copy.subtitle;
   }
 }
 
@@ -203,33 +149,4 @@
   &:focus { transform: none; }
 }
 
-@media (width < responsive.$desktop) {
-  .home-next {
-    --design-unit: 1px;
-    --section-gap: 88px;
-    --privacy-section-gap: 88px;
-  }
-}
-@media (responsive.$tablet <= width < responsive.$desktop) {
-  .home-next {
-    --page-gutter: 32px;
-    --section-gap: 104px;
-    --privacy-section-gap: 104px;
-  }
-}
-
-// Reading text and controls stay usable in smaller desktop windows.
-.home-next {
-  .download-link {
-    min-height: max(44px, design.px(56));
-    font-size: max(16px, design.px(16));
-    line-height: 1.5;
-  }
-  .hero-test__links { font-size: max(14px, design.px(16)); }
-  .hero-test__links a, .hero-test__home { min-height: 44px; }
-  .hero-test__nav-dock { min-height: 60px; }
-  .hero-test__download-slot { min-height: 44px; }
-  .hero-test__nav .download-link--secondary { min-height: 44px; font-size: max(14px, design.px(16)); }
-  .hero-animation__navigation { height: max(60px, design.px(64)); }
-  .hero-animation__surface .hero-test__offer { width: min(max(640px, design.px(744)), calc(100% - design.px(48))); }
-}
+.home-next .hero-animation__surface .hero-test__offer { width: min(max(640px, design.px(744)), calc(100% - design.px(48))); }

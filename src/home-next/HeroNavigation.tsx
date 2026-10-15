@@ -1,9 +1,9 @@
 import logo from '../hero-test/assets/glissform.webp?url';
 import GlassDownloadLink from '../GlassDownloadLink';
-import { navigationSections } from './sectionNavigation';
+import { navigationSections, navigationHref } from './sectionNavigation';
 
 /** Shared navigation for the projected hero and fixed top bar. */
-export default function AnimationHeroNavigation({ downloadHref, flat = false }: { downloadHref: string; flat?: boolean }) {
+export default function AnimationHeroNavigation({ downloadHref, flat = false, onHomePage = true }: { downloadHref: string; flat?: boolean; onHomePage?: boolean }) {
   return <nav className="hero-test__nav" aria-label="Website navigation">
     <div className="hero-test__nav-dock" style={flat ? {
       // Preserve the standard property alongside the Safari form; the CSS
@@ -17,11 +17,11 @@ export default function AnimationHeroNavigation({ downloadHref, flat = false }: 
       <span className="hero-test__nav-divider" aria-hidden="true" />
       <div className="hero-test__links">
         <span className="hero-test__active-link" aria-hidden="true" />
-        {navigationSections.map(({ id, label }) => <a key={id} href={`#${id}`} data-section-link={id}><span>{label}</span></a>)}
+        {navigationSections.map(({ id, label }) => <a key={id} href={navigationHref(id, onHomePage)} data-section-link={id}><span>{label}</span></a>)}
       </div>
       <span className="hero-test__nav-divider" aria-hidden="true" />
       <div className="hero-test__download-slot">
-        {flat ? <GlassDownloadLink href={downloadHref} label="Download" /> : <a className="download-link download-link--secondary" href={downloadHref}>
+        {flat ? <GlassDownloadLink href={downloadHref} label="Download" placement="fixed_navbar" /> : <a className="download-link download-link--secondary" href={downloadHref} data-download-placement="navbar">
           <span className="download-link__glass" aria-hidden="true"><span className="download-link__glint" /></span>
           <span className="download-link__label">Download</span>
         </a>}

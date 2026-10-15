@@ -10,8 +10,8 @@ const privacyNotes = [
     description: 'Screen images stay in memory. Never saved or uploaded.',
   },
   {
-    title: 'No analytics',
-    description: 'No usage analytics. Glissform connects for update checks and downloads.',
+    title: 'Your choice',
+    description: 'Website analytics are optional. Screen images are never included.',
   },
 ];
 

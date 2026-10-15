@@ -1,0 +1,36 @@
+---
+import './analytics-consent.scss';
+---
+<aside class="analytics-consent" aria-labelledby="analytics-consent-title" hidden>
+  <div>
+    <strong id="analytics-consent-title">Help improve Glissform</strong>
+    <p>Help make Glissform better by sharing basic usage statistics, like page visits and download clicks. It’s optional, and you can change your choice anytime.</p>
+  </div>
+  <div class="analytics-consent__actions">
+    <button type="button" data-analytics-choice="accepted">Allow</button>
+    <a class="analytics-consent__details" href="/privacy/#website-analytics">Read More</a>
+    <button class="analytics-consent__decline" type="button" data-analytics-choice="declined">No thanks</button>
+  </div>
+</aside>
+<script>
+  import { analyticsChoice, chooseAnalytics, startAnalytics } from './analytics';
+  const banner = document.querySelector<HTMLElement>('.analytics-consent');
+  const update = () => { if (banner) banner.hidden = analyticsChoice() !== 'undecided'; };
+  update();
+  startAnalytics();
+  window.addEventListener('glissform:analytics-choice', update);
+  document.addEventListener('click', event => {
+    const target = event.target as Element | null;
+    const choice = target?.closest<HTMLButtonElement>('[data-analytics-choice]')?.dataset.analyticsChoice;
+    if (choice === 'accepted' || choice === 'declined') {
+      chooseAnalytics(choice);
+      // When storage is blocked, dismiss for this page and keep analytics off.
+      if (banner) banner.hidden = true;
+    }
+    if (target?.closest('[data-analytics-settings]') && banner) {
+      event.preventDefault();
+      banner.hidden = false;
+      banner.querySelector('button')?.focus();
+    }
+  });
+</script>

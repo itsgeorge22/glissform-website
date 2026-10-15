@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import GlissformBrand from './GlissformBrand';
-import { navigationSections } from './sectionNavigation';
+import { navigationSections, navigationHref } from './sectionNavigation';
 import './compact-navigation.scss';
 
 /** Native disclosure keeps section links usable before hydration and without JS. */
-export default function CompactNavigation() {
+export default function CompactNavigation({ fixed = false, onHomePage = true }: { fixed?: boolean; onHomePage?: boolean }) {
   const menuRef = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
     const menu = menuRef.current!;
@@ -25,12 +25,12 @@ export default function CompactNavigation() {
     };
   }, []);
 
-  return <header className="compact-navigation">
+  return <header className={`compact-navigation${fixed ? ' compact-navigation--fixed' : ''}`}>
     <a className="compact-navigation__home" href={import.meta.env.BASE_URL} aria-label="Glissform home"><GlissformBrand /></a>
     <details className="compact-navigation__menu" ref={menuRef}>
       <summary>Explore <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="m5 8 5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></summary>
       <nav aria-label="Website navigation">
-        {navigationSections.map(({ id, label }) => <a key={id} href={`#${id}`} onClick={() => { if (menuRef.current) menuRef.current.open = false; }}>{label}</a>)}
+        {navigationSections.map(({ id, label }) => <a key={id} href={navigationHref(id, onHomePage)} onClick={() => { if (menuRef.current) menuRef.current.open = false; }}>{label}</a>)}
       </nav>
     </details>
   </header>;

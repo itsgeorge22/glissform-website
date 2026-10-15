@@ -8,7 +8,13 @@ The Astro homepage publishes at `https://glissform.app/`. The reviewed v2 layout
 2. Commit the approved source. Push to `main` only with publication authorization. `.github/workflows/deploy.yml` builds and validates the same source on Node 22 before sending the archive through the restricted SSH receiver.
 3. Verify `https://glissform.app/deployment.json` matches the intended full commit SHA. Check the live HTML, assets, model, canonical/robots metadata, downloads, update feed and redirects. A successful push alone is not deployment verification.
 
-The receiver at `/usr/local/lib/glissform-website-receive.py` is installed from `scripts/receive-deploy.py` and runs as `glissform-website-deploy`. It accepts only `deploy <40-character commit SHA>`, rejects traversal/links/unrelated paths, and retains the legacy preview-page allowlist for rollback. The current workflow archives only `index.html`, `robots.txt`, `sitemap.xml`, `assets/` and `models/`. Downloads, updates, Google verification and old assets are never part of the uploaded archive. Dependencies publish first, then HTML and the marker are atomically replaced.
+The receiver at `/usr/local/lib/glissform-website-receive.py` is installed from `scripts/receive-deploy.py` and runs as `glissform-website-deploy`. It accepts only `deploy <40-character commit SHA>`, rejects traversal/links/unrelated paths, and retains the legacy preview-page allowlist for rollback. The current workflow archives only `index.html`, `privacy/index.html`, `robots.txt`, `sitemap.xml`, `assets/` and `models/`. Downloads, updates, Google verification and old assets are never part of the uploaded archive. Dependencies publish first, then HTML and the marker are atomically replaced.
+
+## Analytics rollout
+
+Before the first analytics website deployment, install the updated `scripts/receive-deploy.py` on the server: the previous receiver rejects `privacy/index.html`. Its narrow allowlist accepts only that page HTML, not arbitrary files beneath privacy. Upload assets and the privacy page before atomically replacing the homepage.
+
+Review the consent banner on phone/tablet/desktop, decline then reload, allow and verify a test page view plus a download click, then withdraw. Production dashboard filters must remain `environment=production`. Publish the privacy page before releasing the analytics-enabled native app. Its wording is release-independent; update it when privacy practices change.
 
 ## Server configuration
 
