@@ -3,7 +3,7 @@ export const siteTitle = 'Glissform — Free MacBook Lid Animation';
 export const siteDescription = 'Add subtle animations to everyday MacBook moments with Glissform, a free macOS app. Explore Seamless Close, an iPhone Duo-style lid animation, in the public beta.';
 export const socialTitle = 'Glissform — A better closing act for your Mac';
 export const socialDescription = 'Make closing your MacBook more satisfying with a smooth lid animation. Adjust the starting angle and blur to make it yours. Free for macOS.';
-const publicBetaVersion = '0.1.0-beta.6';
+const publicBetaVersion = '0.1.0-beta.7';
 export const downloadUrl = `/downloads/Glissform-${publicBetaVersion}.dmg`;
 export const socialImage = new URL('assets/glissform-social.png', siteUrl).href;
 
