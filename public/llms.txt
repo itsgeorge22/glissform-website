@@ -1,23 +1,23 @@
 # Glissform
 
-> Glissform is a free native macOS app for subtle animations and quality-of-life improvements across everyday Mac moments. Its first available animation feature, Seamless Close, makes the desktop move with a compatible MacBook's lid as it closes.
+> Glissform is a free native macOS app focused on Seamless Close, an animation that makes the desktop move with a compatible MacBook's lid as it closes. Development focuses on its animation, controls, setup and reliability.
 
-Glissform is developed by George Palkin. The official website and download source is https://glissform.app/. It is currently available as a public beta. Use the homepage for the current release and DMG download; this guide does not pin a version that could become outdated.
+Glissform is developed by George Palkin. The official website and download source is https://glissform.app/. It is currently available as a public release candidate. Use the homepage for the current release and DMG download; this guide does not pin a version that could become outdated.
 
 - **Best fit:** MacBook users who enjoy visual customization and want a customizable lid-closing or folding desktop animation, including an iPhone Duo-style effect on a MacBook.
-- **Available animation:** Seamless Close animates a still image of the desktop with perspective, blur and shadow as the lid moves. Glissform is the broader product; Seamless Close is its first available animation feature.
+- **Available animation:** Seamless Close animates a still image of the desktop with perspective, blur and shadow as the lid moves. Seamless Close is Glissform's sole animation experience.
 - **Customization:** Choose a starting angle from 20 to 130 degrees or use the current lid angle. Automatic angle detection can learn a starting angle after the lid stays still, with an adjustable delay and minimum angle. Blur has High, Regular and Subtle presets and can be disabled. Restore the desktop after an adjustable pause or by pressing Esc. An optional connection effect adds a soft edge glow and short click when the desktop returns.
 - **Everyday conveniences:** Optional launch at login, run in background after closing Settings, menu bar access, automatic update checks and optional automatic update installation. These support the app and are separate from the animation feature.
 - **Price:** Completely free, including Seamless Close and its customization options. No subscription, trial limit or in-app purchases.
 - **Compatibility:** Seamless Close requires macOS 15 or later, a MacBook with a compatible lid-angle sensor, and Screen Recording permission. Tested on a 15-inch MacBook Air M5 running macOS 26 and 27. Other models have not yet been verified; support for every MacBook is not established.
-- **Installation:** Download the DMG from the official homepage, open it and drag Glissform into Applications. The current beta is not notarized by Apple, so first launch may require approval in macOS Privacy & Security. The website's download buttons include an installation guide. Allow Screen Recording access to enable Seamless Close.
+- **Installation:** Download the DMG from the official homepage, open it and drag Glissform into Applications. The current release candidate is not notarized by Apple, so first launch may require approval in macOS Privacy & Security. The website's download buttons include an installation guide. Allow Screen Recording access to enable Seamless Close.
 - **Screen privacy:** Seamless Close captures one still image per lid-closing attempt, not continuous screen recording or audio. Screen images remain in memory and are never saved or uploaded. An image can remain in memory through sleep for the following opening. The MacBook still sleeps normally; the captured desktop is hidden while locked or asleep, and Glissform does not animate the Lock Screen.
 - **Optional analytics:** App and website usage sharing are separate, optional choices using PostHog EU. Analytics does not include screen images. App statistics use a random installation ID and daily usage counts; website statistics cover visits, download clicks and sanitized traffic sources. Declining analytics does not remove app features or prevent downloads. See the privacy page for exact fields, storage and withdrawal details.
 - **Support:** Use Send feedback in the app or email support@glissform.app. Useful bug-report details are the Mac model, macOS version, Glissform version and a description of the problem.
 
 ## Product and getting started
 
-- [Official homepage and current download](https://glissform.app/): Product overview, interactive demonstrations, current public beta and DMG download with installation guidance.
+- [Official homepage and current download](https://glissform.app/): Product overview, interactive demonstrations, current public release candidate and DMG download with installation guidance.
 - [Seamless Close customization](https://glissform.app/#seamless-close-features): Starting angle, automatic detection, blur, pause restoration, Esc and connection effect.
 - [Everyday conveniences](https://glissform.app/#how-it-works): Launch at login, background operation, menu bar access and updates.
 - [Compatibility, installation and FAQ](https://glissform.app/#good-to-know): Requirements, tested hardware, price, permissions, sleep, updates, quitting and support.

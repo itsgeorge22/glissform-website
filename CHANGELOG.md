@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-16 — Glissform release candidate
+
+- Point the direct DMG download and software metadata to published 0.1.0-rc.1. Use release-candidate wording in the installation and AI product guides, and align the product guide with the focus on Seamless Close.
+
 ## 2026-10-16 — Shared colour palette
 
 - Centralize interface colours, reuse primary blue and success green across icons and animated controls, and consolidate text, borders and neutral button states. Use primary blue for solid action buttons. Derive privacy-panel and feature tints from shared accents; keep illustration, atmosphere and MacBook material palettes separate. Balance feature backgrounds with individual tint strengths and strengthen the Esc illustration outline. Publication authorized on 16 October 2026.
