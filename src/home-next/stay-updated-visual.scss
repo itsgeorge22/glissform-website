@@ -1,5 +1,13 @@
 .stay-updated-visual {
-  --update-green: #34c759;
+  --update-color: color-mix(in srgb, var(--color-primary), var(--color-success) calc(var(--update-change, 0) * 100%));
+  --update-fill-ink: #000;
+  // Decorative confetti keeps its own illustration palette.
+  --confetti-green: var(--color-success);
+  --confetti-mint: #70dfaa;
+  --confetti-blue: #48a7ff;
+  --confetti-purple: #a68bfa;
+  --confetti-yellow: #ffca58;
+  --confetti-pink: #ff8d9b;
   position: absolute;
   inset: 0;
   display: grid;
@@ -7,7 +15,7 @@
   // Enlarge the card and its confetti together within the existing fitting.
   font-size: calc(min(0.143678cqw, 0.18cqh) * 1.25 / 1.1);
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  color: rgb(0 0 0 / 85%);
+  color: var(--mockup-text);
   pointer-events: none;
   isolation: isolate;
 
@@ -48,8 +56,8 @@
     opacity: min(1, calc(var(--update-fold, 1) * 20));
     // Preserve the existing white-over-panel appearance, but fully occlude the
     // rising particles behind the card until they clear its rounded silhouette.
-    background: linear-gradient(rgb(255 255 255 / 75%), rgb(255 255 255 / 75%)), var(--feature-panel-surface);
-    box-shadow: inset 0 0 0 2.41em rgb(0 0 0 / 6.67%), var(--feature-window-shadow);
+    background: linear-gradient(color-mix(in srgb, var(--mockup-surface) 75%, transparent), color-mix(in srgb, var(--mockup-surface) 75%, transparent)), var(--color-surface-muted);
+    box-shadow: inset 0 0 0 2.41em var(--mockup-border), var(--feature-window-shadow);
   }
 
   &__content {
@@ -76,8 +84,8 @@
     flex: 0 0 67.47em;
     height: 67.47em;
     border-radius: 19.277em;
-    background: rgb(var(--update-color, 0 122 255) / 12%);
-    color: rgb(var(--update-color, 0 122 255));
+    background: color-mix(in srgb, var(--update-color) 12%, transparent);
+    color: var(--update-color);
 
     svg { display: block; width: 38.5542em; height: 38.5542em; overflow: visible; }
     [data-update-spinner] { opacity: 0; }
@@ -86,7 +94,7 @@
   &__copy { display: flex; flex: 1; flex-direction: column; gap: 4.819em; white-space: nowrap; }
   &__title, &__button-label span { font-size: 26.506em; line-height: 1.272731; font-weight: 590; }
   &__title { height: 1.272731em; overflow: hidden; }
-  &__description { height: 1.2em; overflow: hidden; font-size: 24.096em; line-height: 1.2; color: rgb(0 0 0 / 50%); }
+  &__description { height: 1.2em; overflow: hidden; font-size: 24.096em; line-height: 1.2; color: var(--mockup-text-secondary); }
   &__copy-track {
     // Share the button's available, updating and completed text sequence.
     transform: translateY(calc(var(--update-label, 0) * -100% / 3));
@@ -97,14 +105,14 @@
     height: 65.06em;
     border-radius: 16.867em;
     overflow: hidden;
-    background: rgb(52 199 89 / 12%);
+    background: color-mix(in srgb, var(--color-success) 12%, transparent);
     transform: scale(var(--update-button-scale, 1));
 
     &::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: #007aff;
+      background: var(--color-primary);
       filter: brightness(var(--update-blue-brightness, 1));
       transition: filter 150ms ease;
       opacity: calc(1 - var(--update-change, 0));
@@ -112,12 +120,12 @@
   }
   &__labels, &__fill { position: absolute; inset: 0; }
   &__labels {
-    color: var(--update-green);
-    .stay-updated-visual__button-label:first-child { color: #fff; }
+    color: var(--color-success);
+    .stay-updated-visual__button-label:first-child { color: var(--mockup-surface); }
   }
   &__fill {
-    background: var(--update-green);
-    color: #000;
+    background: var(--color-success);
+    color: var(--update-fill-ink);
     // Clip the fill and its black copy with one edge, including partial glyphs.
     clip-path: inset(0 calc(100% - var(--update-fill, 0%)) 0 0);
   }

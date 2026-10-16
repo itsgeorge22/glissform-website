@@ -1,6 +1,7 @@
 @use './dialog-controls' as controls;
 
 .analytics-consent {
+  --consent-shadow: 0 8px 40px #102b4c24;
   position: fixed;
   inset: auto 24px 24px auto;
   z-index: 1000;
@@ -12,24 +13,23 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border: 1px solid #d4dfed;
+  border: 1px solid var(--color-border);
   border-radius: 24px;
-  background: #fff;
-  box-shadow: 0 8px 40px #102b4c24;
-  color: #090b0e;
+  background: var(--color-surface);
+  box-shadow: var(--consent-shadow);
+  color: var(--color-text);
   font: 14px/1.6 'Hero Manrope', sans-serif;
 
   &[hidden] { display: none; }
   strong { font-size: 18px; font-weight: 600; line-height: 1.4; }
-  p { margin: 12px 0 0; color: #555b63; }
+  p { margin: 12px 0 0; color: var(--color-text-secondary); }
 
   &__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
   button, &__details { @include controls.button; }
 
   [data-analytics-choice='accepted'] { @include controls.primary; }
-  &__details { background: #f0f2f5; color: #3e4652; }
-  &__details:hover { background: #e5e9ef; }
+  &__details { @include controls.secondary; }
   button.analytics-consent__decline {
     grid-column: 1 / -1;
     justify-self: center;
@@ -37,10 +37,10 @@
     padding: 2px 8px;
     border-radius: 4px;
     background: transparent;
-    color: #555b63;
-    &:hover { color: #090b0e; text-decoration: underline; text-underline-offset: 3px; }
+    color: var(--color-text-secondary);
+    &:hover { color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
   }
-  :focus-visible { outline: 3px solid #0073ff; outline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
 
   @media (width < 768px) {
     inset: auto 12px 12px;

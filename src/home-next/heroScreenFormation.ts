@@ -24,7 +24,7 @@ export function drawScreenFormation(time: number, targets: {
   const scaleY = 1 + 32 * scale / height * (1 - shape);
   const outset = -16 * scale * (1 - shape);
 
-  surface.style.backgroundColor = '#000';
+  surface.style.backgroundColor = 'var(--scene-bezel)';
   for (const element of [screen, frame]) {
     // These layers share the Mac scene's top-left transform origin.
     element.style.transform = `translate(${outset}px, ${outset}px) scale(${scaleX}, ${scaleY})`;
@@ -32,7 +32,7 @@ export function drawScreenFormation(time: number, targets: {
   }
   const edgeLight = Math.sin(Math.PI * shape) * .13;
   frame.style.opacity = String(ease(phase(time, 190, 460)));
-  frame.style.boxShadow = `0 0 ${24 * scale}px rgb(104 177 255 / ${edgeLight}), inset 0 0 ${12 * scale}px rgb(104 177 255 / ${edgeLight * .5})`;
+  frame.style.boxShadow = `0 0 ${24 * scale}px color-mix(in srgb, var(--scene-edge-light) ${edgeLight * 100}%, transparent), inset 0 0 ${12 * scale}px color-mix(in srgb, var(--scene-edge-light) ${edgeLight * 50}%, transparent)`;
   // Grow down from the top, keeping the attachment behind the moving bezel.
   // Both movements are monotonic: the notch cannot overshoot into a gap.
   notch.style.translate = `0 ${Math.min(-26 * scale * (1 - notchGrowth), outset)}px`;

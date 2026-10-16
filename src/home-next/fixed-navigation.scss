@@ -15,7 +15,7 @@
 
   .hero-test__nav { bottom: 0; pointer-events: auto; }
   .hero-test__nav-dock { box-shadow: none; }
-  .hero-test__links a { color: #fff; }
+  .hero-test__links a { color: var(--color-text-on-dark); }
   .download-link { font-family: 'Hero Manrope', sans-serif; }
   .download-link__label { letter-spacing: design.px(-.3); }
 

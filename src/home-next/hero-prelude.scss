@@ -2,7 +2,7 @@
 .home-next {
   @media (prefers-reduced-motion: no-preference) {
     .hero-animation__surface[data-prelude='pending'] {
-      background: #0b121e;
+      background: var(--scene-background);
       .hero-test__frame, .hero-test__notch, .hero-prelude__glow, .hero-test__stars { opacity: 0; }
       .hero-test__notch { translate: 0 design.px(-26); scale: 1 0; }
     }

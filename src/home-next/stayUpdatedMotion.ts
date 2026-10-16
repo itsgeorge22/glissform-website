@@ -107,10 +107,9 @@ export function animateStayUpdated(root: HTMLElement) {
       : pointOn(departure, phase(pose.time, timing.depart, timing.exit));
     const hovered = pose.cursorVisible && point.x >= buttonBounds.left && point.x <= buttonBounds.right
       && point.y >= buttonBounds.top && point.y <= buttonBounds.bottom;
-    const color = [52 * pose.change, 122 + 77 * pose.change, 255 - 166 * pose.change].map(v => v.toFixed(3)).join(' ');
     const properties = {
       '--update-change': pose.change, '--update-fill': `${pose.progress * 100}%`,
-      '--update-label': pose.label, '--update-color': color, '--update-fold': pose.fold,
+      '--update-label': pose.label, '--update-fold': pose.fold,
       '--update-button-scale': 1 - .035 * pose.press,
       '--update-blue-brightness': hovered ? .9 : 1,
       '--update-card-scale': pose.cardScale, '--update-card-y': `${pose.cardY}em`,

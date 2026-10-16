@@ -1,5 +1,11 @@
 @use '../design-scale' as design;
 .manual-angle-visual {
+  --feature-ink: #3d628f;
+  --feature-ink-strong: #1c3553;
+  --feature-ink-secondary: #536d8a;
+  --feature-track: rgb(36 86 145 / 12%);
+  --feature-shadow-rgb: 24 68 117;
+  --feature-control-surface: #fff;
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -24,14 +30,14 @@
     inset: 0;
     overflow: hidden;
     border-radius: 8em;
-    background: rgb(36 86 145 / 12%);
+    background: var(--feature-track);
   }
 
   &__fill {
     width: var(--angle-position);
     height: 100%;
     border-radius: inherit;
-    background: #3d628f;
+    background: var(--feature-ink);
   }
 
   &__handle {
@@ -42,10 +48,10 @@
     width: calc(32em * 27.147 / 18.795);
     height: 32em;
     box-sizing: border-box;
-    border: 1em solid rgb(24 68 117 / 8%);
+    border: 1em solid rgb(var(--feature-shadow-rgb) / 8%);
     border-radius: 16em;
-    background: #fff;
-    box-shadow: 0 2em 4em rgb(24 68 117 / 10%), 0 5em 14em rgb(24 68 117 / 7%);
+    background: var(--feature-control-surface);
+    box-shadow: 0 2em 4em rgb(var(--feature-shadow-rgb) / 10%), 0 5em 14em rgb(var(--feature-shadow-rgb) / 7%);
     transform: translate(-50%, -50%) scale(calc(1 - var(--angle-pressure) * .06));
   }
 
@@ -59,9 +65,9 @@
     width: 88em;
     height: 48em;
     border-radius: 14em;
-    background: #fff;
-    color: #1c3553;
-    box-shadow: 0 4em 18em rgb(24 68 117 / 9%);
+    background: var(--feature-control-surface);
+    color: var(--feature-ink-strong);
+    box-shadow: 0 4em 18em rgb(var(--feature-shadow-rgb) / 9%);
     transform: translateX(-50%);
     transform-origin: center bottom;
 
@@ -73,7 +79,7 @@
       width: 10em;
       height: 10em;
       border-radius: 2em;
-      background: #fff;
+      background: var(--feature-control-surface);
       transform: rotate(45deg);
     }
   }
@@ -84,7 +90,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    color: #536d8a;
+    color: var(--feature-ink-secondary);
     > span { font-size: 18em; font-weight: 500; line-height: 1.333333; }
   }
 }

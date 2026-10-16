@@ -8,7 +8,7 @@ $detail-gap: design.px(8);
 
 @mixin title {
   margin: 0;
-  color: #090b0e;
+  color: var(--color-text);
   font-size: max(36px, #{design.px(52)});
   font-weight: 600;
   line-height: max(44px, #{design.px(60)});
@@ -29,7 +29,7 @@ $detail-gap: design.px(8);
 
 @mixin body {
   margin: 0;
-  color: #555b63;
+  color: var(--color-text-secondary);
   font-size: max(16px, #{design.px(18)});
   font-weight: 400;
   line-height: max(24px, #{design.px(28)});
@@ -48,7 +48,7 @@ $detail-gap: design.px(8);
 
 @mixin detail-title {
   margin: 0;
-  color: #090b0e;
+  color: var(--color-text);
   font-size: max(20px, #{design.px(24)});
   font-weight: 600;
   line-height: max(28px, #{design.px(32)});
@@ -67,7 +67,7 @@ $detail-gap: design.px(8);
 
 @mixin detail-body {
   margin: 0;
-  color: #555b63;
+  color: var(--color-text-secondary);
   font-size: max(16px, #{design.px(16)});
   font-weight: 400;
   line-height: max(24px, #{design.px(24)});

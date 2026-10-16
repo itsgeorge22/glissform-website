@@ -1,0 +1,20 @@
+// Feature accents belong to the illustrations, rather than the global UI palette.
+@mixin accents {
+  --color-automatic: #a079dd;
+  --color-automatic-strong: #8653cc;
+  --color-blur: #35b4af;
+  --color-connection: #f39a43;
+  --color-escape: #f5de72;
+}
+
+// The simulated macOS materials remain independent of website text and surfaces.
+@mixin mockup-materials {
+  --mockup-surface: #fff;
+  --mockup-text: rgb(0 0 0 / 85%);
+  --mockup-text-secondary: rgb(0 0 0 / 50%);
+  --mockup-border: rgb(0 0 0 / 6.67%);
+  --mockup-icon-neutral: rgb(128 128 128 / 12%);
+  --mockup-switch-off: rgb(0 0 0 / 25%);
+  --mockup-screen: #111320;
+  --mockup-bezel: #000;
+}

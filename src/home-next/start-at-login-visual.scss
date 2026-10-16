@@ -1,10 +1,11 @@
 @use '../design-scale' as design;
 .start-at-login-visual {
+  --login-ink: #a4a6cc;
   position: absolute;
   inset: 0;
   font-size: 0.143678cqw;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  color: rgb(164 166 204 / 74%);
+  color: color-mix(in srgb, var(--login-ink) 74%, transparent);
   pointer-events: none;
 
   &__screen {
@@ -14,8 +15,8 @@
     width: 2364em;
     height: 1530em;
     border-radius: var(--login-corner, 24em);
-    background: #111320;
-    box-shadow: 0 0 0 var(--login-bezel, 15em) #000;
+    background: var(--mockup-screen);
+    box-shadow: 0 0 0 var(--login-bezel, 15em) var(--mockup-bezel);
     transform-origin: top left;
     transform: translate3d(calc(50cqw - 2096em), calc(50cqh - 228em), 0);
     will-change: transform;
@@ -77,7 +78,7 @@
     align-items: center;
     justify-content: space-between;
     border-radius: 1332em;
-    background: rgb(164 166 204 / 40%);
+    background: color-mix(in srgb, var(--login-ink) 40%, transparent);
     &::after {
       content: '';
       position: absolute;
@@ -90,7 +91,7 @@
   &__dots {
     width: 53.3333em;
     height: 6.66667em;
-    background: #fff;
+    background: var(--mockup-surface);
     mask: url('/assets/start-at-login/password-dots.svg') center / 53.3333em 6.66667em no-repeat;
     clip-path: inset(0 var(--login-dot-clip, 53.3333em) 0 0);
   }
@@ -100,7 +101,7 @@
     top: 10em;
     width: 1em;
     height: 12em;
-    background: white;
+    background: var(--mockup-surface);
     opacity: var(--login-caret, 0);
   }
   &__submit {

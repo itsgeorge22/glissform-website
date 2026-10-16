@@ -4,7 +4,7 @@
 @use './responsive' as responsive;
 
 .privacy-section {
-  background: #fff;
+  background: var(--color-surface);
   font-family: 'Hero Manrope', sans-serif;
   padding: var(--privacy-section-gap) max(design.px(32), calc((100% - design.px(1416)) / 2)) 0;
 
@@ -19,7 +19,7 @@
     column-gap: design.px(24);
     padding: design.px(56) design.px(64);
     border-radius: design.px(24);
-    background: #edf4fd;
+    background: var(--color-surface-accent);
     scroll-margin-top: max(88px, #{design.px(112)});
   }
 
@@ -47,7 +47,7 @@
     height: design.px(48);
     transform: scale(math.div(40, 48));
 
-    img { display: block; width: design.px(34); height: design.px(40); }
+    .site-icon { display: block; width: design.px(34); height: design.px(40); }
   }
 
   &__text {
@@ -71,7 +71,7 @@
 
     & + & {
       margin-top: design.px(24);
-      border-top: design.px(1) solid #cddef4;
+      border-top: design.px(1) solid var(--color-border);
       padding-top: design.px(24);
     }
 

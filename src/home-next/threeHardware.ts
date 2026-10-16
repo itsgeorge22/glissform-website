@@ -10,6 +10,7 @@ import { macBookDimensions } from './displayGeometry.ts';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { createKeyboardLegendAtlas } from './keyboardLegends.ts';
+import { macBookPalette as palette } from './macBookPalette.ts';
 import details from './macbook-details.json' with { type: 'json' };
 export { macBookDimensions } from './displayGeometry.ts';
 
@@ -367,7 +368,7 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
     baseDetails.position.z += Math.max(0, hingeInset - new Box3().setFromObject(baseDetails).min.z);
     lidDetails.position.y -= Math.max(0, new Box3().setFromObject(lidDetails).max.y + hingeInset);
     lidPivot.add(lid, lidDetails); root.add(lidPivot, baseDetails); scene.add(root);
-    renderer.setClearColor(0x000000, 0); renderer.outputColorSpace = SRGBColorSpace;
+    renderer.setClearColor(palette.bezel, 0); renderer.outputColorSpace = SRGBColorSpace;
     renderer.toneMapping = ACESFilmicToneMapping; renderer.toneMappingExposure = 1.08;
     renderer.shadowMap.enabled = false;
 
@@ -376,11 +377,11 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
     finally { studio.dispose(); pmrem.dispose(); }
     // Large neutral sources in the static environment produce soft reflections;
     // these restrained direct lights define the top surface and beveled edge.
-    const keyLight = new DirectionalLight(0xffffff, 2.1); keyLight.position.set(-1200, 1800, 1800);
-    const fillLight = new DirectionalLight(0xdce9ff, .65); fillLight.position.set(1800, 400, -1200);
+    const keyLight = new DirectionalLight(palette.light.key, 2.1); keyLight.position.set(-1200, 1800, 1800);
+    const fillLight = new DirectionalLight(palette.light.fill, .65); fillLight.position.set(1800, 400, -1200);
     scene.add(keyLight, fillLight);
     const material = <T extends Material>(value: T): T => { materials.add(value); return value; };
-    const silver = material(new MeshPhysicalMaterial({ color: 0xcbd0d5, metalness: 1, roughness: .28, envMapIntensity: 1.08, clearcoat: .10, clearcoatRoughness: .32 }));
+    const silver = material(new MeshPhysicalMaterial({ color: palette.body, metalness: 1, roughness: .28, envMapIntensity: 1.08, clearcoat: .10, clearcoatRoughness: .32 }));
     const hingeCover = lidDetails.getObjectByName('Lid_Clutch');
     const hingeEnds = baseDetails.getObjectByName('Clutch_Cover');
     if (hingeCover instanceof Mesh && hingeEnds instanceof Mesh) {
@@ -394,16 +395,16 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
       const darkCover = Array.isArray(hingeCover.material) ? hingeCover.material[0] : hingeCover.material;
       hingeCover.material = [darkCover, silver];
     }
-    const edgeSilver = material(new MeshStandardMaterial({ color: 0xd4d9de, metalness: 1, roughness: .23, envMapIntensity: 1.12 }));
-    const bottomSilver = material(new MeshStandardMaterial({ color: 0xb7bec5, metalness: 1, roughness: .36, envMapIntensity: .95 }));
-    const trackpadSilver = material(new MeshStandardMaterial({ color: 0xc5cbd1, metalness: .92, roughness: .34, envMapIntensity: 1.02 }));
-    const seam = material(new MeshStandardMaterial({ color: 0x747c84, metalness: .88, roughness: .36 }));
-    const keycap = material(new MeshPhysicalMaterial({ color: 0x101318, metalness: 0, roughness: .68,
+    const edgeSilver = material(new MeshStandardMaterial({ color: palette.edge, metalness: 1, roughness: .23, envMapIntensity: 1.12 }));
+    const bottomSilver = material(new MeshStandardMaterial({ color: palette.underside, metalness: 1, roughness: .36, envMapIntensity: .95 }));
+    const trackpadSilver = material(new MeshStandardMaterial({ color: palette.trackpad, metalness: .92, roughness: .34, envMapIntensity: 1.02 }));
+    const seam = material(new MeshStandardMaterial({ color: palette.seam, metalness: .88, roughness: .36 }));
+    const keycap = material(new MeshPhysicalMaterial({ color: palette.keycap, metalness: 0, roughness: .68,
       envMapIntensity: .16, specularIntensity: .25, clearcoat: 0 }));
-    const touchSensor = material(new MeshPhysicalMaterial({ color: 0x090a0c, metalness: 0, roughness: .62,
+    const touchSensor = material(new MeshPhysicalMaterial({ color: palette.touchSensor, metalness: 0, roughness: .62,
       envMapIntensity: .10, specularIntensity: .12, clearcoat: 0 }));
-    const rubber = material(new MeshStandardMaterial({ color: 0x1c2025, metalness: 0, roughness: .78 }));
-    const black = material(new MeshBasicMaterial({ color: 0x000000 }));
+    const rubber = material(new MeshStandardMaterial({ color: palette.rubber, metalness: 0, roughness: .78 }));
+    const black = material(new MeshBasicMaterial({ color: palette.bezel }));
     const add = (parent: Group, shape: BufferGeometry, paint: Material) => {
       geometries.add(shape); const mesh = new Mesh(shape, paint); parent.add(mesh); return mesh;
     };
@@ -415,7 +416,7 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
     const groundLayers = [12, 64, 192].map((blur, index) => {
       const mask = document.createElement('canvas'); mask.width = 1024; mask.height = 768;
       const brush = mask.getContext('2d')!;
-      brush.fillStyle = '#000'; brush.shadowColor = 'rgb(32, 36, 42)'; brush.shadowBlur = blur;
+      brush.fillStyle = '#000'; brush.shadowColor = palette.groundShadow; brush.shadowBlur = blur;
       brush.shadowOffsetX = 2048;
       brush.beginPath();
       // Contact follows the inset underside, not the outer rim. Its narrow
@@ -514,7 +515,7 @@ export async function createThreeHardware(canvas: HTMLCanvasElement, keyboardTem
     brush.drawImage(logo, 0, 0, mask.width, mask.height); brush.globalCompositeOperation = 'source-in';
     brush.fillStyle = '#fff'; brush.fillRect(0, 0, mask.width, mask.height);
     const logoTexture = new CanvasTexture(mask); logoTexture.flipY = false; textures.add(logoTexture);
-    const logoMetal = material(new MeshStandardMaterial({ color: 0x808a94, metalness: 1, roughness: .20,
+    const logoMetal = material(new MeshStandardMaterial({ color: palette.lidMark, metalness: 1, roughness: .20,
       envMapIntensity: 1.1, alphaMap: logoTexture, alphaTest: .15 }));
     // Orient the mark for the outside of the lid: its crown points toward the
     // front edge when closed, so it reads upright to someone facing an open Mac.

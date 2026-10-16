@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { AlwaysActiveVisual } from './AlwaysActiveVisual';
 import { EasyToReachVisual } from './EasyToReachVisual';
 import { StartAtLoginVisual } from './StartAtLoginVisual';
@@ -7,28 +8,28 @@ import './settings-features.scss';
 const features = [
   {
     id: 'start-at-login',
-    icon: 'login',
+    icon: `${import.meta.env.BASE_URL}assets/feature-icons/login.svg`,
     visualLeft: false,
     title: 'Start at login',
     lines: ['Launch Glissform when you sign in to your Mac,', 'with your saved animation settings.'],
   },
   {
     id: 'always-active',
-    icon: 'background',
+    icon: `${import.meta.env.BASE_URL}assets/feature-icons/background.svg`,
     visualLeft: true,
     title: 'Stay active',
     lines: ['Keep animations running after closing the app', 'with Run in background enabled.'],
   },
   {
     id: 'easy-to-reach',
-    icon: 'menubar',
+    icon: `${import.meta.env.BASE_URL}assets/feature-icons/menubar.svg`,
     visualLeft: false,
     title: 'Menu bar access',
     lines: ['Open Settings from the macOS menu bar', 'whenever you want to adjust an effect.'],
   },
   {
     id: 'stay-updated',
-    icon: 'updates',
+    icon: `${import.meta.env.BASE_URL}assets/feature-icons/updates.svg`,
     visualLeft: true,
     title: 'Stay updated',
     lines: ['Enable automatic updates or install new', 'Glissform versions right inside the app.'],
@@ -42,7 +43,11 @@ export default function SettingsFeatures() {
         <article className={`settings-features__item${visualLeft ? ' settings-features__item--visual-left' : ''}`} key={id} aria-labelledby={id}>
           <div className="settings-features__copy">
             <div className="settings-features__icon-slot">
-              <img className="settings-features__icon" src={`${import.meta.env.BASE_URL}assets/feature-icons/${icon}.svg`} width="40" height="40" alt="" />
+              <span
+                className="site-icon settings-features__icon"
+                style={{ '--icon-mask': `url("${icon}")` } as CSSProperties}
+                aria-hidden="true"
+              />
             </div>
             <div className="settings-features__text">
               <h2 className="settings-features__title" id={id}>{title}</h2>

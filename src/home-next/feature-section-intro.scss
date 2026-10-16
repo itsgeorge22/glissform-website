@@ -12,7 +12,7 @@
 
   h2 {
     margin: 0;
-    color: #090b0e;
+    color: var(--color-text);
     font: 600 max(40px, #{design.px(64)}) / max(48px, #{design.px(72)}) 'Hero Manrope', sans-serif;
     letter-spacing: -.04em;
     text-wrap: balance;

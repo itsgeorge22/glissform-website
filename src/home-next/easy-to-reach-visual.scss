@@ -1,4 +1,6 @@
 .easy-to-reach-visual {
+  --menu-surface: rgb(245 245 245 / 67%);
+  --menu-ink: #1a1a1a;
   --menu-highlight: 1;
   position: absolute;
   inset: 0;
@@ -15,8 +17,8 @@
     width: 2364em;
     height: 1530em;
     border-radius: 24em;
-    background: #111320;
-    box-shadow: 0 0 0 15em #000;
+    background: var(--mockup-screen);
+    box-shadow: 0 0 0 15em var(--mockup-bezel);
   }
   &__menu {
     position: absolute;
@@ -27,14 +29,14 @@
     box-sizing: border-box;
     padding: 9.8355em 23.6053em;
     border-radius: 25.5724em;
-    background: rgb(245 245 245 / 67%);
+    background: var(--menu-surface);
     -webkit-backdrop-filter: blur(23.605em) saturate(115%);
     backdrop-filter: blur(23.605em) saturate(115%);
     box-shadow: 0 0 49.178em rgb(0 0 0 / 16%), 0 0 3.934em rgb(0 0 0 / 10%),
       inset 0 1.5em 1.5em rgb(255 255 255 / 90%), inset 1.5em 0 2em rgb(255 255 255 / 65%),
       inset -1.5em -1.5em 2em rgb(255 255 255 / 70%), inset 0 0 12em rgb(255 255 255 / 60%),
       inset 0 9em 13em rgb(0 0 0 / 18%);
-    color: #1a1a1a;
+    color: var(--menu-ink);
     opacity: var(--menu-open, 1);
     transform-origin: 83em top;
     transform: translateY(var(--menu-y, 0em)) scale(var(--menu-scale, 1));

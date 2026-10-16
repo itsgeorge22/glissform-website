@@ -11,8 +11,8 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #d0f3ff;
-  box-shadow: 0 0 design.px(9) design.px(2) #60bfff55;
+  background: var(--scene-star-core);
+  box-shadow: 0 0 design.px(9) design.px(2) color-mix(in srgb, var(--scene-star-glow) calc(85 / 255 * 100%), transparent);
   opacity: .25;
   animation: download-spark var(--spark-duration) ease-in-out var(--spark-delay) infinite;
   animation-play-state: paused;

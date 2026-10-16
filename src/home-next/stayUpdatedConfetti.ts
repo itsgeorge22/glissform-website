@@ -8,7 +8,7 @@ const random = () => {
   seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
   return seed / 4294967296;
 };
-const colors = ['#34c759', '#70dfaa', '#48a7ff', '#a68bfa', '#ffca58', '#ff8d9b'];
+const colors = ['green', 'mint', 'blue', 'purple', 'yellow', 'pink'].map(name => `var(--confetti-${name})`);
 const maxFadeDepth = 260;
 export const updateConfetti = Array.from({ length: 44 }, (_, index) => {
   // Stratify one wide fan, with jitter, instead of two separate fountains.

@@ -1,9 +1,11 @@
 @use '../design-scale' as design;
 @use './feature-copy' as copy;
 @use './responsive' as responsive;
+@use './feature-palette' as palette;
 
 .seamless-close-features {
-  background: #fff;
+  @include palette.accents;
+  background: var(--color-surface);
   font-family: 'Hero Manrope', sans-serif;
   padding: var(--privacy-section-gap) max(design.px(32), calc((100% - design.px(1416)) / 2)) 0;
 
@@ -17,19 +19,29 @@
   &__item { min-width: 0; }
 
   &__placeholder {
+    --feature-background: color-mix(in srgb, var(--feature-accent) 16%, transparent);
     --demo-stroke-width: clamp(#{design.px(6.4)}, 1.92cqw, #{design.px(8)});
     position: relative;
     width: 100%;
     aspect-ratio: 4 / 3;
     border-radius: design.px(24);
-    background: color-mix(in srgb, var(--placeholder-colour) 16%, transparent);
+    background: var(--feature-background);
 
-    &--blue { --placeholder-colour: #428fe8; }
-    &--purple { --placeholder-colour: #a079dd; }
-    &--teal { --placeholder-colour: #35b4af; }
-    &--green { --placeholder-colour: #53c67d; }
-    &--yellow { --placeholder-colour: #f5de72; }
-    &--orange { --placeholder-colour: #f39a43; }
+    &--blue {
+      --feature-accent: var(--color-primary);
+      --feature-background: color-mix(in srgb, var(--feature-accent) 12%, transparent);
+    }
+    &--purple { --feature-accent: var(--color-automatic); }
+    &--teal { --feature-accent: var(--color-blur); }
+    &--green {
+      --feature-accent: var(--color-success);
+      --feature-background: color-mix(in srgb, var(--feature-accent) 14%, transparent);
+    }
+    &--yellow {
+      --feature-accent: var(--color-escape);
+      --feature-background: color-mix(in srgb, var(--feature-accent) 20%, transparent);
+    }
+    &--orange { --feature-accent: var(--color-connection); }
   }
 
   &__copy {
@@ -78,7 +90,7 @@
       scrollbar-color: #bcc8d8 transparent;
 
       &:focus-visible {
-        outline: 2px solid #007aff;
+        outline: 2px solid var(--color-primary);
         outline-offset: -2px;
       }
     }

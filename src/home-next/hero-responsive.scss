@@ -12,9 +12,9 @@
       min-height: 0;
       padding: 0;
       border-radius: 0 0 28px 28px;
-      background: #0b121e;
+      background: var(--scene-background);
     }
-    .hero-animation__surface .hero-test__screen { height: auto; border-radius: inherit; background: #0b121e; }
+    .hero-animation__surface .hero-test__screen { height: auto; border-radius: inherit; background: var(--scene-background); }
     .hero-animation__desktop, .hero-animation__screen-content { position: relative; inset: auto; }
     .hero-animation__hardware-viewport, .hero-animation__hardware, .hero-animation__template, .hero-animation__navigation,
     .hero-animation__ambience, .hero-animation__screen-shadow, .hero-animation__contact-shadow,

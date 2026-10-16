@@ -1,4 +1,4 @@
-// Shared controls for the privacy consent card and installation guide.
+// Shared controls for privacy choices, the consent card and installation guide.
 @mixin button-type {
   font: 600 14px/1.6 'Hero Manrope', sans-serif;
 }
@@ -18,7 +18,17 @@
 }
 
 @mixin primary {
-  background: #0073ff;
-  color: #fff;
-  &:hover { background: #0067e5; }
+  background: var(--color-primary);
+  color: var(--color-text-on-dark);
+  &:hover { background: color-mix(in srgb, var(--color-primary), black 10%); }
+  &:active { background: color-mix(in srgb, var(--color-primary), black 20%); }
+}
+
+@mixin secondary {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  &:hover {
+    background: var(--color-surface-muted-hover);
+    color: var(--color-text);
+  }
 }

@@ -1,12 +1,13 @@
 @use '../design-scale' as design;
 @use './responsive' as responsive;
 @use './hero-copy' as copy;
+@use '../materials' as material;
 
 .home-next {
   // Reserve the full scroll track in the initial HTML so browser restoration
   // sees the same page height before and after hydration.
   .hero-animation {
-    background: #fff;
+    background: var(--color-surface);
     height: calc(100svh + var(--mac-reveal-distance, design.px(2000)));
     min-height: 0;
   }
@@ -17,8 +18,7 @@
     z-index: 0;
     pointer-events: none;
     // Keep the glow's stage-relative geometry while allowing its fade to overflow.
-    background: radial-gradient(ellipse 65% 46svh at 50% 77svh,
-      rgb(100 161 237 / 11%), rgb(154 192 239 / 4%) 52%, rgb(255 255 255 / 0) 100%);
+    background: material.$scene-ground-glow;
   }
   .hero-animation__hardware { z-index: 2; transform-origin: 0 0; }
   .hero-animation__hardware-viewport {
@@ -30,11 +30,11 @@
     overflow-y: visible;
     pointer-events: none;
   }
-  .hero-animation__surface { z-index: 3; color: #fff; color-scheme: dark; pointer-events: auto; }
+  .hero-animation__surface { z-index: 3; color: var(--color-text-on-dark); color-scheme: dark; pointer-events: auto; }
   .hero-animation__screen-content {
     position: absolute;
     inset: 0;
-    background: #0b121e;
+    background: var(--scene-background);
     transform: translateZ(0);
   }
   .hero-animation__ending {
@@ -48,7 +48,7 @@
     text-align: center;
     pointer-events: none;
 
-    h2 { margin: 0 auto; max-width: design.px(1300); color: #090b0e;  }
+    h2 { margin: 0 auto; max-width: design.px(1300); color: var(--color-text);  }
   }
   .hero-animation__ending .text-reveal__content { opacity: 0; }
   .hero-animation__feature-label {
@@ -58,7 +58,7 @@
     left: 0;
     right: 0;
     margin: 0;
-    color: #0068df;
+    color: var(--color-primary-strong);
     font: 600 design.px(15)/design.px(24) 'Hero Manrope', sans-serif;
     letter-spacing: -.01em;
 
@@ -76,7 +76,7 @@
         height: design.px(32);
         flex: none;
         border-radius: design.px(9);
-        background: rgb(0 115 255 / 12%);
+        background: color-mix(in srgb, var(--color-primary) 12%, transparent);
       }
       &::after {
         content: '';
@@ -86,7 +86,7 @@
         translate: 0 -50%;
         width: design.px(20);
         height: design.px(20);
-        background: #0073ff;
+        background: var(--color-primary);
         mask: url('/assets/seamless-close.svg') center / contain no-repeat;
       }
     }
@@ -101,7 +101,7 @@
     }
   }
   .hero-animation__description {
-    margin: design.px(20) auto 0; color: #555b63;
+    margin: design.px(20) auto 0; color: var(--color-text-secondary);
   }
   .hero-animation__navigation { z-index: 1; opacity: 0; }
   .hero-animation--static { height: 100svh; min-height: design.px(720); }
@@ -143,8 +143,8 @@
   top: 8px; left: 8px;
   padding: 12px 20px;
   border-radius: 12px;
-  background: #fff;
-  color: #1459d5;
+  background: var(--color-surface);
+  color: var(--color-primary-strong);
   transform: translateY(-150%);
   &:focus { transform: none; }
 }

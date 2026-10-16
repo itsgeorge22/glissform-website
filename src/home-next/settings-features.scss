@@ -1,9 +1,11 @@
 @use '../design-scale' as design;
 @use './feature-copy' as copy;
+@use './feature-palette' as palette;
 @use './responsive' as responsive;
 
 .settings-features {
-  background: #fff;
+  @include palette.mockup-materials;
+  background: var(--color-surface);
   font-family: 'Hero Manrope', sans-serif;
   padding: var(--section-gap) max(design.px(32), calc((100% - design.px(1416)) / 2)) 0;
 
@@ -71,7 +73,7 @@
     border-radius: design.px(24);
     container-type: size;
     --feature-window-shadow: 0 0 calc(min(0.143678cqw, 0.18cqh) * 48) rgb(0 0 0 / 5.44%);
-    background-color: var(--feature-panel-surface);
+    background-color: var(--color-surface-muted);
     position: relative;
     overflow: hidden;
   }

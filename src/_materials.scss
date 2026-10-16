@@ -1,0 +1,22 @@
+@use './design-scale' as design;
+
+// Complete material recipes keep equivalent surfaces in sync without making
+// every highlight, reflection and shadow a global interface colour.
+$glass-border: #c4dcff;
+$glass-background: linear-gradient(180deg, #dceaff33, #97c1ff33);
+$glass-reflection: radial-gradient(ellipse design.px(85) design.px(36) at var(--glass-x) var(--glass-y), var(--glass-highlight, #ffffffc7), #ffffff00 75%), radial-gradient(ellipse design.px(100) design.px(24) at var(--glass-x) 110%, #52aaff70, #74bcff00 80%);
+$glass-shadow: 0 design.px(12) design.px(12) #356ab917, 0 design.px(3) design.px(6) #356ab900, inset 0 design.px(1) design.px(1) #ffffff80, inset 0 design.px(-2) design.px(1) #97c1ff66, inset 0 0 design.px(12) #b9d9ff00;
+$glass-active-background: #daebff40;
+$glass-active-shadow: 0 design.px(14) design.px(22) #356ab922, 0 design.px(3) design.px(6) #356ab90a, inset 0 design.px(1) design.px(1) #fff, inset 0 design.px(-2) design.px(1) #73b1ff80, inset 0 0 design.px(12) #b9d9ff26;
+$glass-pressed-shadow: 0 design.px(3) design.px(6) #356ab900, 0 design.px(1) design.px(2) #356ab900, inset 0 design.px(2) design.px(4) #427fb02b, inset 0 design.px(-1) design.px(1) #ffffffd9, inset 0 0 design.px(12) #9ecaff4d;
+
+$navigation-border: #cbddff30;
+$navigation-background: linear-gradient(140deg, #14263be6, #101e35db);
+$navigation-shadow: 0 design.px(12) design.px(28) rgb(0 0 0 / 12%), 0 design.px(3) design.px(8) rgb(0 0 0 / 6%), inset 0 design.px(1) 0 rgb(255 255 255 / 4%);
+$navigation-hover: #ffffff0d;
+$navigation-pressed: #ffffff14;
+
+$shooting-star-tail: linear-gradient(90deg, transparent, #9ed7ff30 30%, #c7eaff99 75%, #effaff);
+$shooting-star-halo: 0 0 design.px(7) #d9f2ffb3, 0 0 design.px(14) #82bfff70;
+$screen-shadow: linear-gradient(#000, #0008 45%, transparent);
+$scene-ground-glow: radial-gradient(ellipse 65% 46svh at 50% 77svh, rgb(100 161 237 / 11%), rgb(154 192 239 / 4%) 52%, rgb(255 255 255 / 0) 100%);

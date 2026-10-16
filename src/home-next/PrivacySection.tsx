@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import './privacy-section.scss';
 
 const privacyNotes = [
@@ -21,7 +22,7 @@ export default function PrivacySection() {
       <div className="privacy-section__intro">
         <div className="privacy-section__icon-slot" aria-hidden="true">
           <div className="privacy-section__icon-frame">
-            <img src={`${import.meta.env.BASE_URL}assets/privacy-shield.svg`} width="34" height="40" alt="" />
+            <span className="site-icon" style={{ '--icon-mask': `url('${import.meta.env.BASE_URL}assets/privacy-shield.svg')` } as CSSProperties} />
           </div>
         </div>
         <div className="privacy-section__text">

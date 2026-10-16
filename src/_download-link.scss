@@ -1,7 +1,10 @@
 @use './design-scale' as design;
-@use './tokens' as *;
+@use './materials' as material;
 
 .download-link {
+  --download-gradient-end: #0da2ff;
+  --download-glow: #57b1ff;
+  --download-highlight: #d2eaff;
   position: relative;
   isolation: isolate;
   display: inline-flex;
@@ -10,11 +13,11 @@
   gap: design.px(7);
   min-height: design.px(56);
   padding: design.px(15) design.px(24);
-  border: design.px(1) solid #fff;
+  border: design.px(1) solid var(--color-text-on-dark);
   border-radius: design.px(100);
-  background: linear-gradient(180deg, #0073ff, #0da2ff);
-  box-shadow: 0 design.px(40) design.px(108) #57b1ff57, 0 design.px(24) design.px(32) #57b1ff30, 0 design.px(12) design.px(12) #57b1ff38, 0 design.px(4) design.px(4) #57b1ff26, inset 0 design.px(1) design.px(16) #d2eaff, inset 0 design.px(1) design.px(4) #d2eaff;
-  color: #fff;
+  background: linear-gradient(180deg, var(--color-primary), var(--download-gradient-end));
+  box-shadow: 0 design.px(40) design.px(108) color-mix(in srgb, var(--download-glow) calc(87 / 255 * 100%), transparent), 0 design.px(24) design.px(32) color-mix(in srgb, var(--download-glow) calc(48 / 255 * 100%), transparent), 0 design.px(12) design.px(12) color-mix(in srgb, var(--download-glow) calc(56 / 255 * 100%), transparent), 0 design.px(4) design.px(4) color-mix(in srgb, var(--download-glow) calc(38 / 255 * 100%), transparent), inset 0 design.px(1) design.px(16) var(--download-highlight), inset 0 design.px(1) design.px(4) var(--download-highlight);
+  color: var(--color-text-on-dark);
   font: 600 design.px(16)/design.px(24) 'SF Pro Rounded', ui-rounded, 'Inter', 'Inter Fallback', sans-serif;
   text-decoration: none;
   white-space: nowrap;
@@ -26,7 +29,7 @@
     transform: translateY(0) scale(1);
     transition: transform .6s cubic-bezier(.2, 1.35, .4, 1), filter .2s ease, box-shadow .2s ease, border-color .12s ease;
 
-    &:hover { box-shadow: 0 design.px(36) design.px(96) #57b1ff66, 0 design.px(20) design.px(36) #57b1ff3d, 0 design.px(8) design.px(14) #57b1ff33, 0 design.px(3) design.px(5) #57b1ff29, inset 0 design.px(1) design.px(16) #d2eaffcc, inset 0 design.px(1) design.px(4) #d2eaffcc; }
+    &:hover { box-shadow: 0 design.px(36) design.px(96) color-mix(in srgb, var(--download-glow) calc(102 / 255 * 100%), transparent), 0 design.px(20) design.px(36) color-mix(in srgb, var(--download-glow) calc(61 / 255 * 100%), transparent), 0 design.px(8) design.px(14) color-mix(in srgb, var(--download-glow) calc(51 / 255 * 100%), transparent), 0 design.px(3) design.px(5) color-mix(in srgb, var(--download-glow) calc(41 / 255 * 100%), transparent), inset 0 design.px(1) design.px(16) color-mix(in srgb, var(--download-highlight) calc(204 / 255 * 100%), transparent), inset 0 design.px(1) design.px(4) color-mix(in srgb, var(--download-highlight) calc(204 / 255 * 100%), transparent); }
 
     &::after {
       content: '';
@@ -57,7 +60,7 @@
       filter: brightness(.98) saturate(1.04);
       border-color: transparent;
       // Keep transparent outer layers so the glow interpolates smoothly on release.
-      box-shadow: 0 design.px(16) design.px(52) #57b1ff00, 0 design.px(8) design.px(16) #57b1ff00, 0 design.px(3) design.px(6) #57b1ff00, 0 design.px(1) design.px(2) #57b1ff00, inset 0 design.px(1) design.px(12) #d2eaff99, inset 0 design.px(1) design.px(3) #d2eaff8c;
+      box-shadow: 0 design.px(16) design.px(52) color-mix(in srgb, var(--download-glow) calc(0 / 255 * 100%), transparent), 0 design.px(8) design.px(16) color-mix(in srgb, var(--download-glow) calc(0 / 255 * 100%), transparent), 0 design.px(3) design.px(6) color-mix(in srgb, var(--download-glow) calc(0 / 255 * 100%), transparent), 0 design.px(1) design.px(2) color-mix(in srgb, var(--download-glow) calc(0 / 255 * 100%), transparent), inset 0 design.px(1) design.px(12) color-mix(in srgb, var(--download-highlight) calc(153 / 255 * 100%), transparent), inset 0 design.px(1) design.px(3) color-mix(in srgb, var(--download-highlight) calc(140 / 255 * 100%), transparent);
       transition-duration: .18s, .15s, .15s, .15s;
       transition-timing-function: cubic-bezier(.2, .8, .3, 1), ease, ease, ease;
     }
@@ -92,7 +95,7 @@
     border-color: transparent;
     background: none;
     box-shadow: none;
-    color: $blue;
+    color: var(--color-primary);
     user-select: none;
 
     // A fixed hit area surrounds the moving glass and label.
@@ -109,18 +112,18 @@
       position: absolute;
       inset: design.px(-1);
       overflow: hidden;
-      border: design.px(1) solid #c4dcff;
+      border: design.px(1) solid material.$glass-border;
       border-radius: inherit;
-      background: linear-gradient(180deg, #dceaff33, #97c1ff33);
+      background: material.$glass-background;
       -webkit-backdrop-filter: blur(design.px(2)) saturate(125%);
       backdrop-filter: blur(design.px(2)) saturate(125%);
-      box-shadow: 0 design.px(12) design.px(12) #356ab917, 0 design.px(3) design.px(6) #356ab900, inset 0 design.px(1) design.px(1) #ffffff80, inset 0 design.px(-2) design.px(1) #97c1ff66, inset 0 0 design.px(12) #b9d9ff00;
+      box-shadow: material.$glass-shadow;
       transition: transform .6s cubic-bezier(.2, 1.35, .4, 1), box-shadow .25s ease, border-color .2s ease, background-color .2s ease;
 
       &::before, &::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
       &::before { background: url('./generated/assets/try-button-texture.webp') top left / design.px(1024) auto; opacity: .06; mix-blend-mode: soft-light; }
       &::after {
-        background: radial-gradient(ellipse design.px(85) design.px(36) at var(--glass-x) var(--glass-y), #ffffffc7, #ffffff00 75%), radial-gradient(ellipse design.px(100) design.px(24) at var(--glass-x) 110%, #52aaff70, #74bcff00 80%);
+        background: material.$glass-reflection;
         opacity: 0;
         transition: opacity .28s ease;
       }
@@ -136,8 +139,8 @@
 
     &:focus-visible .download-link__glass {
       border-color: #8dbdff;
-      background-color: #daebff40;
-      box-shadow: 0 design.px(14) design.px(22) #356ab922, 0 design.px(3) design.px(6) #356ab90a, inset 0 design.px(1) design.px(1) #fff, inset 0 design.px(-2) design.px(1) #73b1ff80, inset 0 0 design.px(12) #b9d9ff26;
+      background-color: material.$glass-active-background;
+      box-shadow: material.$glass-active-shadow;
       &::after { opacity: .65; }
     }
 
@@ -147,8 +150,8 @@
         > * { transition-duration: .36s, .22s, .22s, .22s; }
         .download-link__glass {
           border-color: #a3caff;
-          background-color: #daebff40;
-          box-shadow: 0 design.px(14) design.px(22) #356ab922, 0 design.px(3) design.px(6) #356ab90a, inset 0 design.px(1) design.px(1) #fff, inset 0 design.px(-2) design.px(1) #73b1ff80, inset 0 0 design.px(12) #b9d9ff26;
+          background-color: material.$glass-active-background;
+          box-shadow: material.$glass-active-shadow;
           &::after { opacity: 1; }
         }
         .download-link__glint { opacity: 1; animation: download-button-shimmer .65s cubic-bezier(.25, .1, .25, 1) both; }
@@ -161,7 +164,7 @@
       .download-link__glass {
         border-color: #8db8f052;
         background-color: #adcfff40;
-        box-shadow: 0 design.px(3) design.px(6) #356ab900, 0 design.px(1) design.px(2) #356ab900, inset 0 design.px(2) design.px(4) #427fb02b, inset 0 design.px(-1) design.px(1) #ffffffd9, inset 0 0 design.px(12) #9ecaff4d;
+        box-shadow: material.$glass-pressed-shadow;
         &::after { opacity: .45; }
       }
       .download-link__glint { opacity: 0; animation: none; }

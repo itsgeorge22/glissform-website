@@ -1,4 +1,7 @@
 .always-active-visual {
+  --mockup-window-top: #fbfcfe;
+  --mockup-window-bottom: #f4f5f9;
+  --mockup-lift-shadow-rgb: 28 40 66;
   position: absolute;
   inset: 0;
   display: grid;
@@ -6,7 +9,7 @@
   // Scale the Figma composition uniformly to fit the existing desktop panel.
   font-size: min(0.143678cqw, 0.18cqh);
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  color: rgb(0 0 0 / 85%);
+  color: var(--mockup-text);
   pointer-events: none;
 
   &__window {
@@ -16,7 +19,7 @@
     padding: 25.059em;
     border: 0.5em solid rgb(0 0 0 / 5%);
     border-radius: 20em;
-    background: linear-gradient(142deg, #fbfcfe, #f4f5f9);
+    background: linear-gradient(142deg, var(--mockup-window-top), var(--mockup-window-bottom));
     box-shadow: var(--feature-window-shadow);
   }
 
@@ -29,7 +32,7 @@
     line-height: 1.20833;
     letter-spacing: -0.00958em;
   }
-  &__subtitle { font-size: 13.574em; line-height: 1.23077; color: rgb(0 0 0 / 50%); }
+  &__subtitle { font-size: 13.574em; line-height: 1.23077; color: var(--mockup-text-secondary); }
   &__rows { position: relative; gap: 12.529em; }
   &__row {
     position: relative;
@@ -39,9 +42,9 @@
     align-items: center;
     gap: 12.529em;
     padding: 12.529em 25.059em 12.529em 12.529em;
-    border: 1.044em solid rgb(0 0 0 / 6.67%);
+    border: 1.044em solid var(--mockup-border);
     border-radius: 16.706em;
-    background: #fff;
+    background: var(--mockup-surface);
     transform: scale(calc(1 + var(--card-lift, 0) * 0.026));
     will-change: transform;
     &::after {
@@ -49,7 +52,7 @@
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      box-shadow: 0 10em 28em rgb(28 40 66 / 13%), 0 2em 6em rgb(28 40 66 / 5%);
+      box-shadow: 0 10em 28em rgb(var(--mockup-lift-shadow-rgb) / 13%), 0 2em 6em rgb(var(--mockup-lift-shadow-rgb) / 5%);
       opacity: var(--card-lift, 0);
       pointer-events: none;
     }
@@ -70,12 +73,12 @@
           inset: 0;
           opacity: var(--switch-on, 0);
         }
-        &::before { border-radius: inherit; background: #e5f1ff; }
+        &::before { border-radius: inherit; background: color-mix(in srgb, var(--color-primary) 12%, var(--mockup-surface)); }
         &::after {
           width: 25.059em;
           height: 25.059em;
           margin: auto;
-          background: #0073ff;
+          background: var(--color-primary);
           mask: url('/assets/settings-preview/background-mask.svg') center / contain no-repeat;
         }
       }
@@ -88,12 +91,12 @@
     display: grid;
     place-items: center;
     border-radius: 12.529em;
-    background: rgb(128 128 128 / 12%);
+    background: var(--mockup-icon-neutral);
     img { width: 25.059em; height: 25.059em; }
   }
   &__copy { gap: 4.176em; flex: 1; white-space: nowrap; }
   &__label { font-size: 13.574em; line-height: 1.23077; font-weight: 600; }
-  &__description { font-size: 11.485em; line-height: 1.27273; color: rgb(0 0 0 / 50%); }
+  &__description { font-size: 11.485em; line-height: 1.27273; color: var(--mockup-text-secondary); }
   &__switch {
     position: relative;
     box-sizing: border-box;
@@ -101,9 +104,9 @@
     height: 22.971em;
     padding: 2.088em;
     border-radius: 11.485em;
-    background: rgb(0 0 0 / 25%);
-    &::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: #007aff; opacity: 0; }
-    span { position: relative; display: block; width: 27.147em; height: 18.795em; border-radius: 9.397em; background: #fff; }
+    background: var(--mockup-switch-off);
+    &::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--color-primary); opacity: 0; }
+    span { position: relative; display: block; width: 27.147em; height: 18.795em; border-radius: 9.397em; background: var(--mockup-surface); }
   }
   @media (prefers-reduced-motion: reduce) {
     &__row {

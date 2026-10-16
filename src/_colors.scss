@@ -1,0 +1,19 @@
+// Shared interface colours. Feature artwork and scene materials own their
+// specialised palettes; tints and interaction states derive from these values.
+:root {
+  --color-primary: #0073ff;
+  --color-primary-strong: #0068df;
+  --color-success: #30d158;
+  --color-focus-on-dark: #a6d7ff;
+
+  --color-text: #090b0e;
+  --color-text-secondary: #555b63;
+  --color-text-on-dark: #fff;
+  --color-text-on-dark-secondary: color-mix(in srgb, var(--color-text-on-dark) 80%, transparent);
+
+  --color-surface: #fff;
+  --color-surface-muted: #f1f3f6;
+  --color-surface-muted-hover: #e7ecf2;
+  --color-surface-accent: color-mix(in srgb, var(--color-primary) 7%, var(--color-surface));
+  --color-border: #d4dfed;
+}

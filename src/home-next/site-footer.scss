@@ -1,5 +1,4 @@
 @use '../design-scale' as design;
-@use '../tokens' as tokens;
 @use './feature-copy' as copy;
 @use './responsive' as responsive;
 
@@ -10,7 +9,7 @@
   &__card {
     max-width: design.px(1176);
     margin-inline: auto;
-    color: #fff;
+    color: var(--color-text-on-dark);
     border-radius: design.px(40);
     overflow: hidden;
     isolation: isolate;
@@ -36,8 +35,8 @@
     gap: copy.$text-gap;
     text-align: center;
 
-    h2 { @include copy.title; color: #fff; }
-    p { @include copy.body; color: rgb(255 255 255 / 80%); }
+    h2 { @include copy.title; color: var(--color-text-on-dark); }
+    p { @include copy.body; color: var(--color-text-on-dark-secondary); }
   }
 
   // Keep the hero's live atmosphere, fitted to the shorter Figma card.
@@ -66,7 +65,7 @@
     gap: design.px(32);
     margin-top: design.px(48);
     padding-top: design.px(32);
-    border-top: design.px(1) solid #d4dfed;
+    border-top: design.px(1) solid var(--color-border);
 
     p { @include copy.detail-body; }
 
@@ -75,7 +74,7 @@
   &__privacy {
     display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: center;
     a, button {
-      color: #3e5066;
+      color: var(--color-text-secondary);
       font: inherit;
       font-size: 14px;
       line-height: 1.5;
@@ -85,8 +84,8 @@
       text-decoration: underline;
       text-underline-offset: auto;
 
-      &:hover { color: tokens.$blue; }
-      &:active { color: #005bc8; }
+      &:hover { color: var(--color-primary-strong); }
+      &:active { color: color-mix(in srgb, var(--color-primary-strong), black 20%); }
     }
     button { border: 0; background: none; padding: 0; cursor: pointer; }
   }
@@ -95,7 +94,7 @@
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    color: #090b0e;
+    color: var(--color-text);
     text-decoration: none;
     border-radius: design.px(4);
 

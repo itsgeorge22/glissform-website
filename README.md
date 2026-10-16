@@ -57,6 +57,9 @@ After building, `npm run test:deploy` checks referenced HTML/CSS/JavaScript asse
 | Location | Purpose |
 | --- | --- |
 | `src/pages/index.astro` | Shared responsive page HTML and metadata. |
+| `src/_colors.scss` | Shared interface colours, derived privacy surface and inverse text. Current pages use these CSS variables; `_tokens.scss` is retained for retired Vite pages. |
+| `src/_scene-palette.scss`, `src/_materials.scss` | Shared hero/footer atmosphere and complete glass, navigation and shadow recipes. |
+| `src/home-next/_feature-palette.scss`, `src/home-next/macBookPalette.ts` | Scoped feature accents, simulated macOS materials and unchanged MacBook artwork colours. |
 | `src/home-next/` | V2 hero, static Seamless Close feature grid, Settings feature rows and animated demos, shared line-based text motion, navigation, styles, choreography, display geometry and Three.js hardware. |
 | `src/home-next/heroScreenFormation.ts` | Initial screen, notch and star formation, with the opening's timing. |
 | `src/hero-test/`, `src/hero-test-animation/` | Existing star interactions, assets and projection helpers reused by v2; also contain earlier studies. |

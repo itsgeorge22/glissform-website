@@ -1,10 +1,11 @@
 @use '../design-scale' as design;
-.hero-animation-page { background: #000; }
+@use '../materials' as material;
+.hero-animation-page { background: var(--scene-bezel); }
 
 .hero-animation {
   height: 380svh;
   min-height: design.px(2600);
-  background: #000;
+  background: var(--scene-bezel);
 
   &__stage {
     position: sticky;
@@ -40,14 +41,14 @@
     transform-origin: 0 0;
     // The opening is a normal, flat hero. Only the moving display is promoted.
     &--moving { will-change: transform; }
-    .hero-test__screen { background: #000; }
+    .hero-test__screen { background: var(--scene-bezel); }
     .hero-test__nav { bottom: design.px(20); }
   }
 
   &__desktop {
     position: absolute;
     inset: 0;
-    background: #0b121e;
+    background: var(--scene-background);
     transform-origin: 0 0;
   }
 
@@ -59,7 +60,7 @@
     opacity: 0;
     pointer-events: none;
   }
-  &__screen-shadow { background: linear-gradient(#000, #0008 45%, transparent); }
+  &__screen-shadow { background: material.$screen-shadow; }
   &__contact-shadow { background: linear-gradient(#000, transparent 25%); }
 
   // Layout-only source for the one-time keyboard texture. Removed after baking.
@@ -80,7 +81,7 @@
     left: design.px(24);
     right: design.px(24);
     text-align: center;
-    color: #fff;
+    color: var(--color-text-on-dark);
     opacity: 0;
     transform: translateY(design.px(22));
     pointer-events: none;
@@ -112,8 +113,8 @@
       font: 400 design.px(12)/design.px(18) 'Hero Manrope', sans-serif;
       cursor: pointer;
       transition: color .2s, background .2s;
-      &:hover { color: #fff; background: #ffffff0c; }
-      &:focus-visible { outline: design.px(2) solid #a6d7ff; outline-offset: design.px(4); }
+      &:hover { color: var(--color-text-on-dark); background: #ffffff0c; }
+      &:focus-visible { outline: design.px(2) solid var(--color-focus-on-dark); outline-offset: design.px(4); }
     }
   }
 }

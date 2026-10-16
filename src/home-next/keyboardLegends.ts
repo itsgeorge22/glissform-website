@@ -1,4 +1,5 @@
 import { keyLegends } from './keyboardLayout.ts';
+import { macBookPalette as paint } from './macBookPalette.ts';
 
 export type KeySurface = { id: string; width: number; height: number };
 const cell = 128, columns = 8;
@@ -59,7 +60,7 @@ export function createKeyboardLegendAtlas(keys: KeySurface[]) {
     if (!legend) throw Error(`Missing Mac keyboard legend: ${key.id}`);
     const left = index % columns * cell, top = Math.floor(index / columns) * cell;
     c.save(); c.translate(left, top); c.scale(cell / key.width, cell / key.height);
-    c.fillStyle = '#dce1e7'; c.strokeStyle = '#dce1e7'; c.textBaseline = 'middle'; c.textAlign = 'center';
+    c.fillStyle = paint.keyLegend; c.strokeStyle = paint.keyLegend; c.textBaseline = 'middle'; c.textAlign = 'center';
     const text = (value: string, x: number, y: number, size: number) => {
       c.font = `400 ${size}px Arial, sans-serif`; c.fillText(value, x, y);
     };
@@ -78,10 +79,10 @@ export function createKeyboardLegendAtlas(keys: KeySurface[]) {
     } else if (legend.align) {
       c.textAlign = legend.align === 'right' ? 'right' : 'left';
       text(legend.label, legend.align === 'right' ? w - 7 : 7, h * .74, key.id === 'escape' ? 8.5 : 13);
-      if (key.id === 'caps-lock') { c.fillStyle = '#78818a'; c.beginPath(); c.arc(7, 7, 1.1, 0, Math.PI * 2); c.fill(); }
+      if (key.id === 'caps-lock') { c.fillStyle = paint.capsIndicator; c.beginPath(); c.arc(7, 7, 1.1, 0, Math.PI * 2); c.fill(); }
     } else if (legend.label) {
       text(legend.label, w / 2, h * .52, legend.kind === 'arrow' ? 7 : 13.5);
-      if (key.id === 'F' || key.id === 'J') { c.fillStyle = '#68727b'; c.fillRect(w / 2 - 2.4, h - 6, 4.8, .65); }
+      if (key.id === 'F' || key.id === 'J') { c.fillStyle = paint.tactileMark; c.fillRect(w / 2 - 2.4, h - 6, 4.8, .65); }
     }
     c.restore();
     return { left: left / canvas.width, top: top / canvas.height, width: cell / canvas.width, height: cell / canvas.height };

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-16 — Shared colour palette
+
+- Centralize interface colours, reuse primary blue and success green across icons and animated controls, and consolidate text, borders and neutral button states. Use primary blue for solid action buttons. Derive privacy-panel and feature tints from shared accents; keep illustration, atmosphere and MacBook material palettes separate. Balance feature backgrounds with individual tint strengths and strengthen the Esc illustration outline. Publication authorized on 16 October 2026.
+
 ## 2026-10-16 — AI product guide and search description
 
 - Add `/llms.txt` with current product facts, suitable use cases, customization, tested compatibility, installation and privacy details, and canonical source links. Link it from both page heads and include it in deployment and discovery-file cache rules. Publication authorized on 16 October 2026.

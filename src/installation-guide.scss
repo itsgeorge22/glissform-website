@@ -5,6 +5,8 @@ html.installation-guide-open,
 html.installation-guide-open body { overflow: hidden; overscroll-behavior: none; }
 
 .installation-guide {
+  --dialog-overlay: rgb(5 13 26 / 58%);
+  --dialog-shadow: 0 32px 100px rgb(4 17 38 / 24%), 0 4px 16px rgb(4 17 38 / 8%);
   position: fixed;
   inset: 0;
   width: 100%;
@@ -15,7 +17,7 @@ html.installation-guide-open body { overflow: hidden; overscroll-behavior: none;
   padding: 24px;
   border: 0;
   background: transparent;
-  color: #090b0e;
+  color: var(--color-text);
   color-scheme: light;
   overflow: hidden;
   overscroll-behavior: none;
@@ -27,7 +29,7 @@ html.installation-guide-open body { overflow: hidden; overscroll-behavior: none;
   &__backdrop {
     position: absolute;
     inset: 0;
-    background: rgb(5 13 26 / 58%);
+    background: var(--dialog-overlay);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
   }
@@ -39,10 +41,10 @@ html.installation-guide-open body { overflow: hidden; overscroll-behavior: none;
     width: min(600px, 100%);
     max-height: 100%;
     overflow: hidden;
-    border: 1px solid rgb(255 255 255 / 70%);
+    border: 1px solid color-mix(in srgb, var(--color-surface) 70%, transparent);
     border-radius: 24px;
-    background: #fff;
-    box-shadow: 0 32px 100px rgb(4 17 38 / 24%), 0 4px 16px rgb(4 17 38 / 8%);
+    background: var(--color-surface);
+    box-shadow: var(--dialog-shadow);
   }
 
   &__header { position: relative; flex: none; padding: 28px 32px 24px; }
@@ -51,7 +53,7 @@ html.installation-guide-open body { overflow: hidden; overscroll-behavior: none;
 
   button, a { -webkit-tap-highlight-color: transparent; }
   button { cursor: pointer; }
-  :is(button, a):focus-visible { outline: 3px solid #0073ff; outline-offset: 3px; }
+  :is(button, a):focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
   &__close {
     position: absolute;
     top: 18px;
@@ -63,33 +65,31 @@ html.installation-guide-open body { overflow: hidden; overscroll-behavior: none;
     padding: 0;
     border: 0;
     border-radius: 12px;
-    background: #f1f3f6;
-    color: #555b63;
     transition: background 160ms ease, color 160ms ease, transform 160ms ease;
-    &:hover { background: #e7ecf2; color: #090b0e; }
+    @include controls.secondary;
     &:active { transform: scale(.94); }
   }
 
-  &__body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 32px 24px; scrollbar-width: thin; scrollbar-color: #cdd5df transparent; }
-  &__body:focus-visible { outline: 2px solid #0073ff; outline-offset: -3px; border-radius: 4px; }
+  &__body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 32px 24px; scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; }
+  &__body:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -3px; border-radius: 4px; }
   &__steps { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
-  &__step { min-width: 0; padding: 16px 18px; border-radius: 16px; background: #f1f3f6; }
+  &__step { min-width: 0; padding: 16px 18px; border-radius: 16px; background: var(--color-surface-muted); }
   h3 { @include copy.detail-title; font-size: 18px; line-height: 26px; margin-bottom: 8px; }
   &__step > p { @include copy.detail-body; }
-  strong { color: #252d38; font-weight: 600; }
+  strong { color: var(--color-text); font-weight: 600; }
 
   &__note {
     margin-top: 24px;
     padding: 14px 16px;
     border-radius: 12px;
-    background: rgb(0 115 255 / 12%);
-    color: #0073ff;
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+    color: var(--color-primary-strong);
     p { @include copy.detail-body; color: inherit; }
     a { display: inline-block; color: inherit; text-underline-offset: 3px; }
   }
 
-  &__footer { display: flex; align-items: center; justify-content: space-between; flex: none; gap: 16px; padding: 18px 32px; border-top: 1px solid #edf0f4; background: #fff; }
-  &__retry { @include controls.button-type; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; color: #555b63; text-decoration: none; border-radius: 4px; &:hover { color: #0067e5; } }
+  &__footer { display: flex; align-items: center; justify-content: space-between; flex: none; gap: 16px; padding: 18px 32px; border-top: 1px solid var(--color-border); background: var(--color-surface); }
+  &__retry { @include controls.button-type; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; color: var(--color-text-secondary); text-decoration: none; border-radius: 4px; &:hover { color: var(--color-primary-strong); } }
   &__done { @include controls.button; @include controls.primary; min-width: 112px; }
   &__sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 

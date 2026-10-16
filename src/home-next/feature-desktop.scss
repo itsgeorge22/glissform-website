@@ -43,7 +43,7 @@
     > span {
       width: 36em;
       height: 36em;
-      background: #fff;
+      background: var(--mockup-surface);
       mask: url('/assets/easy-to-reach/menu-icon-mask.png') center / contain no-repeat;
       transform: scale(var(--menu-icon-scale, 1));
     }
@@ -65,6 +65,6 @@
     font-variant-numeric: tabular-nums;
     height: 48em;
     padding: 0 24em;
-    span { font-size: 26em; line-height: 1.23077; font-weight: 600; color: white; white-space: nowrap; }
+    span { font-size: 26em; line-height: 1.23077; font-weight: 600; color: var(--mockup-surface); white-space: nowrap; }
   }
 }

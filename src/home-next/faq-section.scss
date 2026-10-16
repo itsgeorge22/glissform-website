@@ -5,7 +5,7 @@
 .faq-section {
   position: relative;
   z-index: 1;
-  background: var(--feature-panel-surface);
+  background: var(--color-surface-muted);
   border-radius: var(--faq-corner-radius, design.px(40)) var(--faq-corner-radius, design.px(40)) 0 0;
   font-family: 'Hero Manrope', sans-serif;
   // Overlap the hold space; keep the original gap and total page length.
@@ -39,7 +39,7 @@
   &__item {
     box-sizing: border-box;
 
-    & + & { border-top: design.px(1) solid #e4e8ed; }
+    & + & { border-top: design.px(1) solid var(--color-border); }
 
     summary {
       display: flex;
@@ -48,7 +48,7 @@
       min-height: 44px;
       gap: design.px(24);
       padding-block: design.px(24);
-      color: #090b0e;
+      color: var(--color-text);
       list-style: none;
       cursor: pointer;
 
@@ -56,7 +56,7 @@
       &::marker { content: ''; }
 
       &:focus-visible {
-        outline: design.px(3) solid #1459d5;
+        outline: design.px(3) solid var(--color-primary);
         outline-offset: design.px(4);
         border-radius: design.px(4);
       }
@@ -68,7 +68,7 @@
       }
 
       @media (hover: hover) {
-        &:hover, &:hover h3 { color: #007aff; }
+        &:hover, &:hover h3 { color: var(--color-primary-strong); }
       }
     }
 
@@ -99,7 +99,7 @@
 
     p { @include copy.detail-body; text-wrap: pretty; }
     a {
-      color: #007aff;
+      color: var(--color-primary-strong);
       overflow-wrap: anywhere;
       text-decoration-thickness: design.px(1);
       text-underline-offset: design.px(3);
