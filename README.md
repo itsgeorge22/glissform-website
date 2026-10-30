@@ -74,7 +74,7 @@ See [Motion guidelines](docs/MOTION.md) for rules covering text, visuals, compos
 
 Production builds use `index, follow`, a canonical URL of `https://glissform.app/`, matching social and structured-data URLs, and root discovery files. Development HTML uses `noindex, nofollow`; both local development and built-preview servers also send that exclusion as an `X-Robots-Tag` header. A local build serves `/` on port 4180. Download links retain the existing `/downloads/` destination. The website animation does not capture the visitor's screen or read a lid sensor.
 
-An authorized push to `main` builds and deploys through Cloudflare Pages (`glissform-website`); GitHub Actions runs verification only. Existing `/downloads/` addresses redirect to GitHub Releases, and the exact signed update feed is served at `/updates/appcast.xml`. Preserve the Search Console file and Beget email records during domain cutover. See [deployment and rollback](docs/DEPLOYMENT.md).
+An authorized push to `main` builds and deploys through Vercel (`glissform-website`); GitHub Actions runs verification only. Existing `/downloads/` addresses redirect to GitHub Releases, and the exact signed update feed is served at `/updates/appcast.xml`. Preserve the Search Console file during domain cutover. The retired Glissform mailbox is replaced by 4niklap@gmail.com. See [deployment and rollback](docs/DEPLOYMENT.md).
 
 The older checkout at `/Users/george/Projects/glissform-website` may contain independent uncommitted work; do not overwrite it while promoting this checkout. Future pushes and publication still require explicit authorization.
 
