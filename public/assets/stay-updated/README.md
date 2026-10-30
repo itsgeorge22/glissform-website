@@ -1,6 +1,6 @@
 # Stay updated visual
 
-`download.svg` is the unmodified artwork exported from the owner-provided [Stay updated Figma reference](https://www.figma.com/design/IkSrf5xF80j0PeRMzPytZ8/Glissform?node-id=199-304), retrieved 2026-10-12. It retains the original 38.5542 × 38.5542 geometry and blue fill as the source reference.
+`download.svg` is the unmodified artwork exported from the owner-provided Stay updated Figma reference (original design reference), retrieved 2026-10-12. It retains the original 38.5542 × 38.5542 geometry and blue fill as the source reference.
 
 The centered card, text, icon tile and Update button are rendered with HTML and SCSS, following the 400 × 204.819 card inside the 696 × 696 design. The illustration scales uniformly with the desktop feature panel and shares its existing transition compensation.
 

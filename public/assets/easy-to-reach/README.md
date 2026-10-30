@@ -1,6 +1,6 @@
 # Easy to reach visual
 
-Unmodified menu assets exported from the owner-provided [Glissform Figma reference, 199:294](https://www.figma.com/design/IkSrf5xF80j0PeRMzPytZ8/Glissform?node-id=199-294), retrieved 2026-10-12.
+Unmodified menu assets exported from the owner-provided Glissform Figma reference, 199:294 (original design reference), retrieved 2026-10-12.
 
 - `menu-icon-mask.png`: native Glissform menu icon alpha, 72 × 72; rendered as a 36 × 36 white mask in design coordinates.
 - `control-center.svg`: native 24.7202 × 25.213 control center glyph.

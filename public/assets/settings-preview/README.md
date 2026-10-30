@@ -1,6 +1,6 @@
 # Settings preview icons
 
-Unmodified SVG assets from the owner-provided [Always active Figma reference](https://www.figma.com/design/IkSrf5xF80j0PeRMzPytZ8/Glissform?node-id=199-299), retrieved 2026-10-12.
+Unmodified SVG assets from the owner-provided Always active Figma reference (original design reference), retrieved 2026-10-12.
 
 `background.svg`, `menubar.svg`, `login.svg` and `updates.svg` retain their exported geometry and are used by `AlwaysActiveVisual.tsx`. They represent the four General settings rows, separate from the blue feature-heading icons.
 

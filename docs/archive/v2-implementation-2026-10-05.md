@@ -4,7 +4,7 @@
 
 An isolated, local **hero-only** migration to Astro, React, TypeScript and Three.js. The opening uses the existing screen hero design. There are no lower content sections in this candidate; one empty viewport after the desktop ending is reserved for future content.
 
-The candidate is in `/Users/george/Projects/glissform-website-next` on `codex/homepage-v2`. The canonical checkout at `/Users/george/Projects/glissform-website`, its preview, and glissform.app remain separate. Nothing in this migration has been pushed or deployed. Local checkpoint `79afc43` preserves the previous work before the migration.
+The candidate is in `<website-checkout>` on `codex/homepage-v2`. The canonical checkout at `<legacy-website-checkout>`, its preview, and glissform.app remain separate. Nothing in this migration has been pushed or deployed. Local checkpoint `79afc43` preserves the previous work before the migration.
 
 ## Development
 

@@ -1,6 +1,6 @@
 # Hero test assets
 
-Source: [New Version, Figma node 132:326](https://www.figma.com/design/IkSrf5xF80j0PeRMzPytZ8/Untitled?node-id=132-326), inspected 2026-10-03.
+Source: New Version, Figma node 132:326 (original design reference), inspected 2026-10-03.
 
 - `notch.svg`: isolated notch contour and original vector camera from frame artwork (node 132:483), held at 214 × 42 CSS pixels. The screen outline is a separate CSS border with a constant 16px inset and 17px corner radius, so resizing never stretches the notch or lens.
 - `glow.webp`: lossless conversion of the exported decorative glow frame (132:150). Retained only as a visual reference; the runtime glow is now three rounded CSS ellipses using the original fills, 60% opacity, bottom/stretch constraints and equivalent 300px/250px CSS blur. Figma’s 600px/500px layer blur exports at half those values as Gaussian standard deviation.
@@ -9,6 +9,6 @@ Source: [New Version, Figma node 132:326](https://www.figma.com/design/IkSrf5xF8
 - `glass-texture.png`: original Figma navigation texture retained as a design reference; the revamped dock uses CSS material styling. Buttons use the existing website textures/components.
 - `manrope-400.ttf`, `manrope-500.ttf`, `manrope-600.ttf`, `manrope-700.ttf`: original self-hosted Manrope from Google Fonts. See `manrope-license.txt` for the SIL Open Font License. Their adjacent `.woff2` files are the runtime versions, prepared with FontTools 4.60.2 and Brotli 1.2.0 using `fonttools ttLib.woff2 compress --no-glyf-transform INPUT.ttf -o OUTPUT.woff2`. All 737 glyphs per weight, outlines, hinting, layout and metrics tables are retained without subsetting. Only the WOFF2 compression flag and font checksum change in the header; the original TTF files are not bundled by the page.
 
-The v2 footer layout follows [Figma node 155:453](https://www.figma.com/design/IkSrf5xF80j0PeRMzPytZ8/Glissform?node-id=155-453), inspected 2026-10-14. As requested, it reuses the existing logo and production download control, and replaces the reference’s static atmosphere image with the shared live hero atmosphere and interactions. No additional image assets are needed.
+The v2 footer layout follows Figma node 155:453 (original design reference), inspected 2026-10-14. As requested, it reuses the existing logo and production download control, and replaces the reference’s static atmosphere image with the shared live hero atmosphere and interactions. No additional image assets are needed.
 
 No temporary Figma URLs are referenced at runtime. The hero and v2 footer share the existing assets; reference-only assets are not bundled.

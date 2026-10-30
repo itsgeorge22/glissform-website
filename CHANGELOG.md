@@ -1,5 +1,9 @@
 # Changelog
 
+## Public repository — 2026-10-30
+
+- Add a concise project overview and contribution guide. Remove local machine paths, private design/dashboard links and retired server connection details from current files; preserve asset credits and website behavior.
+
 ## Portfolio subdomain — 2026-10-30
 
 - Move the canonical website, privacy and discovery links to glissform.itsgeorge.pro. Keep versioned GitHub downloads and the signed legacy update feed unchanged.

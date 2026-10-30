@@ -1,6 +1,6 @@
 # Production deployment
 
-The static Astro site deploys to the Vercel project `glissform-website` in George’s projects, connected to the private `itsgeorge22/glissform-website` repository. Production branch: `main`; build: `npm run build`; output: `dist`. Configuration lives in `vercel.json`.
+The static Astro site deploys to the Vercel project `glissform-website` in George’s projects, connected to the public `itsgeorge22/glissform-website` repository. Production branch: `main`; build: `npm run build`; output: `dist`. Configuration lives in `vercel.json`.
 
 ## Publish
 
@@ -22,6 +22,6 @@ The old `glissform.app` registration and Vercel binding remain in place for exis
 
 No further app updates are planned. Existing 0.1.0 installers still check `https://glissform.app/updates/appcast.xml`; retiring that domain can cause update-check errors. Do not modify the signed feed to change its URLs. Downloads from the new website continue to use GitHub Releases independently of the old registration.
 
-Support contact: 4niklap@gmail.com. The Glissform mailbox was removed. Vercel deployments can be restored from its dashboard. Original VPS and DNS backups are outside Git in `~/Documents/Glissform-migration-2026-10-30/`; the VPS has not been cancelled.
+Support contact: 4niklap@gmail.com. The Glissform mailbox was removed. Vercel deployments can be restored from its dashboard. Operational backups are kept outside this repository.
 
 [Former VPS deployment instructions](archive/VPS_DEPLOYMENT.md) are historical reference only.

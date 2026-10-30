@@ -2,8 +2,8 @@
 
 ## Scope and authority
 
-- Work in `/Users/george/Projects/glissform-website-next`. These rules apply to the website, not the native app.
-- This checkout contains the production homepage at `https://glissform.itsgeorge.pro/`. The former `/v2/` page redirects to it. Preserve the old checkout at `/Users/george/Projects/glissform-website` and its uncommitted work unless the owner explicitly requests changes there.
+- Work in `<website-checkout>`. These rules apply to the website, not the native app.
+- This checkout contains the production homepage at `https://glissform.itsgeorge.pro/`. The former `/v2/` page redirects to it. Preserve the old checkout at `<legacy-website-checkout>` and its uncommitted work unless the owner explicitly requests changes there.
 - Do not push, upload, deploy, or publish without authorization for that action. A push to `main` triggers production deployment; treat it as publication.
 - Production HTML is indexable and uses root canonical URLs. Keep local development and preview servers excluded from indexing. Preserve downloads, update feeds, Search Console verification and existing assets during deployment; follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 - These owner-approved website rules replace the earlier requirements to maintain README, CHANGELOG and ROADMAP for every task and to run builds/tests after small UI changes. Builds needed to update the preview remain part of the workflow.
