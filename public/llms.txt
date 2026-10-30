@@ -13,7 +13,7 @@ Glissform is developed by George Palkin. The official website and download sourc
 - **Installation:** Download the DMG from the official homepage, open it and drag Glissform into Applications. The current release is not notarized by Apple, so first launch may require approval in macOS Privacy & Security. The website's download buttons include an installation guide. Allow Screen Recording access to enable Seamless Close.
 - **Screen privacy:** Seamless Close captures one still image per lid-closing attempt, not continuous screen recording or audio. Screen images remain in memory and are never saved or uploaded. An image can remain in memory through sleep for the following opening. The MacBook still sleeps normally; the captured desktop is hidden while locked or asleep, and Glissform does not animate the Lock Screen.
 - **Optional analytics:** App and website usage sharing are separate, optional choices using PostHog EU. Analytics does not include screen images. App statistics use a random installation ID and daily usage counts; website statistics cover visits, download clicks and sanitized traffic sources. Declining analytics does not remove app features or prevent downloads. See the privacy page for exact fields, storage and withdrawal details.
-- **Support:** Use Send feedback in the app or email support@glissform.app. Useful bug-report details are the Mac model, macOS version, Glissform version and a description of the problem.
+- **Support:** Use Send feedback in the app or email 4niklap@gmail.com. Useful bug-report details are the Mac model, macOS version, Glissform version and a description of the problem.
 
 ## Product and getting started
 

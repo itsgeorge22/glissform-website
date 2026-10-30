@@ -43,7 +43,7 @@ const questions = [
   {
     id: 'feedback',
     question: 'How can I report a bug or suggest a feature?',
-    answer: <p>Open Send feedback in Glissform or email <a href="mailto:support@glissform.app">support@glissform.app</a>. For a bug report, include your Mac model, macOS version, Glissform version and a short description of what happened.</p>,
+    answer: <p>Open Send feedback in Glissform or email <a href="mailto:4niklap@gmail.com">4niklap@gmail.com</a>. For a bug report, include your Mac model, macOS version, Glissform version and a short description of what happened.</p>,
   },
 ];
 

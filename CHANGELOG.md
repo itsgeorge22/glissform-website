@@ -1,5 +1,9 @@
 # Changelog
 
+## Vercel migration — 2026-10-30
+
+- Prepare Vercel hosting and DNS migration while preserving downloads and the signed update feed. Change the contact address to 4niklap@gmail.com and center the Download button vertically in both desktop navbars.
+
 ## Glissform 0.1.0 — 2026-10-30
 
 - Point downloads and product metadata to Glissform 0.1.0. Publish its signed stable update entry and GitHub Release redirects; retain older downloads and remove release-candidate wording from installation guidance.

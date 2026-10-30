@@ -254,12 +254,13 @@
     .download-link--secondary:focus-visible { outline: #{design.px(2)} solid var(--color-focus-on-dark); outline-offset: #{design.px(4)}; }
   }
   &__download-slot {
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex: none;
     height: design.px(48);
-    // Dock inset (8px) + 4px keeps the outer button margins at 12px.
-    padding: design.px(4) design.px(4) design.px(4) 0;
+    // Keep the button centered even when its minimum touch height exceeds the scaled slot.
+    padding: 0 design.px(4) 0 0;
   }
 
   &__nav-dock {
