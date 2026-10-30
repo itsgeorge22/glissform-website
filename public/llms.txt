@@ -2,7 +2,7 @@
 
 > Glissform is a free native macOS app focused on Seamless Close, an animation that makes the desktop move with a compatible MacBook's lid as it closes. Development focuses on its animation, controls, setup and reliability.
 
-Glissform is developed by George Palkin. The official website and download source is https://glissform.app/. It is currently available as a public release. Use the homepage for the current release and DMG download; this guide does not pin a version that could become outdated.
+Glissform is developed by George Palkin. The official website and download source is https://glissform.itsgeorge.pro/. It is currently available as a public release. Use the homepage for the current release and DMG download; this guide does not pin a version that could become outdated.
 
 - **Best fit:** MacBook users who enjoy visual customization and want a customizable lid-closing or folding desktop animation, including an iPhone Duo-style effect on a MacBook.
 - **Available animation:** Seamless Close animates a still image of the desktop with perspective, blur and shadow as the lid moves. Seamless Close is Glissform's sole animation experience.
@@ -17,19 +17,19 @@ Glissform is developed by George Palkin. The official website and download sourc
 
 ## Product and getting started
 
-- [Official homepage and current download](https://glissform.app/): Product overview, interactive demonstrations, current public release and DMG download with installation guidance.
-- [Seamless Close customization](https://glissform.app/#seamless-close-features): Starting angle, automatic detection, blur, pause restoration, Esc and connection effect.
-- [Everyday conveniences](https://glissform.app/#how-it-works): Launch at login, background operation, menu bar access and updates.
-- [Compatibility, installation and FAQ](https://glissform.app/#good-to-know): Requirements, tested hardware, price, permissions, sleep, updates, quitting and support.
+- [Official homepage and current download](https://glissform.itsgeorge.pro/): Product overview, interactive demonstrations, current public release and DMG download with installation guidance.
+- [Seamless Close customization](https://glissform.itsgeorge.pro/#seamless-close-features): Starting angle, automatic detection, blur, pause restoration, Esc and connection effect.
+- [Everyday conveniences](https://glissform.itsgeorge.pro/#how-it-works): Launch at login, background operation, menu bar access and updates.
+- [Compatibility, installation and FAQ](https://glissform.itsgeorge.pro/#good-to-know): Requirements, tested hardware, price, permissions, sleep, updates, quitting and support.
 
 ## Privacy
 
-- [Privacy policy](https://glissform.app/privacy/): Screen-image handling, optional app and website analytics, service providers, storage and user choices.
-- [Screen images](https://glissform.app/privacy/#screen-images): One still image per closing attempt, in-memory lifetime and no saved or uploaded screen images.
-- [App analytics](https://glissform.app/privacy/#app-analytics): Consent, installation-based statistics, excluded data and how to turn sharing off.
-- [Website analytics](https://glissform.app/privacy/#website-analytics): Consent, visit and download statistics, browser ID and how to change the choice.
+- [Privacy policy](https://glissform.itsgeorge.pro/privacy/): Screen-image handling, optional app and website analytics, service providers, storage and user choices.
+- [Screen images](https://glissform.itsgeorge.pro/privacy/#screen-images): One still image per closing attempt, in-memory lifetime and no saved or uploaded screen images.
+- [App analytics](https://glissform.itsgeorge.pro/privacy/#app-analytics): Consent, installation-based statistics, excluded data and how to turn sharing off.
+- [Website analytics](https://glissform.itsgeorge.pro/privacy/#website-analytics): Consent, visit and download statistics, browser ID and how to change the choice.
 
 ## Optional
 
-- [Privacy choices and contact](https://glissform.app/privacy/#your-choices): Consent withdrawal and privacy requests to the developer.
-- [Sitemap](https://glissform.app/sitemap.xml): Canonical public pages on the official website.
+- [Privacy choices and contact](https://glissform.itsgeorge.pro/privacy/#your-choices): Consent withdrawal and privacy requests to the developer.
+- [Sitemap](https://glissform.itsgeorge.pro/sitemap.xml): Canonical public pages on the official website.

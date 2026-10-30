@@ -37,7 +37,7 @@ export function chooseAnalytics(choice: Exclude<Choice, 'undecided'>) {
 function capture(event: '$pageview' | 'download_clicked', extra: Record<string, string> = {}) {
   if (analyticsChoice() !== 'accepted') return;
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
-  const production = import.meta.env.PROD && location.hostname === 'glissform.app';
+  const production = import.meta.env.PROD && location.hostname === 'glissform.itsgeorge.pro';
   if (!production && !local) return;
   let distinctId: string;
   try {
@@ -68,7 +68,7 @@ function capture(event: '$pageview' | 'download_clicked', extra: Record<string, 
     body: JSON.stringify({ api_key: projectToken, event, distinct_id: distinctId, uuid: crypto.randomUUID(),
       properties: { environment: production ? 'production' : 'test', platform: 'web', schema_version: 1,
         $process_person_profile: false, $geoip_disable: true, $ip: '0.0.0.0',
-        $current_url: `https://glissform.app${path}`, $pathname: path, $host: 'glissform.app',
+        $current_url: `https://glissform.itsgeorge.pro${path}`, $pathname: path, $host: 'glissform.itsgeorge.pro',
         $referring_domain: source, source, ...campaign, ...extra },
     }),
   }).catch(() => { /* Analytics must never interrupt a visit or download. */ })

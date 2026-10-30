@@ -13,7 +13,7 @@
           "value": "www.glissform.app"
         }
       ],
-      "destination": "https://glissform.app/:path*",
+      "destination": "https://glissform.itsgeorge.pro/:path*",
       "statusCode": 301
     },
     {

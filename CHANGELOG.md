@@ -1,5 +1,9 @@
 # Changelog
 
+## Portfolio subdomain — 2026-10-30
+
+- Move the canonical website, privacy and discovery links to glissform.itsgeorge.pro. Keep versioned GitHub downloads and the signed legacy update feed unchanged.
+
 ## Vercel migration — 2026-10-30
 
 - Prepare Vercel hosting and DNS migration while preserving downloads and the signed update feed. Change the contact address to 4niklap@gmail.com and center the Download button vertically in both desktop navbars.

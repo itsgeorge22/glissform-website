@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://glissform.app/sitemap.xml
+Sitemap: https://glissform.itsgeorge.pro/sitemap.xml

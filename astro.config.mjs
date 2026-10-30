@@ -3,7 +3,7 @@ import react from '@astrojs/react';
 
 // Production is the canonical homepage; local servers stay excluded below.
 export default defineConfig({
-  site: 'https://glissform.app',
+  site: 'https://glissform.itsgeorge.pro',
   base: '/',
   trailingSlash: 'always',
   outDir: './dist',

@@ -7,7 +7,7 @@ import unittest
 from urllib.parse import unquote, urljoin, urlsplit
 
 BASE = '/'
-SITE_URL = 'https://glissform.app/'
+SITE_URL = 'https://glissform.itsgeorge.pro/'
 DIST = Path(__file__).resolve().parents[1] / 'dist'
 
 
@@ -76,7 +76,7 @@ class DeploymentBuildTests(unittest.TestCase):
         self.assertEqual(app.get('url'), SITE_URL)
         self.assertEqual(app.get('@id'), SITE_URL + '#software-application')
         self.assertEqual(app.get('image'), SITE_URL + 'assets/glissform-social.png')
-        expected = f'https://glissform.app/downloads/Glissform-{app["softwareVersion"]}.dmg'
+        expected = f'https://glissform.itsgeorge.pro/downloads/Glissform-{app["softwareVersion"]}.dmg'
         self.assertEqual(app.get('downloadUrl'), expected)
         downloads = [attrs.get('href') for tag, attrs in self.page.tags if tag == 'a' and
                      ('download-link' in attrs.get('class', '').split() or urlsplit(attrs.get('href', '')).path.endswith('.dmg'))]

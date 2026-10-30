@@ -6,7 +6,7 @@ The static Astro site deploys to the Vercel project `glissform-website` in Georg
 
 Run `npm run build` and `npm run test:deploy`, then push an authorized change to `main`. Vercel publishes automatically; GitHub Actions independently verifies the site. Check the deployed commit and affected live routes.
 
-The deployment hostname is https://glissform-website.vercel.app/ and the canonical site is https://glissform.app/. Both root and `www` connect to production; `vercel.json` redirects `www` to the root with paths and query strings preserved.
+The deployment hostname is https://glissform-website.vercel.app/ and the canonical site is https://glissform.itsgeorge.pro/. Cloudflare DNS contains one DNS-only CNAME named `glissform` pointing to `928b76af860b7514.vercel-dns-017.com`. The portfolio’s root, www and email records are independent and must remain unchanged.
 
 ## Downloads and updates
 
@@ -16,16 +16,12 @@ The deployment hostname is https://glissform-website.vercel.app/ and the canonic
 
 For a future authorized release, publish and verify the signed installer and checksum on GitHub first, add its exact download redirects, then publish the newly signed feed. Verify public feed bytes, signatures and an installed-app update check.
 
-## DNS migration status
+## Legacy domain and recovery
 
-On 2026-10-30, Beget accepted the change to `ns1.vercel-dns.com` and `ns2.vercel-dns.com`. Public propagation and custom-domain HTTPS verification are pending. The old Cloudflare Pages project and zone remain available until cutover is verified. Their `_redirects` and `_headers` files are retained during this transition. No other domains are in scope.
+The old `glissform.app` registration and Vercel binding remain in place for existing links and installed apps. Its nameservers are `ns1.vercel-dns.com` and `ns2.vercel-dns.com`. The Glissform Cloudflare zone and Pages project were deleted with the owner's approval on 2026-10-30. The old `_redirects` and `_headers` files are retained as migration references; Vercel uses `vercel.json`.
 
-The owner removed the Glissform mailbox; obsolete Beget email records are not migrated. Public support contact: 4niklap@gmail.com.
+No further app updates are planned. Existing 0.1.0 installers still check `https://glissform.app/updates/appcast.xml`; retiring that domain can cause update-check errors. Do not modify the signed feed to change its URLs. Downloads from the new website continue to use GitHub Releases independently of the old registration.
 
-Vercel’s deployment hostname passed all 20 installer/checksum redirect checks and served the byte-identical signed feed. The owner previously confirmed the installed rc.2 update check after the Cloudflare migration; an installed upgrade to 0.1.0 has not been tested. The VPS has not been cancelled.
-
-## Recovery
-
-The original web root and DNS records are backed up outside Git in `~/Documents/Glissform-migration-2026-10-30/`. During this transition, Cloudflare nameservers `jasper.ns.cloudflare.com` and `kara.ns.cloudflare.com` remain a rollback option while their zone exists. Vercel deployments can be restored from the dashboard. Do not delete the old hosting before public DNS and HTTPS checks pass.
+Support contact: 4niklap@gmail.com. The Glissform mailbox was removed. Vercel deployments can be restored from its dashboard. Original VPS and DNS backups are outside Git in `~/Documents/Glissform-migration-2026-10-30/`; the VPS has not been cancelled.
 
 [Former VPS deployment instructions](archive/VPS_DEPLOYMENT.md) are historical reference only.
