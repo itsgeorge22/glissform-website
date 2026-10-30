@@ -3,7 +3,7 @@ export const siteTitle = 'Glissform — Free MacBook Lid Animation';
 export const siteDescription = 'Your Lid Moves. Desktop Stays In Place. An iPhone Duo-style animation for your MacBook. Perspective, blur and shadow follow the lid as it closes.';
 export const socialTitle = 'Glissform — A better closing act for your Mac';
 export const socialDescription = 'Make closing your MacBook more satisfying with a smooth lid animation. Adjust the starting angle and blur to make it yours. Free for macOS.';
-const publicReleaseVersion = '0.1.0-rc.2';
+const publicReleaseVersion = '0.1.0';
 export const downloadUrl = `/downloads/Glissform-${publicReleaseVersion}.dmg`;
 export const socialImage = new URL('assets/glissform-social.png', siteUrl).href;
 

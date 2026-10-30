@@ -1,4 +1,6 @@
 # Keep legacy download URLs used by the website and signed appcast.
+/downloads/Glissform-0.1.0.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0/Glissform-0.1.0.dmg 302
+/downloads/Glissform-0.1.0.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0/Glissform-0.1.0.dmg.sha256 302
 /downloads/Glissform-0.1.0-rc.2.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.2/Glissform-0.1.0-rc.2.dmg 302
 /downloads/Glissform-0.1.0-rc.2.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.2/Glissform-0.1.0-rc.2.dmg.sha256 302
 /downloads/Glissform-0.1.0-rc.1.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.1/Glissform-0.1.0-rc.1.dmg 302

@@ -12,7 +12,7 @@ The preview hostname is https://glissform-website.pages.dev/. The canonical site
 
 `public/_redirects` maps existing versioned `/downloads/` DMG and checksum addresses to immutable GitHub Release assets. Keep the app repository public for unauthenticated downloads. Existing website buttons and installed apps retain their original URLs.
 
-`public/updates/appcast.xml` is the exact signed production feed. **Do not format, edit or regenerate it without the Sparkle signing key and a separately authorized release.** A signature covers the file bytes, and each installer has its own signature. This hosting migration does not change the app version, tags or release assets.
+`public/updates/appcast.xml` is the signed production feed, currently offering 0.1.0 (build 21). **Do not format, edit or regenerate it without the Sparkle signing key and a separately authorized release.** A signature covers the file bytes, and each installer has its own signature. This hosting migration does not change the app version, tags or release assets.
 
 `public/_headers` sets security and feed caching headers. Search Console's existing verification file is retained. `/v2`, `/v2/` and `/v2/index.html` redirect to `/`; `www` redirects to the canonical host through the zone-level rule below.
 
@@ -26,7 +26,7 @@ Cloudflare Single Redirect `Glissform www to canonical root` matches `(http.host
 
 Cutover completed on 2026-10-30. Both custom domains have active HTTPS. Verified the homepage and privacy page, 21 homepage assets, all 18 installer/checksum redirects, the downloaded rc.2 checksum, the byte-identical signed feed, discovery files and the Search Console file (served through Pages’ same-host clean-URL redirect). All original Beget MX, SPF and email autoconfiguration records match. The www redirect preserves paths and query strings.
 
-An installed-app update check remains a final acceptance step. Keep the VPS running until the owner confirms acceptance; it has not been cancelled.
+The owner confirmed that the installed rc.2 app successfully checked for updates after migration on 2026-10-30. The subsequent upgrade to 0.1.0 has not been exercised on an installed app; new app testing was explicitly waived for that release. The VPS has not been cancelled.
 
 The pre-migration public web root and original DNS records are backed up outside Git in `~/Documents/Glissform-migration-2026-10-30/`. The VPS remains available at its existing address. Restore the original web A records or previous Beget nameservers if cutover fails; do not delete the Pages project or existing DNS records as a rollback shortcut. A previous Pages deployment can also be restored through its dashboard.
 
