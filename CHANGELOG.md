@@ -2,7 +2,7 @@
 
 ## Hosting migration — 2026-10-30
 
-- Prepare Cloudflare Pages deployment, legacy download redirects to GitHub Releases, the unchanged signed update feed, security headers and Search Console verification. Preserve the website design and behavior. Retire automatic VPS uploads; retain the VPS until domain and update verification is complete.
+- Move glissform.app and www to Cloudflare Pages with HTTPS, legacy download redirects to GitHub Releases, the unchanged signed update feed, security headers and Search Console verification. Preserve the website design and behavior, Beget email DNS and unrelated domains. Retire automatic VPS uploads and add a proper not-found page. The VPS remains running pending final acceptance.
 
 ## 2026-10-16 — Glissform release candidate
 
