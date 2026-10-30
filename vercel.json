@@ -1,0 +1,175 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.glissform.app"
+        }
+      ],
+      "destination": "https://glissform.app/:path*",
+      "statusCode": 301
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0/Glissform-0.1.0.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0/Glissform-0.1.0.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-rc.2.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.2/Glissform-0.1.0-rc.2.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-rc.2.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.2/Glissform-0.1.0-rc.2.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-rc.1.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.1/Glissform-0.1.0-rc.1.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-rc.1.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.1/Glissform-0.1.0-rc.1.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.7.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.7/Glissform-0.1.0-beta.7.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.7.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.7/Glissform-0.1.0-beta.7.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.6.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.6/Glissform-0.1.0-beta.6.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.6.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.6/Glissform-0.1.0-beta.6.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.5.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.5/Glissform-0.1.0-beta.5.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.5.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.5/Glissform-0.1.0-beta.5.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.4.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.4/Glissform-0.1.0-beta.4.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.4.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.4/Glissform-0.1.0-beta.4.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.3.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.3/Glissform-0.1.0-beta.3.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.3.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.3/Glissform-0.1.0-beta.3.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.2.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.2/Glissform-0.1.0-beta.2.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.2.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.2/Glissform-0.1.0-beta.2.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.1.dmg",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.1/Glissform-0.1.0-beta.1.dmg",
+      "statusCode": 302
+    },
+    {
+      "source": "/downloads/Glissform-0.1.0-beta.1.dmg.sha256",
+      "destination": "https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.1/Glissform-0.1.0-beta.1.dmg.sha256",
+      "statusCode": 302
+    },
+    {
+      "source": "/v2",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/v2/",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/v2/index.html",
+      "destination": "/",
+      "statusCode": 301
+    }
+  ],
+  "headers": [
+    {
+      "source": "/:path*",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "base-uri 'self'; object-src 'none'; frame-ancestors 'none'"
+        }
+      ]
+    },
+    {
+      "source": "/updates/appcast.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300"
+        }
+      ]
+    }
+  ]
+}
