@@ -1,5 +1,9 @@
 # Changelog
 
+## Hosting migration — 2026-10-30
+
+- Prepare Cloudflare Pages deployment, legacy download redirects to GitHub Releases, the unchanged signed update feed, security headers and Search Console verification. Preserve the website design and behavior. Retire automatic VPS uploads; retain the VPS until domain and update verification is complete.
+
 ## 2026-10-16 — Glissform release candidate
 
 - Point the direct DMG download and software metadata to published 0.1.0-rc.1. Use release-candidate wording in the installation and AI product guides, and align the product guide with the focus on Seamless Close.

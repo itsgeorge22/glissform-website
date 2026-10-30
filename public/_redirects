@@ -1,0 +1,23 @@
+# Keep legacy download URLs used by the website and signed appcast.
+/downloads/Glissform-0.1.0-rc.2.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.2/Glissform-0.1.0-rc.2.dmg 302
+/downloads/Glissform-0.1.0-rc.2.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.2/Glissform-0.1.0-rc.2.dmg.sha256 302
+/downloads/Glissform-0.1.0-rc.1.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.1/Glissform-0.1.0-rc.1.dmg 302
+/downloads/Glissform-0.1.0-rc.1.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-rc.1/Glissform-0.1.0-rc.1.dmg.sha256 302
+/downloads/Glissform-0.1.0-beta.7.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.7/Glissform-0.1.0-beta.7.dmg 302
+/downloads/Glissform-0.1.0-beta.7.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.7/Glissform-0.1.0-beta.7.dmg.sha256 302
+/downloads/Glissform-0.1.0-beta.6.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.6/Glissform-0.1.0-beta.6.dmg 302
+/downloads/Glissform-0.1.0-beta.6.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.6/Glissform-0.1.0-beta.6.dmg.sha256 302
+/downloads/Glissform-0.1.0-beta.5.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.5/Glissform-0.1.0-beta.5.dmg 302
+/downloads/Glissform-0.1.0-beta.5.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.5/Glissform-0.1.0-beta.5.dmg.sha256 302
+/downloads/Glissform-0.1.0-beta.4.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.4/Glissform-0.1.0-beta.4.dmg 302
+/downloads/Glissform-0.1.0-beta.4.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.4/Glissform-0.1.0-beta.4.dmg.sha256 302
+/downloads/Glissform-0.1.0-beta.3.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.3/Glissform-0.1.0-beta.3.dmg 302
+/downloads/Glissform-0.1.0-beta.3.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.3/Glissform-0.1.0-beta.3.dmg.sha256 302
+/downloads/Glissform-0.1.0-beta.2.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.2/Glissform-0.1.0-beta.2.dmg 302
+/downloads/Glissform-0.1.0-beta.2.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.2/Glissform-0.1.0-beta.2.dmg.sha256 302
+/downloads/Glissform-0.1.0-beta.1.dmg https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.1/Glissform-0.1.0-beta.1.dmg 302
+/downloads/Glissform-0.1.0-beta.1.dmg.sha256 https://github.com/itsgeorge22/glissform/releases/download/v0.1.0-beta.1/Glissform-0.1.0-beta.1.dmg.sha256 302
+/v2 / 301
+/v2/ / 301
+/v2/index.html / 301
+https://www.glissform.app/* https://glissform.app/:splat 301
